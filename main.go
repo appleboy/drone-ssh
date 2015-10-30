@@ -34,7 +34,7 @@ func main() {
 		if err != nil {
 			os.Exit(1)
 		}
-		if v.Sleep != 0 && i > v.Host.Len()-1 {
+		if v.Sleep != 0 && i != v.Host.Len()-1 {
 			fmt.Printf("$ sleep %d\n", v.Sleep)
 			time.Sleep(time.Duration(v.Sleep) * time.Second)
 		}
