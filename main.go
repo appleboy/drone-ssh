@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/drone/drone-plugin-go/plugin"
 	"golang.org/x/crypto/ssh"
@@ -18,6 +19,7 @@ type Params struct {
 	Login    string   `json:"user"`
 	Port     int      `json:"port"`
 	Host     StrSlice `json:"host"`
+	Sleep    int      `json:"sleep"`
 }
 
 func main() {
@@ -27,10 +29,14 @@ func main() {
 	plugin.Param("vargs", &v)
 	plugin.MustParse()
 
-	for _, host := range v.Host.Slice() {
+	for i, host := range v.Host.Slice() {
 		err := run(w.Keys, v, host)
 		if err != nil {
 			os.Exit(1)
+		}
+		if v.Sleep != 0 && i > v.Host.Len()-1 {
+			fmt.Printf("$ sleep %d\n", v.Sleep)
+			time.Sleep(time.Duration(v.Sleep) * time.Second)
 		}
 	}
 }

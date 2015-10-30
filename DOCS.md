@@ -28,12 +28,15 @@ deploy:
      - bar.com
     user: root
     port: 22
+    sleep: 5
     commands:
       - echo hello
       - echo world
 ```
 
 In the above example Drone executes the commands on multiple hosts sequentially. If the commands fail on a single host this plugin exits immediatly, and will not run your commands on the remaining hosts in the list.
+
+The above example also uses the `sleep` parameter. The sleep parameter instructs Drone to sleep for N seconds between host executions.
 
 ## Keys
 
