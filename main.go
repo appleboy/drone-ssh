@@ -17,7 +17,7 @@ type Params struct {
 	Commands []string `json:"commands"`
 	Login    string   `json:"user"`
 	Port     int      `json:"port"`
-	Host     string   `json:"host"`
+	Host     StrSlice `json:"host"`
 }
 
 func main() {
@@ -27,13 +27,15 @@ func main() {
 	plugin.Param("vargs", &v)
 	plugin.MustParse()
 
-	err := run(w.Keys, v)
-	if err != nil {
-		os.Exit(1)
+	for _, host := range v.Host.Slice() {
+		err := run(w.Keys, v, host)
+		if err != nil {
+			os.Exit(1)
+		}
 	}
 }
 
-func run(keys *plugin.Keypair, params *Params) error {
+func run(keys *plugin.Keypair, params *Params, host string) error {
 
 	// if no username is provided assume root
 	if len(params.Login) == 0 {
@@ -46,10 +48,13 @@ func run(keys *plugin.Keypair, params *Params) error {
 	}
 
 	// join the host and port if necessary
-	host := net.JoinHostPort(
-		params.Host,
+	addr := net.JoinHostPort(
+		host,
 		strconv.Itoa(params.Port),
 	)
+
+	// trace command used for debugging in the build logs
+	fmt.Printf("$ ssh %s@%s -p %d\n", params.Login, addr, params.Port)
 
 	signer, err := ssh.ParsePrivateKey([]byte(keys.Private))
 	if err != nil {
@@ -61,7 +66,7 @@ func run(keys *plugin.Keypair, params *Params) error {
 		Auth: []ssh.AuthMethod{ssh.PublicKeys(signer)},
 	}
 
-	client, err := ssh.Dial("tcp", host, config)
+	client, err := ssh.Dial("tcp", addr, config)
 	if err != nil {
 		return fmt.Errorf("Error dialing server. %s.", err)
 	}
