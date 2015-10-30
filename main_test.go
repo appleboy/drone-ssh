@@ -30,14 +30,14 @@ func TestRun(t *testing.T) {
 	params := &Params{
 		Commands: []string{"whoami", "time", "ps -ax"},
 		Login:    user,
-		Host:     host,
+		Host:     StrSlice{[]string{host}},
 	}
 
 	keys := &plugin.Keypair{
 		Private: string(out),
 	}
 
-	err = run(keys, params)
+	err = run(keys, params, host)
 	if err != nil {
 		t.Errorf("Unable to run SSH commands. %s.", err)
 	}
