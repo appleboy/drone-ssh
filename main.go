@@ -32,6 +32,7 @@ func main() {
 	for i, host := range v.Host.Slice() {
 		err := run(w.Keys, v, host)
 		if err != nil {
+			fmt.Println(err)
 			os.Exit(1)
 		}
 		if v.Sleep != 0 && i != v.Host.Len()-1 {
@@ -48,7 +49,7 @@ func run(keys *plugin.Keypair, params *Params, host string) error {
 		params.Login = "root"
 	}
 
-	// if no username is provided assume root
+	// if no port is provided use default
 	if params.Port == 0 {
 		params.Port = 22
 	}
