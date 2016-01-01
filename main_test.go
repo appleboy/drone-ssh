@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/drone/drone-plugin-go/plugin"
+	"github.com/drone/drone-go/drone"
 )
 
 var (
@@ -15,14 +15,13 @@ var (
 )
 
 func TestRun(t *testing.T) {
-
-	// only runs the test if a host server is provided
 	if len(host) == 0 {
 		t.Skipf("TEST_SSH_HOST not provided")
 		return
 	}
 
 	out, err := ioutil.ReadFile(key)
+
 	if err != nil {
 		t.Errorf("Unable to read or find a test privte key. %s", err)
 	}
@@ -30,14 +29,19 @@ func TestRun(t *testing.T) {
 	params := &Params{
 		Commands: []string{"whoami", "time", "ps -ax"},
 		Login:    user,
-		Host:     StrSlice{[]string{host}},
+		Host: drone.NewStringSlice(
+			[]string{
+				host,
+			},
+		),
 	}
 
-	keys := &plugin.Keypair{
+	keys := &drone.Key{
 		Private: string(out),
 	}
 
 	err = run(keys, params, host)
+
 	if err != nil {
 		t.Errorf("Unable to run SSH commands. %s.", err)
 	}
