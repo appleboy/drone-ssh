@@ -1,8 +1,14 @@
-# Docker image for the Drone build runner
+# Docker image for the Drone Swift plugin
 #
-#     CGO_ENABLED=0 go build -a -tags netgo
-#     docker build --rm=true -t plugins/drone-ssh .
+#     cd $GOPATH/src/github.com/drone-plugins/drone-ssh
+#     make deps build docker
 
-FROM gliderlabs/alpine:3.1
+FROM alpine:3.3
+
+RUN apk update && \
+  apk add \
+    ca-certificates && \
+  rm -rf /var/cache/apk/*
+
 ADD drone-ssh /bin/
 ENTRYPOINT ["/bin/drone-ssh"]
