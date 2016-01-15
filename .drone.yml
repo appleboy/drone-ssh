@@ -8,7 +8,7 @@ build:
 
 publish:
   docker:
-    username: drone
+    username: $$DOCKER_USER
     password: $$DOCKER_PASS
     email: $$DOCKER_EMAIL
     repo: plugins/drone-ssh
