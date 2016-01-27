@@ -1,30 +1,49 @@
 # drone-ssh
 
 [![Build Status](http://beta.drone.io/api/badges/drone-plugins/drone-ssh/status.svg)](http://beta.drone.io/drone-plugins/drone-ssh)
+[![Coverage Status](https://aircover.co/badges/drone-plugins/drone-ssh/coverage.svg)](https://aircover.co/drone-plugins/drone-ssh)
 [![](https://badge.imagelayers.io/plugins/drone-ssh:latest.svg)](https://imagelayers.io/?images=plugins/drone-ssh:latest 'Get your own badge on imagelayers.io')
 
-Drone plugin for executing commands on a remote host through SSH
+Drone plugin to execute commands on a remote host through SSH
 
-## Usage
+## Binary
+
+Build the binary using `make`:
 
 ```
+make deps build
+```
+
+### Example
+
+```sh
 ./drone-ssh <<EOF
 {
-    "repo" : {
-        "owner": "foo",
-        "name": "bar",
-        "full_name": "foo/bar"
+    "repo": {
+        "clone_url": "git://github.com/drone/drone",
+        "owner": "drone",
+        "name": "drone",
+        "full_name": "drone/drone"
     },
-    "build" : {
+    "system": {
+        "link_url": "https://beta.drone.io"
+    },
+    "build": {
         "number": 22,
         "status": "success",
         "started_at": 1421029603,
         "finished_at": 1421029813,
-        "commit": "9f2849d5",
-        "branch": "master",
         "message": "Update the Readme",
         "author": "johnsmith",
         "author_email": "john.smith@gmail.com"
+        "event": "push",
+        "branch": "master",
+        "commit": "436b7a6e2abaddfd35740527353e78a227ddcb2c",
+        "ref": "refs/heads/master"
+    },
+    "workspace": {
+        "root": "/drone/src",
+        "path": "/drone/src/github.com/drone/drone"
     },
     "vargs": {
         "host": "foo.com",
@@ -41,10 +60,10 @@ EOF
 
 ## Docker
 
-Build the Docker container using `make`:
+Build the container using `make`:
 
 ```
-make deps build docker
+make deps docker
 ```
 
 ### Example
@@ -52,21 +71,31 @@ make deps build docker
 ```sh
 docker run -i plugins/drone-ssh <<EOF
 {
-    "repo" : {
-        "owner": "foo",
-        "name": "bar",
-        "full_name": "foo/bar"
+    "repo": {
+        "clone_url": "git://github.com/drone/drone",
+        "owner": "drone",
+        "name": "drone",
+        "full_name": "drone/drone"
     },
-    "build" : {
+    "system": {
+        "link_url": "https://beta.drone.io"
+    },
+    "build": {
         "number": 22,
         "status": "success",
         "started_at": 1421029603,
         "finished_at": 1421029813,
-        "commit": "9f2849d5",
-        "branch": "master",
         "message": "Update the Readme",
         "author": "johnsmith",
         "author_email": "john.smith@gmail.com"
+        "event": "push",
+        "branch": "master",
+        "commit": "436b7a6e2abaddfd35740527353e78a227ddcb2c",
+        "ref": "refs/heads/master"
+    },
+    "workspace": {
+        "root": "/drone/src",
+        "path": "/drone/src/github.com/drone/drone"
     },
     "vargs": {
         "host": "foo.com",
