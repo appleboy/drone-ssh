@@ -4,7 +4,7 @@
 [![Coverage Status](https://aircover.co/badges/drone-plugins/drone-ssh/coverage.svg)](https://aircover.co/drone-plugins/drone-ssh)
 [![](https://badge.imagelayers.io/plugins/drone-ssh:latest.svg)](https://imagelayers.io/?images=plugins/drone-ssh:latest 'Get your own badge on imagelayers.io')
 
-Drone plugin to execute commands on a remote host through SSH
+Drone plugin to execute commands on a remote host through SSH. For the usage information and a listing of the available options please take a look at [the docs](DOCS.md).
 
 ## Binary
 
