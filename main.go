@@ -14,11 +14,11 @@ import (
 )
 
 var (
-	buildDate string
+	buildCommit string
 )
 
 func main() {
-	fmt.Printf("Drone SSH Plugin built at %s\n", buildDate)
+	fmt.Printf("Drone SSH Plugin built from %s\n", buildCommit)
 
 	workspace := drone.Workspace{}
 	vargs := Params{}
