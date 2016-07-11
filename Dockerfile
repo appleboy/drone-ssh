@@ -1,13 +1,9 @@
-# Docker image for the Drone Swift plugin
-#
-#     cd $GOPATH/src/github.com/drone-plugins/drone-ssh
-#     make deps build docker
-
-FROM alpine:3.3
+FROM alpine:3.4
 
 RUN apk update && \
   apk add \
-    ca-certificates && \
+    ca-certificates \
+    openssh-client && \
   rm -rf /var/cache/apk/*
 
 ADD drone-ssh /bin/
