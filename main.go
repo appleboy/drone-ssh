@@ -44,6 +44,11 @@ func main() {
 			Usage:  "sleep between hosts",
 			EnvVar: "PLUGIN_SLEEP,SSH_SLEEP",
 		},
+		cli.DurationFlag{
+			Name:   "timeout",
+			Usage:  "connection timeout",
+			EnvVar: "PLUGIN_TIMEOUT,SSH_TIMEOUT",
+		},
 		cli.StringSliceFlag{
 			Name:   "commands",
 			Usage:  "execute commands",
@@ -72,6 +77,7 @@ func run(c *cli.Context) error {
 			Host:     c.StringSlice("host"),
 			Port:     c.Int("port"),
 			Sleep:    c.Int("sleep"),
+			Timeout:  c.Duration("timeout"),
 			Commands: c.StringSlice("commands"),
 		},
 	}

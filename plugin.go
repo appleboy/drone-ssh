@@ -13,12 +13,13 @@ import (
 
 type (
 	Config struct {
-		Key      string   `json:"key"`
-		User     string   `json:"user"`
-		Host     []string `json:"host"`
-		Port     int      `json:"port"`
-		Sleep    int      `json:"sleep"`
-		Commands []string `json:"commands"`
+		Key      string        `json:"key"`
+		User     string        `json:"user"`
+		Host     []string      `json:"host"`
+		Port     int           `json:"port"`
+		Sleep    int           `json:"sleep"`
+		Timeout  time.Duration `json:"timeout"`
+		Commands []string      `json:"commands"`
 	}
 
 	Plugin struct {
@@ -44,7 +45,8 @@ func (p Plugin) Exec() error {
 		}
 
 		config := &ssh.ClientConfig{
-			User: p.Config.User,
+			Timeout: p.Config.Timeout,
+			User:    p.Config.User,
 			Auth: []ssh.AuthMethod{
 				ssh.PublicKeys(signer),
 			},

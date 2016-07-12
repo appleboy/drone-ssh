@@ -10,6 +10,7 @@ The following parameters are used to configure the plugin:
 * **user** - user to log in as on the remote machine
 * **key** - private SSH key for the remote machine
 * **sleep** - sleep for seconds between host connections
+* **timeout** - timeout for the tcp connection attempt
 * **commands** - list of commands to execute
 
 The following secret values can be set to configure the plugin.
@@ -19,6 +20,7 @@ The following secret values can be set to configure the plugin.
 * **SSH_USER** - corresponds to **user**
 * **SSH_KEY** - corresponds to **key**
 * **SSH_SLEEP** - corresponds to **sleep**
+* **SSH_TIMEOUT** - corresponds to **timeout**
 
 It is highly recommended to put the **SSH_KEY** into a secret so it is not
 exposed to users. This can be done using the drone-cli.
