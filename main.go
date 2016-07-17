@@ -1,91 +1,86 @@
 package main
 
 import (
-	"fmt"
-	"net"
+	"log"
 	"os"
-	"strconv"
-	"strings"
-	"time"
 
-	"github.com/drone/drone-go/drone"
-	"github.com/drone/drone-go/plugin"
-	"golang.org/x/crypto/ssh"
+	"github.com/joho/godotenv"
+	"github.com/urfave/cli"
 )
 
-var (
-	buildCommit string
-)
+var version string // build number set at compile-time
 
 func main() {
-	fmt.Printf("Drone SSH Plugin built from %s\n", buildCommit)
-
-	workspace := drone.Workspace{}
-	vargs := Params{}
-
-	plugin.Param("workspace", &workspace)
-	plugin.Param("vargs", &vargs)
-	plugin.MustParse()
-
-	for i, host := range vargs.Host.Slice() {
-		err := run(workspace.Keys, &vargs, host)
-
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-
-		if vargs.Sleep != 0 && i != vargs.Host.Len()-1 {
-			fmt.Printf("$ sleep %d\n", vargs.Sleep)
-			time.Sleep(time.Duration(vargs.Sleep) * time.Second)
-		}
-	}
-}
-
-func run(key *drone.Key, params *Params, host string) error {
-	if params.Login == "" {
-		params.Login = "root"
-	}
-
-	if params.Port == 0 {
-		params.Port = 22
-	}
-
-	addr := net.JoinHostPort(
-		host,
-		strconv.Itoa(params.Port),
-	)
-
-	fmt.Printf("$ ssh %s@%s -p %d\n", params.Login, addr, params.Port)
-	signer, err := ssh.ParsePrivateKey([]byte(key.Private))
-
-	if err != nil {
-		return fmt.Errorf("Error: Failed to parse private key. %s", err)
-	}
-
-	config := &ssh.ClientConfig{
-		User: params.Login,
-		Auth: []ssh.AuthMethod{
-			ssh.PublicKeys(signer),
+	app := cli.NewApp()
+	app.Name = "ssh plugin"
+	app.Usage = "ssh plugin"
+	app.Action = run
+	app.Version = version
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:   "ssh-key",
+			Usage:  "private ssh key",
+			EnvVar: "PLUGIN_SSH_KEY,SSH_KEY",
+		},
+		cli.StringFlag{
+			Name:   "user",
+			Usage:  "connect as user",
+			EnvVar: "PLUGIN_USER,SSH_USER",
+			Value:  "root",
+		},
+		cli.StringSliceFlag{
+			Name:   "host",
+			Usage:  "connect to host",
+			EnvVar: "PLUGIN_HOST,SSH_HOST",
+		},
+		cli.IntFlag{
+			Name:   "port",
+			Usage:  "connect to port",
+			EnvVar: "PLUGIN_PORT,SSH_PORT",
+			Value:  22,
+		},
+		cli.IntFlag{
+			Name:   "sleep",
+			Usage:  "sleep between hosts",
+			EnvVar: "PLUGIN_SLEEP,SSH_SLEEP",
+		},
+		cli.DurationFlag{
+			Name:   "timeout",
+			Usage:  "connection timeout",
+			EnvVar: "PLUGIN_TIMEOUT,SSH_TIMEOUT",
+		},
+		cli.StringSliceFlag{
+			Name:   "commands",
+			Usage:  "execute commands",
+			EnvVar: "PLUGIN_COMMANDS",
+		},
+		cli.StringFlag{
+			Name:  "env-file",
+			Usage: "source env file",
 		},
 	}
 
-	client, err := ssh.Dial("tcp", addr, config)
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
+}
 
-	if err != nil {
-		return fmt.Errorf("Error: Failed to dial to server. %s", err)
+func run(c *cli.Context) error {
+	if c.String("env-file") != "" {
+		_ = godotenv.Load(c.String("env-file"))
 	}
 
-	session, err := client.NewSession()
-
-	if err != nil {
-		return fmt.Errorf("Error: Failed to start a SSH session. %s", err)
+	plugin := Plugin{
+		Config: Config{
+			Key:      c.String("ssh-key"),
+			User:     c.String("user"),
+			Host:     c.StringSlice("host"),
+			Port:     c.Int("port"),
+			Sleep:    c.Int("sleep"),
+			Timeout:  c.Duration("timeout"),
+			Commands: c.StringSlice("commands"),
+		},
 	}
 
-	defer session.Close()
-
-	session.Stdout = os.Stdout
-	session.Stderr = os.Stderr
-
-	return session.Run(strings.Join(params.Commands, "\n"))
+	return plugin.Exec()
 }

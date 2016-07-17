@@ -1,39 +1,42 @@
-build:
-  image: golang:1.5
-  environment:
-    - CGO_ENABLED=0
-  commands:
-    - make deps
-    - make vet
-    - make build
-    - make test
+workspace:
+  base: /go
+  path: src/github.com/drone-plugins/drone-ssh
 
-publish:
+pipeline:
+  test:
+    image: golang:1.6
+    environment:
+      - CGO_ENABLED=0
+    commands:
+      - go vet
+      - go test -cover -coverprofile=coverage.out
+      - go build -ldflags "-s -w -X main.build=$DRONE_BUILD_NUMBER"
   coverage:
     when:
       branch: master
-  docker:
-    username: $$DOCKER_USER
-    password: $$DOCKER_PASS
-    email: $$DOCKER_EMAIL
-    repo: plugins/drone-ssh
-    tag: latest
+      event: push
+  latest:
+    image: docker
+    storage_driver: overlay
+    repo: plugins/ssh
+    tags: [ "latest", "1.0", "1" ]
     when:
       branch: master
-  docker:
-    username: $$DOCKER_USER
-    password: $$DOCKER_PASS
-    email: $$DOCKER_EMAIL
-    repo: plugins/drone-ssh
-    tag: develop
+      event: push
+  develop:
+    image: docker
+    storage_driver: overlay
+    repo: plugins/ssh
+    tags: [ "develop" ]
     when:
       branch: develop
+      event: push
 
 plugin:
   name: SSH
   desc: Execute commands on a remote host through SSH
   type: deploy
-  image: plugins/drone-ssh
+  image: plugins/ssh
   labels:
     - deploy
     - ssh

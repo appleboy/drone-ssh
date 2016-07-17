@@ -6,106 +6,43 @@
 
 Drone plugin to execute commands on a remote host through SSH. For the usage information and a listing of the available options please take a look at [the docs](DOCS.md).
 
-## Binary
+## Build
 
-Build the binary using `make`:
+Build the binary with the following commands:
 
 ```
-make deps build
-```
-
-### Example
-
-```sh
-./drone-ssh <<EOF
-{
-    "repo": {
-        "clone_url": "git://github.com/drone/drone",
-        "owner": "drone",
-        "name": "drone",
-        "full_name": "drone/drone"
-    },
-    "system": {
-        "link_url": "https://beta.drone.io"
-    },
-    "build": {
-        "number": 22,
-        "status": "success",
-        "started_at": 1421029603,
-        "finished_at": 1421029813,
-        "message": "Update the Readme",
-        "author": "johnsmith",
-        "author_email": "john.smith@gmail.com"
-        "event": "push",
-        "branch": "master",
-        "commit": "436b7a6e2abaddfd35740527353e78a227ddcb2c",
-        "ref": "refs/heads/master"
-    },
-    "workspace": {
-        "root": "/drone/src",
-        "path": "/drone/src/github.com/drone/drone"
-    },
-    "vargs": {
-        "host": "foo.com",
-        "user": "root",
-        "port": 22,
-        "commands": [
-            "echo hello",
-            "echo world"
-        ]
-    }
-}
-EOF
+export GO15VENDOREXPERIMENT=1
+go build
+go test
 ```
 
 ## Docker
 
-Build the container using `make`:
+Build the docker image with the following commands:
 
 ```
-make deps docker
+export GO15VENDOREXPERIMENT=1
+GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -a -tags netgo
 ```
 
-### Example
+Please note incorrectly building the image for the correct x64 linux and with GCO disabled will result in an error when running the Docker image:
+
+```
+docker: Error response from daemon: Container command
+'/bin/drone-ssh' not found or does not exist..
+```
+
+## Usage
+
+Execute a single remote command
 
 ```sh
-docker run -i plugins/drone-ssh <<EOF
-{
-    "repo": {
-        "clone_url": "git://github.com/drone/drone",
-        "owner": "drone",
-        "name": "drone",
-        "full_name": "drone/drone"
-    },
-    "system": {
-        "link_url": "https://beta.drone.io"
-    },
-    "build": {
-        "number": 22,
-        "status": "success",
-        "started_at": 1421029603,
-        "finished_at": 1421029813,
-        "message": "Update the Readme",
-        "author": "johnsmith",
-        "author_email": "john.smith@gmail.com"
-        "event": "push",
-        "branch": "master",
-        "commit": "436b7a6e2abaddfd35740527353e78a227ddcb2c",
-        "ref": "refs/heads/master"
-    },
-    "workspace": {
-        "root": "/drone/src",
-        "path": "/drone/src/github.com/drone/drone"
-    },
-    "vargs": {
-        "host": "foo.com",
-        "user": "root",
-        "port": 22,
-        "commands": [
-            "echo hello",
-            "echo world"
-        ]
-    }
-}
-EOF
+docker run --rm \
+  -e PLUGIN_HOST=foo.com \
+  -e PLUGIN_USER=root \
+  -e PLUGIN_KEY="$(cat ${HOME}/.ssh/id_rsa)" \
+  -e PLUGIN_COMMANDS=whoami \
+  -v $(pwd)/$(pwd) \
+  -w $(pwd) \
+  plugins/ssh
 ```
