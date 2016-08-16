@@ -1,7 +1,7 @@
 Use the SSH plugin to execute commands on a remote server. You will need to
 supply Drone with a private SSH key to being able to connect to a host.
 
-## Overview
+## Config
 
 The following parameters are used to configure the plugin:
 
@@ -27,7 +27,7 @@ exposed to users. This can be done using the drone-cli.
 
 ```bash
 drone secret add --image=ssh \
-    octocat/hello-world SSH_KEY @${HOME}/.ssh/id_rsa
+    octocat/hello-world SSH_KEY @path/to/.ssh/id_rsa
 ```
 
 Then sign the YAML file after all secrets are added.

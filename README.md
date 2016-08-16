@@ -1,17 +1,19 @@
 # drone-ssh
 
 [![Build Status](http://beta.drone.io/api/badges/drone-plugins/drone-ssh/status.svg)](http://beta.drone.io/drone-plugins/drone-ssh)
-[![Coverage Status](https://aircover.co/badges/drone-plugins/drone-ssh/coverage.svg)](https://aircover.co/drone-plugins/drone-ssh)
-[![](https://badge.imagelayers.io/plugins/drone-ssh:latest.svg)](https://imagelayers.io/?images=plugins/drone-ssh:latest 'Get your own badge on imagelayers.io')
+[![Go Doc](https://godoc.org/github.com/drone-plugins/drone-ssh?status.svg)](http://godoc.org/github.com/drone-plugins/drone-ssh)
+[![Go Report](https://goreportcard.com/badge/github.com/drone-plugins/drone-ssh)](https://goreportcard.com/report/github.com/drone-plugins/drone-ssh)
+[![Join the chat at https://gitter.im/drone/drone](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/drone/drone)
 
-Drone plugin to execute commands on a remote host through SSH. For the usage information and a listing of the available options please take a look at [the docs](DOCS.md).
+Drone plugin to execute commands on a remote host through SSH. For the usage
+information and a listing of the available options please take a look at
+[the docs](DOCS.md).
 
 ## Build
 
 Build the binary with the following commands:
 
 ```
-export GO15VENDOREXPERIMENT=1
 go build
 go test
 ```
@@ -21,11 +23,12 @@ go test
 Build the docker image with the following commands:
 
 ```
-export GO15VENDOREXPERIMENT=1
-GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -a -tags netgo
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo
+docker build --rm=true -t plugins/ssh .
 ```
 
-Please note incorrectly building the image for the correct x64 linux and with GCO disabled will result in an error when running the Docker image:
+Please note incorrectly building the image for the correct x64 linux and with
+GCO disabled will result in an error when running the Docker image:
 
 ```
 docker: Error response from daemon: Container command
@@ -34,7 +37,7 @@ docker: Error response from daemon: Container command
 
 ## Usage
 
-Execute a single remote command
+Execute from the working directory:
 
 ```sh
 docker run --rm \

@@ -1,6 +1,5 @@
 workspace:
   base: /go
-  path: src/github.com/drone-plugins/drone-ssh
 
 pipeline:
   test:
@@ -10,26 +9,14 @@ pipeline:
     commands:
       - go vet
       - go test -cover -coverprofile=coverage.out
-      - go build -ldflags "-s -w -X main.build=$DRONE_BUILD_NUMBER"
-  coverage:
-    when:
-      branch: master
-      event: push
+      - go build -ldflags "-s -w -X main.build=$DRONE_BUILD_NUMBER" -a -tags netgo
+
   latest:
     image: docker
-    storage_driver: overlay
     repo: plugins/ssh
     tags: [ "latest", "1.0", "1" ]
     when:
       branch: master
-      event: push
-  develop:
-    image: docker
-    storage_driver: overlay
-    repo: plugins/ssh
-    tags: [ "develop" ]
-    when:
-      branch: develop
       event: push
 
 plugin:
