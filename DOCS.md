@@ -26,7 +26,7 @@ It is highly recommended to put the **SSH_KEY** into a secret so it is not
 exposed to users. This can be done using the drone-cli.
 
 ```bash
-drone secret add --image=ssh \
+drone secret add --image=plugins/ssh \
     octocat/hello-world SSH_KEY @path/to/.ssh/id_rsa
 ```
 
@@ -46,6 +46,7 @@ Example configuration in your .drone.yml file for a single host:
 ```yaml
 pipeline:
   ssh:
+    image: plugins/ssh
     host: foo.com
     user: root
     port: 22
@@ -59,6 +60,7 @@ Example configuration in your .drone.yml file for multiple hosts:
 ```yaml
 pipeline:
   ssh:
+    image: plugins/ssh
     host:
      - foo.com
      - bar.com
