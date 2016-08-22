@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
 	"os"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli"
 )
@@ -52,7 +52,7 @@ func main() {
 		cli.StringSliceFlag{
 			Name:   "commands",
 			Usage:  "execute commands",
-			EnvVar: "PLUGIN_COMMANDS",
+			EnvVar: "PLUGIN_COMMANDS,SSH_COMMANDS",
 		},
 		cli.StringFlag{
 			Name:  "env-file",
@@ -61,7 +61,7 @@ func main() {
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 }
 
