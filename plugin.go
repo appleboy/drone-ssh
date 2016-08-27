@@ -19,7 +19,7 @@ type (
 		Port     int           `json:"port"`
 		Sleep    int           `json:"sleep"`
 		Timeout  time.Duration `json:"timeout"`
-		Commands []string      `json:"commands"`
+		Script   []string      `json:"script"`
 	}
 
 	Plugin struct {
@@ -70,7 +70,7 @@ func (p Plugin) Exec() error {
 		session.Stdout = os.Stdout
 		session.Stderr = os.Stderr
 
-		if err := session.Run(strings.Join(p.Config.Commands, "\n")); err != nil {
+		if err := session.Run(strings.Join(p.Config.Script, "\n")); err != nil {
 			return err
 		}
 

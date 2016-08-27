@@ -11,7 +11,7 @@ The following parameters are used to configure the plugin:
 * **key** - private SSH key for the remote machine
 * **sleep** - sleep for seconds between host connections
 * **timeout** - timeout for the tcp connection attempt
-* **commands** - list of commands to execute
+* **script** - list of commands to execute
 
 The following secret values can be set to configure the plugin.
 
@@ -50,7 +50,7 @@ pipeline:
     host: foo.com
     user: root
     port: 22
-    commands:
+    script:
       - echo hello
       - echo world
 ```
@@ -67,7 +67,7 @@ pipeline:
     user: root
     port: 22
     sleep: 5
-    commands:
+    script:
       - echo hello
       - echo world
 ```
