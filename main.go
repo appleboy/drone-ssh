@@ -51,9 +51,9 @@ func main() {
 			EnvVar: "PLUGIN_TIMEOUT,SSH_TIMEOUT",
 		},
 		cli.StringSliceFlag{
-			Name:   "commands",
+			Name:   "script",
 			Usage:  "execute commands",
-			EnvVar: "PLUGIN_COMMANDS,SSH_COMMANDS",
+			EnvVar: "PLUGIN_SCRIPT,SSH_SCRIPT",
 		},
 		cli.StringFlag{
 			Name:  "env-file",
@@ -79,7 +79,7 @@ func run(c *cli.Context) error {
 			Port:     c.Int("port"),
 			Sleep:    c.Int("sleep"),
 			Timeout:  c.Duration("timeout"),
-			Commands: c.StringSlice("commands"),
+			Script:   c.StringSlice("script"),
 		},
 	}
 
