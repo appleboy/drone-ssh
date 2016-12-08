@@ -45,7 +45,7 @@ docker run --rm \
   -e PLUGIN_USER=root \
   -e PLUGIN_KEY="$(cat ${HOME}/.ssh/id_rsa)" \
   -e PLUGIN_SCRIPT=whoami \
-  -v $(pwd)/$(pwd) \
+  -v $(pwd):$(pwd) \
   -w $(pwd) \
   plugins/ssh
 ```
