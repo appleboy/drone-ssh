@@ -6,6 +6,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv/autoload"
 	"github.com/urfave/cli"
 )
 
@@ -28,6 +29,11 @@ func main() {
 			Usage:  "connect as user",
 			EnvVar: "PLUGIN_USER,SSH_USER",
 			Value:  "root",
+		},
+		cli.StringFlag{
+			Name:   "password",
+			Usage:  "user password",
+			EnvVar: "PLUGIN_PASSWORD,SSH_PASSWORD",
 		},
 		cli.StringSliceFlag{
 			Name:   "host",
@@ -56,8 +62,9 @@ func main() {
 			EnvVar: "PLUGIN_SCRIPT,SSH_SCRIPT",
 		},
 		cli.StringFlag{
-			Name:  "env-file",
-			Usage: "source env file",
+			Name:   "env-file",
+			Usage:  "source env file",
+			EnvVar: "ENV_FILE",
 		},
 	}
 
@@ -75,6 +82,7 @@ func run(c *cli.Context) error {
 		Config: Config{
 			Key:      c.String("ssh-key"),
 			User:     c.String("user"),
+			Password: c.String("password"),
 			Host:     c.StringSlice("host"),
 			Port:     c.Int("port"),
 			Sleep:    c.Int("sleep"),
