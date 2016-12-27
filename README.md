@@ -44,7 +44,6 @@ docker run --rm \
   -e PLUGIN_HOST=foo.com \
   -e PLUGIN_USER=root \
   -e PLUGIN_KEY="$(cat ${HOME}/.ssh/id_rsa)" \
-  -e PLUGIN_PASSWORD=xxxxx \
   -e PLUGIN_SCRIPT=whoami \
   -v $(pwd):$(pwd) \
   -w $(pwd) \

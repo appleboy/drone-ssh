@@ -62,9 +62,8 @@ func main() {
 			EnvVar: "PLUGIN_SCRIPT,SSH_SCRIPT",
 		},
 		cli.StringFlag{
-			Name:   "env-file",
-			Usage:  "source env file",
-			EnvVar: "ENV_FILE",
+			Name:  "env-file",
+			Usage: "source env file",
 		},
 	}
 
