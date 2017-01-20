@@ -8,6 +8,7 @@ The following parameters are used to configure the plugin:
 * **host** - address or IP of the remote machine
 * **port** - port to connect to on the remote machine
 * **user** - user to log in as on the remote machine
+* **passsword** - password to log in as on the remote machine
 * **key** - private SSH key for the remote machine
 * **sleep** - sleep for seconds between host connections
 * **timeout** - timeout for the tcp connection attempt
@@ -18,16 +19,19 @@ The following secret values can be set to configure the plugin.
 * **SSH_HOST** - corresponds to **host**
 * **SSH_PORT** - corresponds to **port**
 * **SSH_USER** - corresponds to **user**
+* **SSH_PASSWORD** - corresponds to **password**
 * **SSH_KEY** - corresponds to **key**
 * **SSH_SLEEP** - corresponds to **sleep**
 * **SSH_TIMEOUT** - corresponds to **timeout**
 
-It is highly recommended to put the **SSH_KEY** into a secret so it is not
+It is highly recommended to put the **SSH_KEY** and **SSH_PASSWORD** into a secret so it is not
 exposed to users. This can be done using the drone-cli.
 
 ```bash
 drone secret add --image=plugins/ssh \
     octocat/hello-world SSH_KEY @path/to/.ssh/id_rsa
+drone secret add --image=plugins/ssh \
+    octocat/hello-world SSH_PASSWORD admin1234
 ```
 
 Then sign the YAML file after all secrets are added.
@@ -49,6 +53,7 @@ pipeline:
     image: plugins/ssh
     host: foo.com
     user: root
+    password: 1234
     port: 22
     script:
       - echo hello

@@ -24,7 +24,7 @@ Build the docker image with the following commands:
 
 ```
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo
-docker build --rm=true -t plugins/ssh .
+docker build -t plugins/ssh .
 ```
 
 Please note incorrectly building the image for the correct x64 linux and with
@@ -45,7 +45,7 @@ docker run --rm \
   -e PLUGIN_USER=root \
   -e PLUGIN_KEY="$(cat ${HOME}/.ssh/id_rsa)" \
   -e PLUGIN_SCRIPT=whoami \
-  -v $(pwd)/$(pwd) \
+  -v $(pwd):$(pwd) \
   -w $(pwd) \
   plugins/ssh
 ```

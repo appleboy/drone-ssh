@@ -13,13 +13,14 @@ import (
 
 type (
 	Config struct {
-		Key      string        `json:"key"`
-		User     string        `json:"user"`
-		Host     []string      `json:"host"`
-		Port     int           `json:"port"`
-		Sleep    int           `json:"sleep"`
-		Timeout  time.Duration `json:"timeout"`
-		Script   []string      `json:"script"`
+		Key      string
+		User     string
+		Password string
+		Host     []string
+		Port     int
+		Sleep    int
+		Timeout  time.Duration
+		Script   []string
 	}
 
 	Plugin struct {
@@ -28,8 +29,8 @@ type (
 )
 
 func (p Plugin) Exec() error {
-	if p.Config.Key == "" {
-		return fmt.Errorf("Error: Can't connect without a private SSH key.")
+	if p.Config.Key == "" && p.Config.Password == "" {
+		return fmt.Errorf("Error: Can't connect without a private SSH key or password.")
 	}
 
 	for i, host := range p.Config.Host {
@@ -38,18 +39,28 @@ func (p Plugin) Exec() error {
 			strconv.Itoa(p.Config.Port),
 		)
 
-		signer, err := ssh.ParsePrivateKey([]byte(p.Config.Key))
+		// auths holds the detected ssh auth methods
+		auths := []ssh.AuthMethod{}
 
-		if err != nil {
-			return fmt.Errorf("Error: Failed to parse private key. %s", err)
+		if p.Config.Key != "" {
+			signer, err := ssh.ParsePrivateKey([]byte(p.Config.Key))
+
+			if err != nil {
+				return fmt.Errorf("Error: Failed to parse private key. %s", err)
+			}
+
+			auths = append(auths, ssh.PublicKeys(signer))
+		}
+
+		// figure out what auths are requested, what is supported
+		if p.Config.Password != "" {
+			auths = append(auths, ssh.Password(p.Config.Password))
 		}
 
 		config := &ssh.ClientConfig{
 			Timeout: p.Config.Timeout,
 			User:    p.Config.User,
-			Auth: []ssh.AuthMethod{
-				ssh.PublicKeys(signer),
-			},
+			Auth:    auths,
 		}
 
 		fmt.Printf("+ ssh %s@%s -p %d\n", p.Config.User, addr, p.Config.Port)
