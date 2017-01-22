@@ -11,13 +11,22 @@ pipeline:
       - go test -cover -coverprofile=coverage.out
       - go build -ldflags "-s -w -X main.build=$DRONE_BUILD_NUMBER" -a -tags netgo
 
-  latest:
+  publish:
     image: docker
     repo: plugins/ssh
+    username: ${DOCKER_USERNAME}
+    password: ${DOCKER_PASSWORD}
     tags: [ "latest", "1.0", "1" ]
     when:
       branch: master
       event: push
+
+  notify:
+      image: plugins/gitter
+      webhook: ${GITTER_WEBHOOK}
+      when:
+        status: [ success, failure ]
+        event: [ push, pull_request ]
 
 plugin:
   name: SSH
