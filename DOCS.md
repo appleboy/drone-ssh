@@ -24,25 +24,6 @@ The following secret values can be set to configure the plugin.
 * **SSH_SLEEP** - corresponds to **sleep**
 * **SSH_TIMEOUT** - corresponds to **timeout**
 
-It is highly recommended to put the **SSH_KEY** and **SSH_PASSWORD** into a secret so it is not
-exposed to users. This can be done using the drone-cli.
-
-```bash
-drone secret add --image=plugins/ssh \
-    octocat/hello-world SSH_KEY @path/to/.ssh/id_rsa
-drone secret add --image=plugins/ssh \
-    octocat/hello-world SSH_PASSWORD admin1234
-```
-
-Then sign the YAML file after all secrets are added.
-
-```bash
-drone sign octocat/hello-world
-```
-
-See [secrets](http://readme.drone.io/0.5/usage/secrets/) for additional
-information on secrets
-
 ## Examples
 
 Example configuration in your .drone.yml file for a single host:
