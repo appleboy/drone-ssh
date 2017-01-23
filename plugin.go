@@ -12,6 +12,11 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
+const (
+	missingHostOrUser    = "Error: missing server host or user"
+	missingPasswordOrKey = "Error: can't connect without a private SSH key or password"
+)
+
 type (
 	// Config for the plugin.
 	Config struct {
@@ -33,8 +38,12 @@ type (
 
 // Exec executes the plugin.
 func (p Plugin) Exec() error {
+	if len(p.Config.Host) == 0 && p.Config.User == "" {
+		return fmt.Errorf(missingHostOrUser)
+	}
+
 	if p.Config.Key == "" && p.Config.Password == "" {
-		return fmt.Errorf("Error: can't connect without a private SSH key or password")
+		return fmt.Errorf(missingPasswordOrKey)
 	}
 
 	for i, host := range p.Config.Host {
