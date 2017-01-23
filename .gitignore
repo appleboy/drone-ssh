@@ -24,6 +24,6 @@ _testmain.go
 *.prof
 .env
 
-coverage.out
+coverage.txt
 drone-ssh
 vendor
