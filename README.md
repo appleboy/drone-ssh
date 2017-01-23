@@ -1,9 +1,8 @@
+<img src="ssh.png">
+
 # drone-ssh
 
-[![Build Status](http://beta.drone.io/api/badges/drone-plugins/drone-ssh/status.svg)](http://beta.drone.io/drone-plugins/drone-ssh)
-[![Go Doc](https://godoc.org/github.com/drone-plugins/drone-ssh?status.svg)](http://godoc.org/github.com/drone-plugins/drone-ssh)
-[![Go Report](https://goreportcard.com/badge/github.com/drone-plugins/drone-ssh)](https://goreportcard.com/report/github.com/drone-plugins/drone-ssh)
-[![Join the chat at https://gitter.im/drone/drone](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/drone/drone)
+[![GoDoc](https://godoc.org/github.com/appleboy/drone-ssh?status.svg)](https://godoc.org/github.com/appleboy/drone-ssh) [![Build Status](http://drone.wu-boy.com/api/badges/appleboy/drone-ssh/status.svg)](http://drone.wu-boy.com/appleboy/drone-ssh) [![codecov](https://codecov.io/gh/appleboy/drone-ssh/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-ssh) [![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-ssh)](https://goreportcard.com/report/github.com/appleboy/drone-ssh) [![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-ssh.svg)](https://hub.docker.com/r/appleboy/drone-ssh/) [![](https://images.microbadger.com/badges/image/appleboy/drone-ssh.svg)](https://microbadger.com/images/appleboy/drone-ssh "Get your own image badge on microbadger.com")
 
 Drone plugin to execute commands on a remote host through SSH. For the usage
 information and a listing of the available options please take a look at
@@ -24,7 +23,7 @@ Build the docker image with the following commands:
 
 ```
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo
-docker build -t plugins/ssh .
+docker build -t appleboy/drone-ssh .
 ```
 
 Please note incorrectly building the image for the correct x64 linux and with
@@ -47,5 +46,5 @@ docker run --rm \
   -e PLUGIN_SCRIPT=whoami \
   -v $(pwd):$(pwd) \
   -w $(pwd) \
-  plugins/ssh
+  appleboy/drone-ssh
 ```
