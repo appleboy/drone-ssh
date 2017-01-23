@@ -1,17 +1,19 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 
+	"fmt"
 	"golang.org/x/crypto/ssh"
 )
 
 type (
+	// Config for the plugin.
 	Config struct {
 		Key      string
 		User     string
@@ -23,14 +25,16 @@ type (
 		Script   []string
 	}
 
+	// Plugin structure
 	Plugin struct {
 		Config Config
 	}
 )
 
+// Exec executes the plugin.
 func (p Plugin) Exec() error {
 	if p.Config.Key == "" && p.Config.Password == "" {
-		return fmt.Errorf("Error: Can't connect without a private SSH key or password.")
+		return fmt.Errorf("Error: can't connect without a private SSH key or password")
 	}
 
 	for i, host := range p.Config.Host {
@@ -63,7 +67,7 @@ func (p Plugin) Exec() error {
 			Auth:    auths,
 		}
 
-		fmt.Printf("+ ssh %s@%s -p %d\n", p.Config.User, addr, p.Config.Port)
+		log.Printf("+ ssh %s@%s -p %d\n", p.Config.User, addr, p.Config.Port)
 		client, err := ssh.Dial("tcp", addr, config)
 
 		if err != nil {
@@ -86,7 +90,7 @@ func (p Plugin) Exec() error {
 		}
 
 		if p.Config.Sleep != 0 && i != len(p.Config.Host)-1 {
-			fmt.Printf("+ sleep %d\n", p.Config.Sleep)
+			log.Printf("+ sleep %d\n", p.Config.Sleep)
 			time.Sleep(time.Duration(p.Config.Sleep) * time.Second)
 		}
 	}
