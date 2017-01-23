@@ -1,0 +1,78 @@
+workspace:
+  base: /srv/app
+  path: src/github.com/appleboy/drone-ssh
+
+pipeline:
+  clone:
+    image: plugins/git
+    tags: true
+
+  # restore the cache from an sftp server
+  restore_cache:
+    image: appleboy/drone-sftp-cache
+    restore: true
+    mount: [ .glide, vendor ]
+    ignore_branch: true
+
+  test:
+    image: appleboy/golang-testing
+    pull: true
+    environment:
+      TAGS: netgo
+      GOPATH: /srv/app
+    commands:
+      - make dep_install
+      - make vet
+      - make lint
+      - make test
+      - make coverage
+      - make build
+      # build binary for docker image
+      - make static_build
+    when:
+      event: [ push, tag, pull_request ]
+
+  release:
+    image: appleboy/golang-testing
+    pull: true
+    environment:
+      TAGS: netgo
+      GOPATH: /srv/app
+    commands:
+      - make release
+    when:
+      event: [ tag ]
+      branch: [ refs/tags/* ]
+
+  publish_tag:
+    image: plugins/docker
+    repo: ${DRONE_REPO}
+    tags: [ '${DRONE_TAG}' ]
+    when:
+      event: [ tag ]
+      branch: [ refs/tags/* ]
+
+  publish_latest:
+    image: plugins/docker
+    repo: ${DRONE_REPO}
+    tags: [ 'latest' ]
+    when:
+      event: [ push ]
+      branch: [ master ]
+
+  release:
+    image: plugins/github-release
+    files:
+      - dist/release/*
+    when:
+      event: [ tag ]
+      branch: [ refs/tags/* ]
+
+  # rebuild the cache on the sftp server
+  rebuild_cache:
+    image: appleboy/drone-sftp-cache
+    rebuild: true
+    mount: [ .glide, vendor ]
+    ignore_branch: true
+    when:
+      branch: master
