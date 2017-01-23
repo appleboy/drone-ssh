@@ -1,12 +1,14 @@
 package main
 
 import (
+	"log"
 	"net"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 
+	"fmt"
 	"golang.org/x/crypto/ssh"
 )
 
@@ -32,7 +34,7 @@ type (
 // Exec executes the plugin.
 func (p Plugin) Exec() error {
 	if p.Config.Key == "" && p.Config.Password == "" {
-		return errors.New("Error: can't connect without a private SSH key or password")
+		return fmt.Errorf("Error: can't connect without a private SSH key or password")
 	}
 
 	for i, host := range p.Config.Host {
@@ -48,7 +50,7 @@ func (p Plugin) Exec() error {
 			signer, err := ssh.ParsePrivateKey([]byte(p.Config.Key))
 
 			if err != nil {
-				return errors.New("Error: Failed to parse private key. %s", err)
+				return fmt.Errorf("Error: Failed to parse private key. %s", err)
 			}
 
 			auths = append(auths, ssh.PublicKeys(signer))
@@ -69,13 +71,13 @@ func (p Plugin) Exec() error {
 		client, err := ssh.Dial("tcp", addr, config)
 
 		if err != nil {
-			return errors.New("Error: Failed to dial to server. %s", err)
+			return fmt.Errorf("Error: Failed to dial to server. %s", err)
 		}
 
 		session, err := client.NewSession()
 
 		if err != nil {
-			return errors.New("Error: Failed to start a SSH session. %s", err)
+			return fmt.Errorf("Error: Failed to start a SSH session. %s", err)
 		}
 
 		defer session.Close()
