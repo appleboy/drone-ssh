@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"os"
@@ -8,7 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"fmt"
 	"golang.org/x/crypto/ssh"
 )
 

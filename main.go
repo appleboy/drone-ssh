@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -9,14 +8,22 @@ import (
 	"github.com/urfave/cli"
 )
 
-var build = "0" // build number set at compile-time
+// Version set at compile-time
+var Version = "v1.0.0-dev"
 
 func main() {
 	app := cli.NewApp()
-	app.Name = "ssh plugin"
-	app.Usage = "ssh plugin"
+	app.Name = "Drone SSH"
+	app.Usage = "Executing remote ssh commands"
+	app.Copyright = "Copyright (c) 2017 Bo-Yi Wu"
+	app.Authors = []cli.Author{
+		{
+			Name:  "Bo-Yi Wu",
+			Email: "appleboy.tw@gmail.com",
+		},
+	}
 	app.Action = run
-	app.Version = fmt.Sprintf("1.0.%s", build)
+	app.Version = Version
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:   "ssh-key",
@@ -65,6 +72,39 @@ func main() {
 			Usage: "source env file",
 		},
 	}
+
+	// Override a template
+	cli.AppHelpTemplate = `
+________                                         _________ _________ ___ ___
+\______ \_______  ____   ____   ____            /   _____//   _____//   |   \
+ |    |  \_  __ \/  _ \ /    \_/ __ \   ______  \_____  \ \_____  \/    ~    \
+ |    |   \  | \(  <_> )   |  \  ___/  /_____/  /        \/        \    Y    /
+/_______  /__|   \____/|___|  /\___  >         /_______  /_______  /\___|_  /
+        \/                  \/     \/                  \/        \/       \/
+                                                    version: {{.Version}}
+NAME:
+   {{.Name}} - {{.Usage}}
+
+USAGE:
+   {{.HelpName}} {{if .VisibleFlags}}[global options]{{end}}{{if .Commands}} command [command options]{{end}} {{if .ArgsUsage}}{{.ArgsUsage}}{{else}}[arguments...]{{end}}
+   {{if len .Authors}}
+AUTHOR:
+   {{range .Authors}}{{ . }}{{end}}
+   {{end}}{{if .Commands}}
+COMMANDS:
+{{range .Commands}}{{if not .HideHelp}}   {{join .Names ", "}}{{ "\t"}}{{.Usage}}{{ "\n" }}{{end}}{{end}}{{end}}{{if .VisibleFlags}}
+GLOBAL OPTIONS:
+   {{range .VisibleFlags}}{{.}}
+   {{end}}{{end}}{{if .Copyright }}
+COPYRIGHT:
+   {{.Copyright}}
+   {{end}}{{if .Version}}
+VERSION:
+   {{.Version}}
+   {{end}}
+REPOSITORY:
+    Github: https://github.com/appleboy/drone-ssh
+`
 
 	app.Run(os.Args)
 }
