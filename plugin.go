@@ -15,6 +15,8 @@ import (
 const (
 	missingHostOrUser    = "Error: missing server host or user"
 	missingPasswordOrKey = "Error: can't connect without a private SSH key or password"
+	unableConnectServer  = "Error: Failed to start a SSH session"
+	failParsePrivateKey  = "Error: Failed to parse private key"
 )
 
 type (
@@ -59,7 +61,7 @@ func (p Plugin) Exec() error {
 			signer, err := ssh.ParsePrivateKey([]byte(p.Config.Key))
 
 			if err != nil {
-				return fmt.Errorf("Error: Failed to parse private key. %s", err)
+				return fmt.Errorf(failParsePrivateKey)
 			}
 
 			auths = append(auths, ssh.PublicKeys(signer))
@@ -80,15 +82,10 @@ func (p Plugin) Exec() error {
 		client, err := ssh.Dial("tcp", addr, config)
 
 		if err != nil {
-			return fmt.Errorf("Error: Failed to dial to server. %s", err)
+			return fmt.Errorf(unableConnectServer)
 		}
 
-		session, err := client.NewSession()
-
-		if err != nil {
-			return fmt.Errorf("Error: Failed to start a SSH session. %s", err)
-		}
-
+		session, _ := client.NewSession()
 		defer session.Close()
 
 		session.Stdout = os.Stdout

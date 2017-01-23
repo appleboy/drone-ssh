@@ -21,6 +21,7 @@ pipeline:
       TAGS: netgo
       GOPATH: /srv/app
     commands:
+      - make ssh-server
       - make dep_install
       - make vet
       - make lint
