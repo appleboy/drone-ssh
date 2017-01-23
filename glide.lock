@@ -1,0 +1,17 @@
+hash: fa5c3a4bf7b53b8e4cbbb43fb8a33447fc7d67f8cdd7bb8a27ff66e2d0dac47a
+updated: 2017-01-23T09:33:16.187136258+08:00
+imports:
+- name: github.com/joho/godotenv
+  version: a01a834e1654b4c9ca5b3ad05159445cc9c7ad08
+  subpackages:
+  - autoload
+- name: github.com/urfave/cli
+  version: 0bdeddeeb0f650497d603c4ad7b20cfe685682f6
+- name: golang.org/x/crypto
+  version: c3b1d0d6d8690eaebe3064711b026770cc37efa3
+  subpackages:
+  - curve25519
+  - ed25519
+  - ed25519/internal/edwards25519
+  - ssh
+testImports: []
