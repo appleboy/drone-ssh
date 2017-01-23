@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net"
 	"os"
 	"strconv"
@@ -12,6 +11,7 @@ import (
 )
 
 type (
+	// Config for the plugin.
 	Config struct {
 		Key      string
 		User     string
@@ -23,14 +23,16 @@ type (
 		Script   []string
 	}
 
+	// Plugin structure
 	Plugin struct {
 		Config Config
 	}
 )
 
+// Exec executes the plugin.
 func (p Plugin) Exec() error {
 	if p.Config.Key == "" && p.Config.Password == "" {
-		return fmt.Errorf("Error: Can't connect without a private SSH key or password.")
+		return errors.New("Error: can't connect without a private SSH key or password")
 	}
 
 	for i, host := range p.Config.Host {
@@ -46,7 +48,7 @@ func (p Plugin) Exec() error {
 			signer, err := ssh.ParsePrivateKey([]byte(p.Config.Key))
 
 			if err != nil {
-				return fmt.Errorf("Error: Failed to parse private key. %s", err)
+				return errors.New("Error: Failed to parse private key. %s", err)
 			}
 
 			auths = append(auths, ssh.PublicKeys(signer))
@@ -63,17 +65,17 @@ func (p Plugin) Exec() error {
 			Auth:    auths,
 		}
 
-		fmt.Printf("+ ssh %s@%s -p %d\n", p.Config.User, addr, p.Config.Port)
+		log.Printf("+ ssh %s@%s -p %d\n", p.Config.User, addr, p.Config.Port)
 		client, err := ssh.Dial("tcp", addr, config)
 
 		if err != nil {
-			return fmt.Errorf("Error: Failed to dial to server. %s", err)
+			return errors.New("Error: Failed to dial to server. %s", err)
 		}
 
 		session, err := client.NewSession()
 
 		if err != nil {
-			return fmt.Errorf("Error: Failed to start a SSH session. %s", err)
+			return errors.New("Error: Failed to start a SSH session. %s", err)
 		}
 
 		defer session.Close()
@@ -86,7 +88,7 @@ func (p Plugin) Exec() error {
 		}
 
 		if p.Config.Sleep != 0 && i != len(p.Config.Host)-1 {
-			fmt.Printf("+ sleep %d\n", p.Config.Sleep)
+			log.Printf("+ sleep %d\n", p.Config.Sleep)
 			time.Sleep(time.Duration(p.Config.Sleep) * time.Second)
 		}
 	}
