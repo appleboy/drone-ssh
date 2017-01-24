@@ -138,14 +138,30 @@ func TestWrongKeyFormat(t *testing.T) {
 func TestSSHScriptFromKeyFile(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
-			Host:    []string{"localhost"},
+			Host:    []string{"localhost", "127.0.0.1"},
 			User:    "drone-scp",
 			Port:    22,
 			KeyPath: "./tests/.ssh/id_rsa",
 			Script:  []string{"whoami"},
+			Sleep:   1,
 		},
 	}
 
 	err := plugin.Exec()
 	assert.Nil(t, err)
+}
+
+func TestSSHScriptRunError(t *testing.T) {
+	plugin := Plugin{
+		Config: Config{
+			Host:    []string{"localhost"},
+			User:    "drone-scp",
+			Port:    22,
+			KeyPath: "./tests/.ssh/id_rsa",
+			Script:  []string{"whoami", "whoam"},
+		},
+	}
+
+	err := plugin.Exec()
+	assert.NotNil(t, err)
 }
