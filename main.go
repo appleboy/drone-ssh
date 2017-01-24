@@ -31,28 +31,28 @@ func main() {
 			EnvVar: "PLUGIN_SSH_KEY,PLUGIN_KEY,SSH_KEY",
 		},
 		cli.StringFlag{
-			Name:   "key-path",
+			Name:   "key-path,i",
 			Usage:  "ssh private key path",
 			EnvVar: "PLUGIN_KEY_PATH,SSH_KEY_PATH",
 		},
 		cli.StringFlag{
-			Name:   "user",
+			Name:   "user,u",
 			Usage:  "connect as user",
 			EnvVar: "PLUGIN_USER,SSH_USER",
 			Value:  "root",
 		},
 		cli.StringFlag{
-			Name:   "password",
+			Name:   "password,P",
 			Usage:  "user password",
 			EnvVar: "PLUGIN_PASSWORD,SSH_PASSWORD",
 		},
 		cli.StringSliceFlag{
-			Name:   "host",
+			Name:   "host,H",
 			Usage:  "connect to host",
 			EnvVar: "PLUGIN_HOST,SSH_HOST",
 		},
 		cli.IntFlag{
-			Name:   "port",
+			Name:   "port,p",
 			Usage:  "connect to port",
 			EnvVar: "PLUGIN_PORT,SSH_PORT",
 			Value:  22,
@@ -63,12 +63,12 @@ func main() {
 			EnvVar: "PLUGIN_SLEEP,SSH_SLEEP",
 		},
 		cli.DurationFlag{
-			Name:   "timeout",
+			Name:   "timeout,t",
 			Usage:  "connection timeout",
 			EnvVar: "PLUGIN_TIMEOUT,SSH_TIMEOUT",
 		},
 		cli.StringSliceFlag{
-			Name:   "script",
+			Name:   "script,s",
 			Usage:  "execute commands",
 			EnvVar: "PLUGIN_SCRIPT,SSH_SCRIPT",
 		},
