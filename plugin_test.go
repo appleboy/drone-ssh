@@ -61,7 +61,7 @@ func TestFailParsePrivateKey(t *testing.T) {
 	assert.Equal(t, failParsePrivateKey, err.Error())
 }
 
-func TestSSHScript(t *testing.T) {
+func TestSSHScriptFromRawKey(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host: []string{"localhost"},
@@ -96,6 +96,53 @@ ib4KbP5ovZlrjL++akMQ7V2fHzuQIFWnCkDA5c2ZAqzlM+ZN+HRG7gWur7Bt4XH1
 -----END RSA PRIVATE KEY-----
 `,
 			Script: []string{"whoami"},
+		},
+	}
+
+	err := plugin.Exec()
+	assert.Nil(t, err)
+}
+
+func TestWrongKeyPath(t *testing.T) {
+	plugin := Plugin{
+		Config: Config{
+			Host:    []string{"localhost"},
+			User:    "drone-scp",
+			Port:    22,
+			KeyPath: "/appleboy",
+			Script:  []string{"whoami"},
+		},
+	}
+
+	err := plugin.Exec()
+	assert.NotNil(t, err)
+	assert.Equal(t, "open /appleboy: no such file or directory", err.Error())
+}
+
+func TestWrongKeyFormat(t *testing.T) {
+	plugin := Plugin{
+		Config: Config{
+			Host:    []string{"localhost"},
+			User:    "drone-scp",
+			Port:    22,
+			KeyPath: "./tests/.ssh/id_rsa.pub",
+			Script:  []string{"whoami"},
+		},
+	}
+
+	err := plugin.Exec()
+	assert.NotNil(t, err)
+	assert.Equal(t, sshKeyNotFound, err.Error())
+}
+
+func TestSSHScriptFromKeyFile(t *testing.T) {
+	plugin := Plugin{
+		Config: Config{
+			Host:    []string{"localhost"},
+			User:    "drone-scp",
+			Port:    22,
+			KeyPath: "./tests/.ssh/id_rsa",
+			Script:  []string{"whoami"},
 		},
 	}
 

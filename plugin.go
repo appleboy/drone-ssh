@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
 	"os"
@@ -17,12 +18,14 @@ const (
 	missingPasswordOrKey = "Error: can't connect without a private SSH key or password"
 	unableConnectServer  = "Error: Failed to start a SSH session"
 	failParsePrivateKey  = "Error: Failed to parse private key"
+	sshKeyNotFound       = "ssh: no key found"
 )
 
 type (
 	// Config for the plugin.
 	Config struct {
 		Key      string
+		KeyPath  string
 		User     string
 		Password string
 		Host     []string
@@ -38,13 +41,29 @@ type (
 	}
 )
 
+// returns ssh.Signer from user you running app home path + cutted key path.
+// (ex. pubkey,err := getKeyFile("/.ssh/id_rsa") )
+func getKeyFile(keypath string) (ssh.Signer, error) {
+	buf, err := ioutil.ReadFile(keypath)
+	if err != nil {
+		return nil, err
+	}
+
+	pubkey, err := ssh.ParsePrivateKey(buf)
+	if err != nil {
+		return nil, err
+	}
+
+	return pubkey, nil
+}
+
 // Exec executes the plugin.
 func (p Plugin) Exec() error {
 	if len(p.Config.Host) == 0 && p.Config.User == "" {
 		return fmt.Errorf(missingHostOrUser)
 	}
 
-	if p.Config.Key == "" && p.Config.Password == "" {
+	if p.Config.Key == "" && p.Config.Password == "" && p.Config.KeyPath == "" {
 		return fmt.Errorf(missingPasswordOrKey)
 	}
 
@@ -56,6 +75,16 @@ func (p Plugin) Exec() error {
 
 		// auths holds the detected ssh auth methods
 		auths := []ssh.AuthMethod{}
+
+		if p.Config.KeyPath != "" {
+			pubkey, err := getKeyFile(p.Config.KeyPath)
+
+			if err != nil {
+				return err
+			}
+
+			auths = append(auths, ssh.PublicKeys(pubkey))
+		}
 
 		if p.Config.Key != "" {
 			signer, err := ssh.ParsePrivateKey([]byte(p.Config.Key))
