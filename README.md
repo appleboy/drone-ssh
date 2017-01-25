@@ -8,6 +8,8 @@ Drone plugin to execute commands on a remote host through SSH. For the usage
 information and a listing of the available options please take a look at
 [the docs](DOCS.md).
 
+**Note: Please update your image config path to `appleboy/drone-ssh` for drone. `plugins/ssh` is no longer maintained.**
+
 ## Build
 
 Build the binary with the following commands:
