@@ -107,7 +107,7 @@ func (p Plugin) Exec() error {
 			Auth:    auths,
 		}
 
-		log.Printf("+ ssh %s@%s -p %d\n", p.Config.User, addr, p.Config.Port)
+		log.Printf("+ ssh %s@%s \n", p.Config.User, addr)
 		client, err := ssh.Dial("tcp", addr, config)
 
 		if err != nil {
