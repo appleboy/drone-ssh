@@ -31,7 +31,7 @@ Example configuration in your .drone.yml file for a single host:
 ```yaml
 pipeline:
   ssh:
-    image: plugins/ssh
+    image: appleboy/drone-ssh
     host: foo.com
     user: root
     password: 1234
@@ -46,7 +46,7 @@ Example configuration in your .drone.yml file for multiple hosts:
 ```yaml
 pipeline:
   ssh:
-    image: plugins/ssh
+    image: appleboy/drone-ssh
     host:
      - foo.com
      - bar.com
