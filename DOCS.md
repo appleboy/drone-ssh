@@ -10,7 +10,6 @@ The following parameters are used to configure the plugin:
 * **user** - user to log in as on the remote machine
 * **passsword** - password to log in as on the remote machine
 * **key** - private SSH key for the remote machine
-* **sleep** - sleep for seconds between host connections
 * **timeout** - timeout for the tcp connection attempt
 * **script** - list of commands to execute
 
@@ -21,7 +20,6 @@ The following secret values can be set to configure the plugin.
 * **SSH_USER** - corresponds to **user**
 * **SSH_PASSWORD** - corresponds to **password**
 * **SSH_KEY** - corresponds to **key**
-* **SSH_SLEEP** - corresponds to **sleep**
 * **SSH_TIMEOUT** - corresponds to **timeout**
 
 ## Examples
@@ -52,7 +50,6 @@ pipeline:
      - bar.com
     user: root
     port: 22
-    sleep: 5
     script:
       - echo hello
       - echo world
@@ -62,6 +59,3 @@ In the above example Drone executes the commands on multiple hosts
 sequentially. If the commands fail on a single host this plugin exits
 immediatly, and will not run your commands on the remaining hosts in the
 list.
-
-The above example also uses the `sleep` parameter. The sleep parameter
-instructs Drone to sleep for N seconds between host executions.
