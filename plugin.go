@@ -2,23 +2,20 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net"
-	"os"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
-	"golang.org/x/crypto/ssh"
+	"github.com/appleboy/drone-ssh/easyssh"
 )
+
+var wg sync.WaitGroup
 
 const (
 	missingHostOrUser    = "Error: missing server host or user"
 	missingPasswordOrKey = "Error: can't connect without a private SSH key or password"
-	unableConnectServer  = "Error: Failed to start a SSH session"
-	failParsePrivateKey  = "Error: Failed to parse private key"
-	sshKeyNotFound       = "ssh: no key found"
 )
 
 type (
@@ -30,7 +27,6 @@ type (
 		Password string
 		Host     []string
 		Port     int
-		Sleep    int
 		Timeout  time.Duration
 		Script   []string
 	}
@@ -41,20 +37,8 @@ type (
 	}
 )
 
-// returns ssh.Signer from user you running app home path + cutted key path.
-// (ex. pubkey,err := getKeyFile("/.ssh/id_rsa") )
-func getKeyFile(keypath string) (ssh.Signer, error) {
-	buf, err := ioutil.ReadFile(keypath)
-	if err != nil {
-		return nil, err
-	}
-
-	pubkey, err := ssh.ParsePrivateKey(buf)
-	if err != nil {
-		return nil, err
-	}
-
-	return pubkey, nil
+func (p Plugin) log(host string, message ...interface{}) {
+	log.Printf("%s: %s", host, fmt.Sprintln(message...))
 }
 
 // Exec executes the plugin.
@@ -67,68 +51,49 @@ func (p Plugin) Exec() error {
 		return fmt.Errorf(missingPasswordOrKey)
 	}
 
-	for i, host := range p.Config.Host {
-		addr := net.JoinHostPort(
-			host,
-			strconv.Itoa(p.Config.Port),
-		)
-
-		// auths holds the detected ssh auth methods
-		auths := []ssh.AuthMethod{}
-
-		if p.Config.KeyPath != "" {
-			pubkey, err := getKeyFile(p.Config.KeyPath)
-
-			if err != nil {
-				return err
+	wg.Add(len(p.Config.Host))
+	errChannel := make(chan error, 1)
+	finished := make(chan bool, 1)
+	for _, host := range p.Config.Host {
+		go func(host string) {
+			// Create MakeConfig instance with remote username, server address and path to private key.
+			ssh := &easyssh.MakeConfig{
+				Server:   host,
+				User:     p.Config.User,
+				Password: p.Config.Password,
+				Port:     strconv.Itoa(p.Config.Port),
+				Key:      p.Config.Key,
+				KeyPath:  p.Config.KeyPath,
+				Timeout:  p.Config.Timeout,
 			}
 
-			auths = append(auths, ssh.PublicKeys(pubkey))
-		}
-
-		if p.Config.Key != "" {
-			signer, err := ssh.ParsePrivateKey([]byte(p.Config.Key))
+			p.log(host, "commands: ", strings.Join(p.Config.Script, "\n"))
+			response, err := ssh.Run(strings.Join(p.Config.Script, "\n"))
+			p.log(host, "outputs:", response)
 
 			if err != nil {
-				return fmt.Errorf(failParsePrivateKey)
+				errChannel <- err
 			}
 
-			auths = append(auths, ssh.PublicKeys(signer))
-		}
+			wg.Done()
+		}(host)
+	}
 
-		// figure out what auths are requested, what is supported
-		if p.Config.Password != "" {
-			auths = append(auths, ssh.Password(p.Config.Password))
-		}
+	go func() {
+		wg.Wait()
+		close(finished)
+	}()
 
-		config := &ssh.ClientConfig{
-			Timeout: p.Config.Timeout,
-			User:    p.Config.User,
-			Auth:    auths,
-		}
-
-		log.Printf("+ ssh %s@%s \n", p.Config.User, addr)
-		client, err := ssh.Dial("tcp", addr, config)
-
+	select {
+	case <-finished:
+	case err := <-errChannel:
 		if err != nil {
-			return fmt.Errorf(unableConnectServer)
-		}
-
-		session, _ := client.NewSession()
-		defer session.Close()
-
-		session.Stdout = os.Stdout
-		session.Stderr = os.Stderr
-
-		if err := session.Run(strings.Join(p.Config.Script, "\n")); err != nil {
+			log.Println("drone-ssh error: ", err)
 			return err
 		}
-
-		if p.Config.Sleep != 0 && i != len(p.Config.Host)-1 {
-			log.Printf("+ sleep %d\n", p.Config.Sleep)
-			time.Sleep(time.Duration(p.Config.Sleep) * time.Second)
-		}
 	}
+
+	log.Println("Successfully executed commnads to all host.")
 
 	return nil
 }

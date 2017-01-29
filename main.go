@@ -57,11 +57,6 @@ func main() {
 			EnvVar: "PLUGIN_PORT,SSH_PORT",
 			Value:  22,
 		},
-		cli.IntFlag{
-			Name:   "sleep",
-			Usage:  "sleep between hosts",
-			EnvVar: "PLUGIN_SLEEP,SSH_SLEEP",
-		},
 		cli.DurationFlag{
 			Name:   "timeout,t",
 			Usage:  "connection timeout",
@@ -127,7 +122,6 @@ func run(c *cli.Context) error {
 			Password: c.String("password"),
 			Host:     c.StringSlice("host"),
 			Port:     c.Int("port"),
-			Sleep:    c.Int("sleep"),
 			Timeout:  c.Duration("timeout"),
 			Script:   c.StringSlice("script"),
 		},
