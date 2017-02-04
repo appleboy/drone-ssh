@@ -6,12 +6,9 @@ package easyssh
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net"
-	"os"
-	"path/filepath"
 	"time"
 
 	"golang.org/x/crypto/ssh"
@@ -146,49 +143,4 @@ func (ssh_conf *MakeConfig) Run(command string) (outStr string, err error) {
 	}
 	// return the concatenation of all signals from the output channel
 	return outStr, err
-}
-
-// Scp uploads sourceFile to remote machine like native scp console app.
-func (ssh_conf *MakeConfig) Scp(sourceFile string) error {
-	session, err := ssh_conf.connect()
-
-	if err != nil {
-		return err
-	}
-	defer session.Close()
-
-	targetFile := filepath.Base(sourceFile)
-
-	src, srcErr := os.Open(sourceFile)
-
-	if srcErr != nil {
-		return srcErr
-	}
-
-	srcStat, statErr := src.Stat()
-
-	if statErr != nil {
-		return statErr
-	}
-
-	go func() {
-		w, _ := session.StdinPipe()
-
-		fmt.Fprintln(w, "C0644", srcStat.Size(), targetFile)
-
-		if srcStat.Size() > 0 {
-			io.Copy(w, src)
-			fmt.Fprint(w, "\x00")
-			w.Close()
-		} else {
-			fmt.Fprint(w, "\x00")
-			w.Close()
-		}
-	}()
-
-	if err := session.Run(fmt.Sprintf("scp -t %s", targetFile)); err != nil {
-		return err
-	}
-
-	return nil
 }
