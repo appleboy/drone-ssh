@@ -25,7 +25,8 @@ pipeline:
       - make dep_install
       - make vet
       - make lint
-      - make test
+      # - make test
+      - coverage all
       - make coverage
       - make build
       # build binary for docker image
