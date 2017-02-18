@@ -15,7 +15,6 @@ pipeline:
       GOPATH: /srv/app
     commands:
       - make ssh-server
-      - make dep_install
       - make vet
       - make lint
       # - make test
