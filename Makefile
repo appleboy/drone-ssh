@@ -57,12 +57,6 @@ test:
 html:
 	go tool cover -html=coverage.txt
 
-dep_install:
-	glide install
-
-dep_update:
-	glide up
-
 install: $(SOURCES)
 	go install -v -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)'
 

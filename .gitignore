@@ -26,5 +26,4 @@ _testmain.go
 
 coverage.txt
 drone-ssh
-vendor
 .cover
