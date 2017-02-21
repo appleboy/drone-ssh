@@ -42,7 +42,7 @@ Execute from the working directory:
 ```sh
 docker run --rm \
   -e PLUGIN_HOST=foo.com \
-  -e PLUGIN_USER=root \
+  -e PLUGIN_USERNAME=root \
   -e PLUGIN_KEY="$(cat ${HOME}/.ssh/id_rsa)" \
   -e PLUGIN_SCRIPT=whoami \
   -v $(pwd):$(pwd) \

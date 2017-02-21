@@ -36,9 +36,9 @@ func main() {
 			EnvVar: "PLUGIN_KEY_PATH,SSH_KEY_PATH",
 		},
 		cli.StringFlag{
-			Name:   "user,u",
+			Name:   "username,user,u",
 			Usage:  "connect as user",
-			EnvVar: "PLUGIN_USER,SSH_USER",
+			EnvVar: "PLUGIN_USERNAME,PLUGIN_USER,SSH_USERNAME",
 			Value:  "root",
 		},
 		cli.StringFlag{
@@ -118,7 +118,7 @@ func run(c *cli.Context) error {
 		Config: Config{
 			Key:      c.String("ssh-key"),
 			KeyPath:  c.String("key-path"),
-			User:     c.String("user"),
+			UserName: c.String("user"),
 			Password: c.String("password"),
 			Host:     c.StringSlice("host"),
 			Port:     c.Int("port"),

@@ -15,7 +15,7 @@ pipeline:
   ssh:
     image: appleboy/drone-ssh
     host: foo.com
-    user: root
+    username: root
     password: 1234
     port: 22
     script:
@@ -32,7 +32,7 @@ pipeline:
     host:
 +    - foo.com
 +    - bar.com
-    user: root
+    username: root
     port: 22
     script:
       - echo hello
@@ -46,7 +46,7 @@ pipeline:
   ssh:
     image: appleboy/drone-ssh
     host: foo.com
-    user: root
+    username: root
     password: 1234
     port: 22
     script:
@@ -63,7 +63,7 @@ pipeline:
   ssh:
     image: appleboy/drone-ssh
     host: foo.com
-    user: root
+    username: root
     password: 1234
     port: 22
     script:
@@ -82,7 +82,7 @@ host
 port
 : ssh port of target host
 
-user
+username
 : account for target host user
 
 password

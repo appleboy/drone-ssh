@@ -23,7 +23,7 @@ type (
 	Config struct {
 		Key      string
 		KeyPath  string
-		User     string
+		UserName string
 		Password string
 		Host     []string
 		Port     int
@@ -43,7 +43,7 @@ func (p Plugin) log(host string, message ...interface{}) {
 
 // Exec executes the plugin.
 func (p Plugin) Exec() error {
-	if len(p.Config.Host) == 0 && p.Config.User == "" {
+	if len(p.Config.Host) == 0 && p.Config.UserName == "" {
 		return fmt.Errorf(missingHostOrUser)
 	}
 
@@ -59,7 +59,7 @@ func (p Plugin) Exec() error {
 			// Create MakeConfig instance with remote username, server address and path to private key.
 			ssh := &easyssh.MakeConfig{
 				Server:   host,
-				User:     p.Config.User,
+				User:     p.Config.UserName,
 				Password: p.Config.Password,
 				Port:     strconv.Itoa(p.Config.Port),
 				Key:      p.Config.Key,
