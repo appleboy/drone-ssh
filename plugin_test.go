@@ -6,13 +6,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMissingHostOrUserName(t *testing.T) {
+func TestMissingHostOrUser(t *testing.T) {
 	plugin := Plugin{}
 
 	err := plugin.Exec()
 
 	assert.NotNil(t, err)
-	assert.Equal(t, missingHostOrUserName, err.Error())
+	assert.Equal(t, missingHostOrUser, err.Error())
 }
 
 func TestMissingKeyOrPassword(t *testing.T) {
