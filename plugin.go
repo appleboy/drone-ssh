@@ -93,7 +93,7 @@ func (p Plugin) Exec() error {
 		}
 	}
 
-	log.Println("Successfully executed commnads to all host.")
+	log.Println("Successfully executed commands to all host.")
 
 	return nil
 }
