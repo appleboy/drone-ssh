@@ -40,7 +40,7 @@ pipeline:
       - echo world
 ```
 
-Example configuration for login with private key:
+Example configuration for login with user private key:
 
 ```diff
 pipeline:
@@ -56,7 +56,7 @@ pipeline:
       - echo world
 ```
 
-Example configuration for login with file path of private key:
+Example configuration for login with file path of user private key:
 
 ```diff
 pipeline:
@@ -123,6 +123,9 @@ password
 
 key
 : plain text of user private key
+
+key_path
+: key path of user private key
 
 script
 : execute commands on a remote server
