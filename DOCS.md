@@ -33,6 +33,39 @@ pipeline:
 +    - foo.com
 +    - bar.com
     username: root
+    password: 1234
+    port: 22
+    script:
+      - echo hello
+      - echo world
+```
+
+Example configuration for login with private key:
+
+```diff
+pipeline:
+  ssh:
+    image: appleboy/drone-ssh
+    host: foo.com
+    username: root
+-   password: 1234
++   key: ${DEPLOY_KEY}
+    port: 22
+    script:
+      - echo hello
+      - echo world
+```
+
+Example configuration for login with file path of private key:
+
+```diff
+pipeline:
+  ssh:
+    image: appleboy/drone-ssh
+    host: foo.com
+    username: root
+-   password: 1234
++   key_path: ./deploy/key.pem
     port: 22
     script:
       - echo hello
