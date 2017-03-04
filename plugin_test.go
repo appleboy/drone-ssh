@@ -32,11 +32,12 @@ func TestMissingKeyOrPassword(t *testing.T) {
 func TestIncorrectPassword(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
-			Host:     []string{"localhost"},
-			UserName: "drone-scp",
-			Port:     22,
-			Password: "123456",
-			Script:   []string{"whoami"},
+			Host:           []string{"localhost"},
+			UserName:       "drone-scp",
+			Port:           22,
+			Password:       "123456",
+			Script:         []string{"whoami"},
+			CommandTimeout: 60,
 		},
 	}
 
@@ -47,9 +48,10 @@ func TestIncorrectPassword(t *testing.T) {
 func TestSSHScriptFromRawKey(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
-			Host:     []string{"localhost"},
-			UserName: "drone-scp",
-			Port:     22,
+			Host:           []string{"localhost"},
+			UserName:       "drone-scp",
+			Port:           22,
+			CommandTimeout: 60,
 			Key: `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEA4e2D/qPN08pzTac+a8ZmlP1ziJOXk45CynMPtva0rtK/RB26
 VbfAF0hIJji7ltvnYnqCU9oFfvEM33cTn7T96+od8ib/Vz25YU8ZbstqtIskPuwC
@@ -89,11 +91,12 @@ ib4KbP5ovZlrjL++akMQ7V2fHzuQIFWnCkDA5c2ZAqzlM+ZN+HRG7gWur7Bt4XH1
 func TestSSHScriptFromKeyFile(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
-			Host:     []string{"localhost", "127.0.0.1"},
-			UserName: "drone-scp",
-			Port:     22,
-			KeyPath:  "./tests/.ssh/id_rsa",
-			Script:   []string{"whoami", "ls -al"},
+			Host:           []string{"localhost", "127.0.0.1"},
+			UserName:       "drone-scp",
+			Port:           22,
+			KeyPath:        "./tests/.ssh/id_rsa",
+			Script:         []string{"whoami", "ls -al"},
+			CommandTimeout: 60,
 		},
 	}
 
@@ -120,12 +123,11 @@ func TestSSHCommandTimeOut(t *testing.T) {
 func TestSSHCommandNotFound(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
-			Host:           []string{"localhost"},
-			UserName:       "drone-scp",
-			Port:           22,
-			KeyPath:        "./tests/.ssh/id_rsa",
-			Script:         []string{"whoami1234"},
-			CommandTimeout: 1,
+			Host:     []string{"localhost"},
+			UserName: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Script:   []string{"whoami1234"},
 		},
 	}
 
