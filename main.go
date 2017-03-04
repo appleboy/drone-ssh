@@ -9,7 +9,7 @@ import (
 )
 
 // Version set at compile-time
-var Version = "v1.0.0-dev"
+var Version = "v1.1.0-dev"
 
 func main() {
 	app := cli.NewApp()
