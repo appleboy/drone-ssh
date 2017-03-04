@@ -77,6 +77,43 @@ func main() {
 			Name:  "env-file",
 			Usage: "source env file",
 		},
+		cli.StringFlag{
+			Name:   "proxy.ssh-key",
+			Usage:  "private ssh key of proxy",
+			EnvVar: "PLUGIN_PROXY_SSH_KEY,PLUGIN_PROXY_KEY,PROXY_SSH_KEY",
+		},
+		cli.StringFlag{
+			Name:   "proxy.key-path",
+			Usage:  "ssh private key path of proxy",
+			EnvVar: "PLUGIN_PROXY_KEY_PATH,PROXY_SSH_KEY_PATH",
+		},
+		cli.StringFlag{
+			Name:   "proxy.username,user",
+			Usage:  "connect as user of proxy",
+			EnvVar: "PLUGIN_PROXY_USERNAME,PLUGIN_PROXY_USER,PROXY_SSH_USERNAME",
+			Value:  "root",
+		},
+		cli.StringFlag{
+			Name:   "proxy.password",
+			Usage:  "user password of proxy",
+			EnvVar: "PLUGIN_PROXY_PASSWORD,PROXY_SSH_PASSWORD",
+		},
+		cli.StringFlag{
+			Name:   "proxy.host",
+			Usage:  "connect to host of proxy",
+			EnvVar: "PLUGIN_PROXY_HOST,PROXY_SSH_HOST",
+		},
+		cli.StringFlag{
+			Name:   "proxy.port",
+			Usage:  "connect to port of proxy",
+			EnvVar: "PLUGIN_PROXY_PORT,PROXY_SSH_PORT",
+			Value:  "22",
+		},
+		cli.DurationFlag{
+			Name:   "proxy.timeout",
+			Usage:  "proxy connection timeout",
+			EnvVar: "PLUGIN_PROXY_TIMEOUT,PROXY_SSH_TIMEOUT",
+		},
 	}
 
 	// Override a template
@@ -131,6 +168,15 @@ func run(c *cli.Context) error {
 			Timeout:        c.Duration("timeout"),
 			CommandTimeout: c.Int("command.timeout"),
 			Script:         c.StringSlice("script"),
+			Proxy: defaultConfig{
+				Key:      c.String("proxy.ssh-key"),
+				KeyPath:  c.String("proxy.key-path"),
+				User:     c.String("proxy.user"),
+				Password: c.String("proxy.password"),
+				Server:   c.String("proxy.host"),
+				Port:     c.String("proxy.port"),
+				Timeout:  c.Duration("proxy.timeout"),
+			},
 		},
 	}
 
