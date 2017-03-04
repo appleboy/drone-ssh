@@ -120,21 +120,6 @@ func TestSSHCommandTimeOut(t *testing.T) {
 	assert.NotNil(t, err)
 }
 
-func TestSSHCommandNotFound(t *testing.T) {
-	plugin := Plugin{
-		Config: Config{
-			Host:     []string{"localhost"},
-			UserName: "drone-scp",
-			Port:     22,
-			KeyPath:  "./tests/.ssh/id_rsa",
-			Script:   []string{"whoami1234"},
-		},
-	}
-
-	err := plugin.Exec()
-	assert.NotNil(t, err)
-}
-
 func TestProxyCommand(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
