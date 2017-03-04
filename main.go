@@ -88,7 +88,7 @@ func main() {
 			EnvVar: "PLUGIN_PROXY_KEY_PATH,PROXY_SSH_KEY_PATH",
 		},
 		cli.StringFlag{
-			Name:   "proxy.username,user",
+			Name:   "proxy.username",
 			Usage:  "connect as user of proxy",
 			EnvVar: "PLUGIN_PROXY_USERNAME,PLUGIN_PROXY_USER,PROXY_SSH_USERNAME",
 			Value:  "root",
