@@ -93,7 +93,7 @@ func (p Plugin) Exec() error {
 			outStr, errStr, isTimeout, err := ssh.Run(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
 			p.log(host, "outputs:", outStr)
 			if len(errStr) != 0 {
-				p.log(host, "errors:", outStr)
+				p.log(host, "errors:", errStr)
 			}
 
 			if !isTimeout {
