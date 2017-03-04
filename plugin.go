@@ -96,12 +96,12 @@ func (p Plugin) Exec() error {
 				p.log(host, "errors:", errStr)
 			}
 
-			if !isTimeout {
-				errChannel <- fmt.Errorf(commandTimeOut)
-			}
-
 			if err != nil {
 				errChannel <- err
+			}
+
+			if !isTimeout {
+				errChannel <- fmt.Errorf(commandTimeOut)
 			}
 
 			wg.Done()

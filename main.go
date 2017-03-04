@@ -171,7 +171,7 @@ func run(c *cli.Context) error {
 			Proxy: defaultConfig{
 				Key:      c.String("proxy.ssh-key"),
 				KeyPath:  c.String("proxy.key-path"),
-				User:     c.String("proxy.user"),
+				User:     c.String("proxy.username"),
 				Password: c.String("proxy.password"),
 				Server:   c.String("proxy.host"),
 				Port:     c.String("proxy.port"),
