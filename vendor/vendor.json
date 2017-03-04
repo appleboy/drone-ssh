@@ -3,12 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
-			"checksumSHA1": "NCdmzR+clcl2/1jUPn0vFeqjwjk=",
+			"checksumSHA1": "knoaYH97GvBuW65HyXhR0CQwEJ8=",
 			"path": "github.com/appleboy/easyssh-proxy",
-			"revision": "89c61a4555c1578454f75ae406f4e3cdded275d2",
-			"revisionTime": "2017-03-04T06:27:13Z",
-			"version": "=1.0.0",
-			"versionExact": "1.0.0"
+			"revision": "438121ffb50f6f6de791bceb7046e74c1d818c3d",
+			"revisionTime": "2017-03-04T08:24:35Z",
+			"version": "=1.1.0",
+			"versionExact": "1.1.0"
 		},
 		{
 			"checksumSHA1": "dvabztWVQX8f6oMLRyv4dLH+TGY=",
