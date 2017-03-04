@@ -3,6 +3,14 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "NCdmzR+clcl2/1jUPn0vFeqjwjk=",
+			"path": "github.com/appleboy/easyssh-proxy",
+			"revision": "89c61a4555c1578454f75ae406f4e3cdded275d2",
+			"revisionTime": "2017-03-04T06:27:13Z",
+			"version": "=1.0.0",
+			"versionExact": "1.0.0"
+		},
+		{
 			"checksumSHA1": "dvabztWVQX8f6oMLRyv4dLH+TGY=",
 			"path": "github.com/davecgh/go-spew/spew",
 			"revision": "346938d642f2ec3594ed81d874461961cd0faa76",
@@ -59,8 +67,14 @@
 		{
 			"checksumSHA1": "fsrFs762jlaILyqqQImS1GfvIvw=",
 			"path": "golang.org/x/crypto/ssh",
-			"revision": "453249f01cfeb54c3d549ddb75ff152ca243f9d8",
-			"revisionTime": "2017-02-08T20:51:15Z"
+			"revision": "40541ccb1c6e64c947ed6f606b8a6cb4b67d7436",
+			"revisionTime": "2017-02-12T21:20:41Z"
+		},
+		{
+			"checksumSHA1": "SJ3Ma3Ozavxpbh1usZWBCnzMKIc=",
+			"path": "golang.org/x/crypto/ssh/agent",
+			"revision": "40541ccb1c6e64c947ed6f606b8a6cb4b67d7436",
+			"revisionTime": "2017-02-12T21:20:41Z"
 		}
 	],
 	"rootPath": "github.com/appleboy/drone-ssh"

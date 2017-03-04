@@ -100,3 +100,35 @@ func TestSSHScriptFromKeyFile(t *testing.T) {
 	err := plugin.Exec()
 	assert.Nil(t, err)
 }
+
+func TestSSHCommandTimeOut(t *testing.T) {
+	plugin := Plugin{
+		Config: Config{
+			Host:           []string{"localhost"},
+			UserName:       "drone-scp",
+			Port:           22,
+			KeyPath:        "./tests/.ssh/id_rsa",
+			Script:         []string{"sleep 5"},
+			CommandTimeout: 1,
+		},
+	}
+
+	err := plugin.Exec()
+	assert.NotNil(t, err)
+}
+
+func TestSSHCommandNotFound(t *testing.T) {
+	plugin := Plugin{
+		Config: Config{
+			Host:           []string{"localhost"},
+			UserName:       "drone-scp",
+			Port:           22,
+			KeyPath:        "./tests/.ssh/id_rsa",
+			Script:         []string{"whoami1234"},
+			CommandTimeout: 1,
+		},
+	}
+
+	err := plugin.Exec()
+	assert.NotNil(t, err)
+}
