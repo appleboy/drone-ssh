@@ -16,6 +16,7 @@ var wg sync.WaitGroup
 const (
 	missingHostOrUser    = "Error: missing server host or user"
 	missingPasswordOrKey = "Error: can't connect without a private SSH key or password"
+	commandTimeOut       = "Error: command timeout"
 )
 
 type (
@@ -91,9 +92,12 @@ func (p Plugin) Exec() error {
 			p.log(host, "commands: ", strings.Join(p.Config.Script, "\n"))
 			outStr, errStr, isTimeout, err := ssh.Run(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
 			p.log(host, "outputs:", outStr)
+			if len(errStr) != 0 {
+				p.log(host, "errors:", outStr)
+			}
 
-			if !isTimeout || len(errStr) != 0 {
-				errChannel <- fmt.Errorf(errStr)
+			if !isTimeout {
+				errChannel <- fmt.Errorf(commandTimeOut)
 			}
 
 			if err != nil {
