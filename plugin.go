@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/appleboy/drone-ssh/easyssh"
+	"github.com/appleboy/easyssh-proxy"
 )
 
 var wg sync.WaitGroup
@@ -21,14 +21,15 @@ const (
 type (
 	// Config for the plugin.
 	Config struct {
-		Key      string
-		KeyPath  string
-		UserName string
-		Password string
-		Host     []string
-		Port     int
-		Timeout  time.Duration
-		Script   []string
+		Key            string
+		KeyPath        string
+		UserName       string
+		Password       string
+		Host           []string
+		Port           int
+		Timeout        time.Duration
+		CommandTimeout int
+		Script         []string
 	}
 
 	// Plugin structure
@@ -68,8 +69,12 @@ func (p Plugin) Exec() error {
 			}
 
 			p.log(host, "commands: ", strings.Join(p.Config.Script, "\n"))
-			response, err := ssh.Run(strings.Join(p.Config.Script, "\n"))
-			p.log(host, "outputs:", response)
+			outStr, errStr, isTimeout, err := ssh.Run(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
+			p.log(host, "outputs:", outStr)
+
+			if !isTimeout || len(errStr) != 0 {
+				errChannel <- fmt.Errorf(errStr)
+			}
 
 			if err != nil {
 				errChannel <- err

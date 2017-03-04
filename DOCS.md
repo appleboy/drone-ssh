@@ -72,6 +72,22 @@ pipeline:
       - echo world
 ```
 
+Example configuration for command timeout (unit: second), default value is 60 seconds:
+
+```diff
+pipeline:
+  ssh:
+    image: appleboy/drone-ssh
+    host: foo.com
+    username: root
+    password: 1234
+    port: 22
++   command_timeout: 10
+    script:
+      - echo hello
+      - echo world
+```
+
 Example configuration for success build:
 
 ```diff
@@ -132,3 +148,6 @@ script
 
 timeout
 : Timeout is the maximum amount of time for the TCP connection to establish.
+
+command_timeout
+: Command timeout is the maximum amount of time for the execute commands, default is 60 secs.

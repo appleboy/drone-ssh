@@ -62,6 +62,12 @@ func main() {
 			Usage:  "connection timeout",
 			EnvVar: "PLUGIN_TIMEOUT,SSH_TIMEOUT",
 		},
+		cli.IntFlag{
+			Name:   "command.timeout,T",
+			Usage:  "command timeout",
+			EnvVar: "PLUGIN_COMMAND_TIMEOUT,SSH_COMMAND_TIMEOUT",
+			Value:  60,
+		},
 		cli.StringSliceFlag{
 			Name:   "script,s",
 			Usage:  "execute commands",
@@ -116,14 +122,15 @@ func run(c *cli.Context) error {
 
 	plugin := Plugin{
 		Config: Config{
-			Key:      c.String("ssh-key"),
-			KeyPath:  c.String("key-path"),
-			UserName: c.String("user"),
-			Password: c.String("password"),
-			Host:     c.StringSlice("host"),
-			Port:     c.Int("port"),
-			Timeout:  c.Duration("timeout"),
-			Script:   c.StringSlice("script"),
+			Key:            c.String("ssh-key"),
+			KeyPath:        c.String("key-path"),
+			UserName:       c.String("user"),
+			Password:       c.String("password"),
+			Host:           c.StringSlice("host"),
+			Port:           c.Int("port"),
+			Timeout:        c.Duration("timeout"),
+			CommandTimeout: c.Int("command.timeout"),
+			Script:         c.StringSlice("script"),
 		},
 	}
 
