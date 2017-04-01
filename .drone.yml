@@ -37,6 +37,7 @@ pipeline:
     when:
       event: [ tag ]
       branch: [ refs/tags/* ]
+      local: false
 
   publish_tag:
     image: plugins/docker
@@ -45,6 +46,7 @@ pipeline:
     when:
       event: [ tag ]
       branch: [ refs/tags/* ]
+      local: false
 
   publish_latest:
     image: plugins/docker
@@ -53,6 +55,7 @@ pipeline:
     when:
       event: [ push ]
       branch: [ master ]
+      local: false
 
   release:
     image: plugins/github-release
@@ -61,3 +64,4 @@ pipeline:
     when:
       event: [ tag ]
       branch: [ refs/tags/* ]
+      local: false
