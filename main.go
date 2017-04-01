@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"github.com/appleboy/easyssh-proxy"
 	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/urfave/cli"
@@ -168,7 +169,7 @@ func run(c *cli.Context) error {
 			Timeout:        c.Duration("timeout"),
 			CommandTimeout: c.Int("command.timeout"),
 			Script:         c.StringSlice("script"),
-			Proxy: defaultConfig{
+			Proxy: easyssh.DefaultConfig{
 				Key:      c.String("proxy.ssh-key"),
 				KeyPath:  c.String("proxy.key-path"),
 				User:     c.String("proxy.username"),
