@@ -20,16 +20,6 @@ const (
 )
 
 type (
-	defaultConfig struct {
-		User     string
-		Server   string
-		Key      string
-		KeyPath  string
-		Port     string
-		Password string
-		Timeout  time.Duration
-	}
-
 	// Config for the plugin.
 	Config struct {
 		Key            string
@@ -41,7 +31,7 @@ type (
 		Timeout        time.Duration
 		CommandTimeout int
 		Script         []string
-		Proxy          defaultConfig
+		Proxy          easyssh.DefaultConfig
 	}
 
 	// Plugin structure
@@ -78,7 +68,7 @@ func (p Plugin) Exec() error {
 				Key:      p.Config.Key,
 				KeyPath:  p.Config.KeyPath,
 				Timeout:  p.Config.Timeout,
-				Proxy: defaultConfig{
+				Proxy: easyssh.DefaultConfig{
 					Server:   p.Config.Proxy.Server,
 					User:     p.Config.Proxy.User,
 					Password: p.Config.Proxy.Password,

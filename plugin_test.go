@@ -3,6 +3,7 @@ package main
 import (
 	"testing"
 
+	"github.com/appleboy/easyssh-proxy"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -129,7 +130,7 @@ func TestProxyCommand(t *testing.T) {
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"whoami"},
 			CommandTimeout: 1,
-			Proxy: defaultConfig{
+			Proxy: easyssh.DefaultConfig{
 				Server:  "localhost",
 				User:    "drone-scp",
 				Port:    "22",
