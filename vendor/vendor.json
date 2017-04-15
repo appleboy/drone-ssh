@@ -3,12 +3,12 @@
 	"ignore": "test",
 	"package": [
 		{
-			"checksumSHA1": "KzIglkvAb68+jcmwajNkQLwa1R0=",
+			"checksumSHA1": "L3PugNJJOEpRmRbD+27LgTZC2E4=",
 			"path": "github.com/appleboy/easyssh-proxy",
-			"revision": "b5f58761a17ac54f2b0008fb8dcc883c73bf289d",
-			"revisionTime": "2017-03-14T07:47:33Z",
-			"version": "1.1.1",
-			"versionExact": "1.1.1"
+			"revision": "a13ed86767b8e8a24d8147a4909a702e7cf6b465",
+			"revisionTime": "2017-04-14T13:46:38Z",
+			"version": "1.1.2",
+			"versionExact": "1.1.2"
 		},
 		{
 			"checksumSHA1": "dvabztWVQX8f6oMLRyv4dLH+TGY=",
@@ -65,10 +65,10 @@
 			"revisionTime": "2017-02-08T20:51:15Z"
 		},
 		{
-			"checksumSHA1": "fsrFs762jlaILyqqQImS1GfvIvw=",
+			"checksumSHA1": "8sVsMTphul+B0sI0qAv4TE1ZxUk=",
 			"path": "golang.org/x/crypto/ssh",
-			"revision": "40541ccb1c6e64c947ed6f606b8a6cb4b67d7436",
-			"revisionTime": "2017-02-12T21:20:41Z"
+			"revision": "cbc3d0884eac986df6e78a039b8792e869bff863",
+			"revisionTime": "2017-04-09T18:29:52Z"
 		},
 		{
 			"checksumSHA1": "SJ3Ma3Ozavxpbh1usZWBCnzMKIc=",
