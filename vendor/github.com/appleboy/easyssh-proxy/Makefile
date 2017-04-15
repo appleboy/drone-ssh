@@ -1,11 +1,29 @@
-.PHONY: test drone-ssh build fmt vet errcheck lint install update release-dirs release-build release-copy release-check release coverage embedmd
+.PHONY: test drone-ssh fmt vet errcheck lint install update coverage embedmd
 
+GOFMT ?= gofmt "-s"
+
+GOFILES := find . -name "*.go" -type f -not -path "./vendor/*"
 PACKAGES ?= $(shell go list ./... | grep -v /vendor/)
 
-all: build
+all: install lint
+
+install:
+	@hash govendor > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
+		go get -u github.com/kardianos/govendor; \
+	fi
+	govendor sync
 
 fmt:
-	find . -name "*.go" -type f -not -path "./vendor/*" | xargs gofmt -s -w
+	$(GOFILES) | xargs $(GOFMT) -w
+
+.PHONY: fmt-check
+fmt-check:
+	# get all go files and run go fmt on them
+	@files=$$($(GOFILES) | xargs $(GOFMT) -l); if [ -n "$$files" ]; then \
+		echo "Please run 'make fmt' and commit the result:"; \
+		echo "$${files}"; \
+		exit 1; \
+		fi;
 
 vet:
 	go vet $(PACKAGES)
@@ -34,7 +52,7 @@ embedmd:
 	fi
 	embedmd -d *.md
 
-test:
+test: fmt-check
 	for PKG in $(PACKAGES); do go test -v -cover -coverprofile $$GOPATH/src/$$PKG/coverage.txt $$PKG || exit 1; done;
 
 html:
