@@ -59,6 +59,7 @@ pipeline:
 
   release:
     image: plugins/github-release
+    api_key: ${GITHUB_RELEASE_API_KEY}
     files:
       - dist/release/*
     when:
