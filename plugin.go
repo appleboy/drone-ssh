@@ -17,6 +17,7 @@ const (
 	missingHostOrUser    = "Error: missing server host or user"
 	missingPasswordOrKey = "Error: can't connect without a private SSH key or password"
 	commandTimeOut       = "Error: command timeout"
+	setPasswordandKey    = "can't set password and key at the same time"
 )
 
 type (
@@ -46,12 +47,16 @@ func (p Plugin) log(host string, message ...interface{}) {
 
 // Exec executes the plugin.
 func (p Plugin) Exec() error {
-	if len(p.Config.Host) == 0 && p.Config.UserName == "" {
+	if len(p.Config.Host) == 0 && len(p.Config.UserName) == 0 {
 		return fmt.Errorf(missingHostOrUser)
 	}
 
-	if p.Config.Key == "" && p.Config.Password == "" && p.Config.KeyPath == "" {
+	if len(p.Config.Key) == 0 && len(p.Config.Password) == 0 && len(p.Config.KeyPath) == 0 {
 		return fmt.Errorf(missingPasswordOrKey)
+	}
+
+	if len(p.Config.Key) != 0 && len(p.Config.Password) != 0 {
+		return fmt.Errorf(setPasswordandKey)
 	}
 
 	wg.Add(len(p.Config.Host))
