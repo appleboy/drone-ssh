@@ -46,6 +46,7 @@ pipeline:
     image: plugins/docker
     repo: ${DRONE_REPO}
     tags: [ '${DRONE_TAG}' ]
+    secrets: [ docker_username, docker_password ]
     when:
       event: [ tag ]
       branch: [ refs/tags/* ]
@@ -55,6 +56,7 @@ pipeline:
     image: plugins/docker
     repo: ${DRONE_REPO}
     tags: [ 'latest' ]
+    secrets: [ docker_username, docker_password ]
     when:
       event: [ push ]
       branch: [ master ]
@@ -62,7 +64,7 @@ pipeline:
 
   release:
     image: plugins/github-release
-    api_key: ${GITHUB_RELEASE_API_KEY}
+    secrets: [ github_token ]
     files:
       - dist/release/*
     when:
