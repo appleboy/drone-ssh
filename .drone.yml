@@ -2,17 +2,20 @@ workspace:
   base: /srv/app
   path: src/github.com/appleboy/drone-ssh
 
-pipeline:
-  clone:
+clone:
+  git:
     image: plugins/git
+    depth: 50
     tags: true
 
+pipeline:
   test:
     image: appleboy/golang-testing
     pull: true
     environment:
       TAGS: netgo
       GOPATH: /srv/app
+    secrets: [ codecov_token ]
     commands:
       - make ssh-server
       - make vet
