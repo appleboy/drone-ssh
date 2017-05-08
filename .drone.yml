@@ -29,6 +29,16 @@ pipeline:
     when:
       event: [ push, tag, pull_request ]
 
+  publish_latest:
+    image: plugins/docker
+    repo: ${DRONE_REPO}
+    tags: [ 'latest' ]
+    secrets: [ docker_username, docker_password ]
+    when:
+      event: [ push ]
+      branch: [ master ]
+      local: false
+
   release:
     image: appleboy/golang-testing
     pull: true
@@ -47,24 +57,16 @@ pipeline:
     repo: ${DRONE_REPO}
     tags: [ '${DRONE_TAG}' ]
     secrets: [ docker_username, docker_password ]
+    group: release
     when:
       event: [ tag ]
       branch: [ refs/tags/* ]
       local: false
 
-  publish_latest:
-    image: plugins/docker
-    repo: ${DRONE_REPO}
-    tags: [ 'latest' ]
-    secrets: [ docker_username, docker_password ]
-    when:
-      event: [ push ]
-      branch: [ master ]
-      local: false
-
-  release:
+  release_tag:
     image: plugins/github-release
-    secrets: [ github_token ]
+    secrets: [ github_release_api_key ]
+    group: release
     files:
       - dist/release/*
     when:
