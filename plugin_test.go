@@ -121,6 +121,23 @@ func TestSSHScriptFromKeyFile(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func TestSSHScriptWithError(t *testing.T) {
+	plugin := Plugin{
+		Config: Config{
+			Host:           []string{"localhost", "127.0.0.1"},
+			UserName:       "drone-scp",
+			Port:           22,
+			KeyPath:        "./tests/.ssh/id_rsa",
+			Script:         []string{"exit 1"},
+			CommandTimeout: 60,
+		},
+	}
+
+	err := plugin.Exec()
+	// Process exited with status 1
+	assert.NotNil(t, err)
+}
+
 func TestSSHCommandTimeOut(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
