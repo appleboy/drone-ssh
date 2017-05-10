@@ -9,7 +9,7 @@ information and a listing of the available options please take a look at [the do
 
 **Note: Please update your image config path to `appleboy/drone-ssh` for drone. `plugins/ssh` is no longer maintained.**
 
-![demo](./screenshot/demo2017.gif)
+![demo](./screenshot/demo2017.05.10.gif)
 ## Build
 
 Build the binary with the following commands:
