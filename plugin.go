@@ -96,9 +96,9 @@ func (p Plugin) Exec() error {
 					case isTimeout = <-doneChan:
 						stillGoing = false
 					case outline := <-stdoutChan:
-						p.log(host, "outputs:", outline)
+						p.log(host, "out:", outline)
 					case errline := <-stderrChan:
-						p.log(host, "errors:", errline)
+						p.log(host, "err:", errline)
 					case err = <-errChan:
 					}
 				}
