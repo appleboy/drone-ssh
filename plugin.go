@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 	"sync"
@@ -131,12 +130,14 @@ func (p Plugin) Exec() error {
 	case <-finished:
 	case err := <-errChannel:
 		if err != nil {
-			log.Println("drone-ssh error: ", err)
+			fmt.Println("drone-ssh error: ", err)
 			return err
 		}
 	}
 
-	log.Println("Successfully executed commands to all host.")
+	fmt.Println("==========================================")
+	fmt.Println("Successfully executed commands to all host.")
+	fmt.Println("==========================================")
 
 	return nil
 }
