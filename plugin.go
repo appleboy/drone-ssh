@@ -11,8 +11,6 @@ import (
 	"github.com/appleboy/easyssh-proxy"
 )
 
-var wg sync.WaitGroup
-
 const (
 	missingHostOrUser    = "Error: missing server host or user"
 	missingPasswordOrKey = "Error: can't connect without a private SSH key or password"
@@ -59,6 +57,7 @@ func (p Plugin) Exec() error {
 		return fmt.Errorf(setPasswordandKey)
 	}
 
+	wg := sync.WaitGroup{}
 	wg.Add(len(p.Config.Host))
 	errChannel := make(chan error, 1)
 	finished := make(chan bool, 1)
@@ -85,18 +84,34 @@ func (p Plugin) Exec() error {
 			}
 
 			p.log(host, "commands: ", strings.Join(p.Config.Script, "\n"))
-			outStr, errStr, isTimeout, err := ssh.Run(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
-			p.log(host, "outputs:", outStr)
-			if len(errStr) != 0 {
-				p.log(host, "errors:", errStr)
-			}
-
+			stdoutChan, stderrChan, doneChan, errChan, err := ssh.Stream(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
 			if err != nil {
 				errChannel <- err
-			}
+			} else {
+				// read from the output channel until the done signal is passed
+				stillGoing := true
+				isTimeout := true
+				for stillGoing {
+					select {
+					case isTimeout = <-doneChan:
+						stillGoing = false
+					case outline := <-stdoutChan:
+						p.log(host, "outputs:", outline)
+					case errline := <-stderrChan:
+						p.log(host, "errors:", errline)
+					case err = <-errChan:
+					}
+				}
 
-			if !isTimeout {
-				errChannel <- fmt.Errorf(commandTimeOut)
+				// get exit code or command error.
+				if err != nil {
+					errChannel <- err
+				}
+
+				// command time out
+				if !isTimeout {
+					errChannel <- fmt.Errorf(commandTimeOut)
+				}
 			}
 
 			wg.Done()
