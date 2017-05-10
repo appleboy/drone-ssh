@@ -40,7 +40,11 @@ type (
 )
 
 func (p Plugin) log(host string, message ...interface{}) {
-	fmt.Printf("%s: %s", host, fmt.Sprintln(message...))
+	if len(host) == 0 {
+		fmt.Printf("%s", fmt.Sprintln(message...))
+	} else {
+		fmt.Printf("%s: %s", host, fmt.Sprintln(message...))
+	}
 }
 
 // Exec executes the plugin.
@@ -61,8 +65,12 @@ func (p Plugin) Exec() error {
 	wg.Add(len(p.Config.Host))
 	errChannel := make(chan error, 1)
 	finished := make(chan bool, 1)
+	countHosts := len(p.Config.Host)
 	for _, host := range p.Config.Host {
-		go func(host string) {
+		go func(host string, counts int) {
+			if counts == 1 {
+				host = ""
+			}
 			// Create MakeConfig instance with remote username, server address and path to private key.
 			ssh := &easyssh.MakeConfig{
 				Server:   host,
@@ -115,7 +123,7 @@ func (p Plugin) Exec() error {
 			}
 
 			wg.Done()
-		}(host)
+		}(host, countHosts)
 	}
 
 	go func() {
