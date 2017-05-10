@@ -40,7 +40,7 @@ type (
 )
 
 func (p Plugin) log(host string, message ...interface{}) {
-	log.Printf("%s: %s", host, fmt.Sprintln(message...))
+	fmt.Printf("%s: %s", host, fmt.Sprintln(message...))
 }
 
 // Exec executes the plugin.
