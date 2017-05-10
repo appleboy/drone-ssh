@@ -40,7 +40,11 @@ type (
 )
 
 func (p Plugin) log(host string, message ...interface{}) {
-	fmt.Printf("%s: %s", host, fmt.Sprintln(message...))
+	if count := len(p.Config.Host); count == 1 {
+		fmt.Printf("%s", fmt.Sprintln(message...))
+	} else {
+		fmt.Printf("%s: %s", host, fmt.Sprintln(message...))
+	}
 }
 
 // Exec executes the plugin.
