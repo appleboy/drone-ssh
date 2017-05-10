@@ -68,9 +68,6 @@ func (p Plugin) Exec() error {
 	countHosts := len(p.Config.Host)
 	for _, host := range p.Config.Host {
 		go func(host string, counts int) {
-			if counts == 1 {
-				host = ""
-			}
 			// Create MakeConfig instance with remote username, server address and path to private key.
 			ssh := &easyssh.MakeConfig{
 				Server:   host,
@@ -99,6 +96,10 @@ func (p Plugin) Exec() error {
 				// read from the output channel until the done signal is passed
 				stillGoing := true
 				isTimeout := true
+				// hide host in log if only single host in config.
+				if counts == 1 {
+					host = ""
+				}
 				for stillGoing {
 					select {
 					case isTimeout = <-doneChan:
