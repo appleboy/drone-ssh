@@ -121,6 +121,22 @@ func TestSSHScriptFromKeyFile(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func TestStreamFromSSHCommand(t *testing.T) {
+	plugin := Plugin{
+		Config: Config{
+			Host:           []string{"localhost", "127.0.0.1"},
+			UserName:       "drone-scp",
+			Port:           22,
+			KeyPath:        "./tests/.ssh/id_rsa",
+			Script:         []string{"whoami", "for i in {1..5}; do echo ${i}; sleep 1; done", "echo 'done'"},
+			CommandTimeout: 60,
+		},
+	}
+
+	err := plugin.Exec()
+	assert.Nil(t, err)
+}
+
 func TestSSHScriptWithError(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{

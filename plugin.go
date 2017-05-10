@@ -85,20 +85,34 @@ func (p Plugin) Exec() error {
 			}
 
 			p.log(host, "commands: ", strings.Join(p.Config.Script, "\n"))
-			outStr, errStr, isTimeout, err := ssh.Run(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
-			p.log(host, "outputs:", outStr)
-			if len(errStr) != 0 {
-				p.log(host, "errors:", errStr)
+			stdoutChan, stderrChan, doneChan, errChan, err := ssh.Stream(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
+			if err != nil {
+				errChannel <- err
+			}
+			// read from the output channel until the done signal is passed
+			stillGoing := true
+			isTimeout := true
+			for stillGoing {
+				select {
+				case isTimeout = <-doneChan:
+					stillGoing = false
+				case outline := <-stdoutChan:
+					p.log(host, "outputs:", outline)
+				case errline := <-stderrChan:
+					p.log(host, "errors:", errline)
+				case err = <-errChan:
+				}
 			}
 
+			// get exit code or command error.
 			if err != nil {
 				errChannel <- err
 			}
 
+			// command time out
 			if !isTimeout {
 				errChannel <- fmt.Errorf(commandTimeOut)
 			}
-
 			wg.Done()
 		}(host)
 	}
