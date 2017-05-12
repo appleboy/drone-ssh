@@ -191,3 +191,19 @@ func TestProxyCommand(t *testing.T) {
 	err := plugin.Exec()
 	assert.Nil(t, err)
 }
+
+func TestSSHCommandError(t *testing.T) {
+	plugin := Plugin{
+		Config: Config{
+			Host:           []string{"localhost"},
+			UserName:       "drone-scp",
+			Port:           22,
+			KeyPath:        "./tests/.ssh/id_rsa",
+			Script:         []string{"mkdir a", "mkdir a"},
+			CommandTimeout: 60,
+		},
+	}
+
+	err := plugin.Exec()
+	assert.NotNil(t, err)
+}
