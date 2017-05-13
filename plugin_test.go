@@ -207,3 +207,25 @@ func TestSSHCommandError(t *testing.T) {
 	err := plugin.Exec()
 	assert.NotNil(t, err)
 }
+
+func TestSSHCommandExitCodeError(t *testing.T) {
+	plugin := Plugin{
+		Config: Config{
+			Host:     []string{"localhost"},
+			UserName: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Script: []string{
+				"set -e",
+				"echo 1",
+				"mkdir a",
+				"mkdir a",
+				"echo 2",
+			},
+			CommandTimeout: 60,
+		},
+	}
+
+	err := plugin.Exec()
+	assert.NotNil(t, err)
+}
