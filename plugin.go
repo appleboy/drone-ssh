@@ -92,12 +92,12 @@ func (p Plugin) Exec() error {
 				errChannel <- err
 			} else {
 				// read from the output channel until the done signal is passed
-				stillGoing := true
 				isTimeout := true
-				for stillGoing {
+			loop:
+				for {
 					select {
 					case isTimeout = <-doneChan:
-						stillGoing = false
+						break loop
 					case outline := <-stdoutChan:
 						p.log(host, "out:", outline)
 					case errline := <-stderrChan:
