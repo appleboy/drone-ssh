@@ -21,6 +21,7 @@ pipeline:
       - make vet
       - make lint
       # - make test
+      - make test-vendor
       - coverage all
       - make coverage
       - make build
