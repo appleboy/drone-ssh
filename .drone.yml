@@ -74,3 +74,11 @@ pipeline:
       event: [ tag ]
       branch: [ refs/tags/* ]
       local: false
+
+  facebook:
+    image: appleboy/drone-facebook
+    secrets: [ fb_page_token, fb_verify_token ]
+    pull: true
+    to: 1234973386524610
+    when:
+      status: [ changed, failure ]
