@@ -88,9 +88,9 @@ func (p Plugin) Exec() error {
 			}
 
 			// expand DRONE env variables in script (like DRONE_DEPLOY_TO)
-			for index, _ := range p.Config.Script {
+			for index := range p.Config.Script {
 				parts := strings.Split(p.Config.Script[index], " ")
-				for i, _ := range parts {
+				for i := range parts {
 					if strings.Contains(parts[i], "DRONE") {
 						parts[i] = os.ExpandEnv(parts[i])
 					}
