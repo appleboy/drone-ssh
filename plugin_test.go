@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"testing"
 
 	"github.com/appleboy/easyssh-proxy"
@@ -129,6 +130,23 @@ func TestStreamFromSSHCommand(t *testing.T) {
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"whoami", "for i in {1..5}; do echo ${i}; sleep 1; done", "echo 'done'"},
+			CommandTimeout: 60,
+		},
+	}
+
+	err := plugin.Exec()
+	assert.Nil(t, err)
+}
+
+func TestDroneEnvSubstitution(t *testing.T) {
+	os.Setenv("DRONE_DEPLOY_TO", "dev")
+	plugin := Plugin{
+		Config: Config{
+			Host:           []string{"localhost", "127.0.0.1"},
+			UserName:       "drone-scp",
+			Port:           22,
+			KeyPath:        "./tests/.ssh/id_rsa",
+			Script:         []string{"echo $DRONE_DEPLOY_TO $PATH"},
 			CommandTimeout: 60,
 		},
 	}

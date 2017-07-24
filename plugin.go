@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -84,6 +85,17 @@ func (p Plugin) Exec() error {
 					KeyPath:  p.Config.Proxy.KeyPath,
 					Timeout:  p.Config.Proxy.Timeout,
 				},
+			}
+
+			// expand DRONE env variables in script (like DRONE_DEPLOY_TO)
+			for index := range p.Config.Script {
+				parts := strings.Split(p.Config.Script[index], " ")
+				for i := range parts {
+					if strings.Contains(parts[i], "DRONE") {
+						parts[i] = os.ExpandEnv(parts[i])
+					}
+				}
+				p.Config.Script[index] = strings.Join(parts, " ")
 			}
 
 			p.log(host, "commands: ", strings.Join(p.Config.Script, "\n"))
