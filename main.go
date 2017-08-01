@@ -115,6 +115,16 @@ func main() {
 			Usage:  "proxy connection timeout",
 			EnvVar: "PLUGIN_PROXY_TIMEOUT,PROXY_SSH_TIMEOUT",
 		},
+		cli.StringSliceFlag{
+			Name:   "secrets",
+			Usage:  "plugin secret",
+			EnvVar: "PLUGIN_SECRETS",
+		},
+		cli.StringSliceFlag{
+			Name:   "envs",
+			Usage:  "Pass envs",
+			EnvVar: "PLUGIN_ENVS",
+		},
 	}
 
 	// Override a template
@@ -169,6 +179,8 @@ func run(c *cli.Context) error {
 			Timeout:        c.Duration("timeout"),
 			CommandTimeout: c.Int("command.timeout"),
 			Script:         c.StringSlice("script"),
+			Secrets:        c.StringSlice("secrets"),
+			Envs:           c.StringSlice("envs"),
 			Proxy: easyssh.DefaultConfig{
 				Key:      c.String("proxy.ssh-key"),
 				KeyPath:  c.String("proxy.key-path"),

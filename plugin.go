@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -29,6 +30,8 @@ type (
 		Timeout        time.Duration
 		CommandTimeout int
 		Script         []string
+		Secrets        []string
+		Envs           []string
 		Proxy          easyssh.DefaultConfig
 	}
 
@@ -85,6 +88,15 @@ func (p Plugin) Exec() error {
 					Timeout:  p.Config.Proxy.Timeout,
 				},
 			}
+
+			env := []string{}
+			for _, key := range p.Config.Envs {
+				val := os.Getenv(key)
+				val = strings.Replace(val, " ", "", -1)
+				env = append(env, key+"="+val)
+			}
+
+			p.Config.Script = append(env, p.Config.Script...)
 
 			p.log(host, "commands: ", strings.Join(p.Config.Script, "\n"))
 			stdoutChan, stderrChan, doneChan, errChan, err := ssh.Stream(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
