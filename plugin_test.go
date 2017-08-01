@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"testing"
 
 	"github.com/appleboy/easyssh-proxy"
@@ -228,4 +229,29 @@ func TestSSHCommandExitCodeError(t *testing.T) {
 
 	err := plugin.Exec()
 	assert.NotNil(t, err)
+}
+
+func TestSetENV(t *testing.T) {
+	os.Setenv("FOO", "1")
+	plugin := Plugin{
+		Config: Config{
+			Host:           []string{"localhost"},
+			UserName:       "drone-scp",
+			Port:           22,
+			KeyPath:        "./tests/.ssh/id_rsa",
+			Secrets:        []string{"FOO"},
+			Envs:           []string{"FOO"},
+			Script:         []string{"whoami; echo $FOO"},
+			CommandTimeout: 1,
+			Proxy: easyssh.DefaultConfig{
+				Server:  "localhost",
+				User:    "drone-scp",
+				Port:    "22",
+				KeyPath: "./tests/.ssh/id_rsa",
+			},
+		},
+	}
+
+	err := plugin.Exec()
+	assert.Nil(t, err)
 }
