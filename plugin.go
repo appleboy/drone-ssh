@@ -33,6 +33,7 @@ type (
 		Secrets        []string
 		Envs           []string
 		Proxy          easyssh.DefaultConfig
+		Debug          bool
 	}
 
 	// Plugin structure
@@ -89,6 +90,10 @@ func (p Plugin) Exec() error {
 				},
 			}
 
+			p.log(host, "======CMD======")
+			p.log(host, strings.Join(p.Config.Script, "\n"))
+			p.log(host, "======END======")
+
 			env := []string{}
 			for _, key := range p.Config.Envs {
 				key = strings.ToUpper(key)
@@ -99,7 +104,12 @@ func (p Plugin) Exec() error {
 
 			p.Config.Script = append(env, p.Config.Script...)
 
-			p.log(host, "commands: ", strings.Join(p.Config.Script, "\n"))
+			if p.Config.Debug {
+				p.log(host, "======ENV======")
+				p.log(host, strings.Join(env, "\n"))
+				p.log(host, "======END======")
+			}
+
 			stdoutChan, stderrChan, doneChan, errChan, err := ssh.Stream(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
 			if err != nil {
 				errChannel <- err

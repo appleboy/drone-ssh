@@ -241,6 +241,7 @@ func TestSetENV(t *testing.T) {
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Secrets:        []string{"FOO"},
 			Envs:           []string{"FOO"},
+			Debug:          true,
 			Script:         []string{"whoami; echo $FOO"},
 			CommandTimeout: 1,
 			Proxy: easyssh.DefaultConfig{
