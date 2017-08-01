@@ -91,7 +91,7 @@ func (p Plugin) Exec() error {
 
 			env := []string{}
 			for _, key := range p.Config.Envs {
-				val := os.Getenv(key)
+				val := os.Getenv(strings.ToUpper(key))
 				val = strings.Replace(val, " ", "", -1)
 				env = append(env, key+"="+val)
 			}
