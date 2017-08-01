@@ -125,6 +125,11 @@ func main() {
 			Usage:  "Pass envs",
 			EnvVar: "PLUGIN_ENVS",
 		},
+		cli.BoolFlag{
+			Name:   "debug",
+			Usage:  "debug mode",
+			EnvVar: "PLUGIN_DEBUG",
+		},
 	}
 
 	// Override a template
@@ -181,6 +186,7 @@ func run(c *cli.Context) error {
 			Script:         c.StringSlice("script"),
 			Secrets:        c.StringSlice("secrets"),
 			Envs:           c.StringSlice("envs"),
+			Debug:          c.Bool("debug"),
 			Proxy: easyssh.DefaultConfig{
 				Key:      c.String("proxy.ssh-key"),
 				KeyPath:  c.String("proxy.key-path"),
