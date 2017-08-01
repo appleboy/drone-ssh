@@ -240,7 +240,7 @@ func TestSetENV(t *testing.T) {
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Secrets:        []string{"FOO"},
-			Envs:           []string{"FOO"},
+			Envs:           []string{"foo"},
 			Debug:          true,
 			Script:         []string{"whoami; echo $FOO"},
 			CommandTimeout: 1,
