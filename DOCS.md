@@ -152,8 +152,8 @@ pipeline:
     username: root
     password: 1234
     port: 22
-+    secrets: [ aws_access_key_id ]
-+    envs: [ aws_access_key_id ]
++   secrets: [ aws_access_key_id ]
++   envs: [ aws_access_key_id ]
     script:
       - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 ```
