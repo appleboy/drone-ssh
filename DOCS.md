@@ -142,6 +142,24 @@ pipeline:
 +     event: tag
 ```
 
+Example configuration for using custom secrets:
+
+```diff
+pipeline:
+  ssh:
+    image: appleboy/drone-ssh
+    host: foo.com
+    username: root
+    password: 1234
+    port: 22
++    secrets: [ aws_access_key_id ]
++    envs: [ aws_access_key_id ]
+    script:
+      - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+```
+
+This allows us to use custom secrets (The one's that the plugin doesn't expect) which can be used in the script section.
+
 # Parameter Reference
 
 host
@@ -161,6 +179,9 @@ key
 
 key_path
 : key path of user private key
+
+envs
+: custom secrets which are made available in the script section
 
 script
 : execute commands on a remote server
