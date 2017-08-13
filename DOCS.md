@@ -159,11 +159,17 @@ pipeline:
 
 # Secret Reference
 
+ssh_username
+: account for target host user
+
 ssh_password
 : password for target host user
 
 ssh_key
 : plain text of user private key
+
+proxy_ssh_username
+: account for user of proxy server
 
 proxy_ssh_password
 : password for user of proxy server
