@@ -40,38 +40,6 @@ pipeline:
       - echo world
 ```
 
-Example configuration for login with user private key:
-
-```diff
-pipeline:
-  ssh:
-    image: appleboy/drone-ssh
-    host: foo.com
-    username: root
--   password: 1234
-+   key: ${DEPLOY_KEY}
-    port: 22
-    script:
-      - echo hello
-      - echo world
-```
-
-Example configuration for login with file path of user private key:
-
-```diff
-pipeline:
-  ssh:
-    image: appleboy/drone-ssh
-    host: foo.com
-    username: root
--   password: 1234
-+   key_path: ./deploy/key.pem
-    port: 22
-    script:
-      - echo hello
-      - echo world
-```
-
 Example configuration for command timeout (unit: second), default value is 60 seconds:
 
 ```diff
@@ -96,15 +64,15 @@ pipeline:
     image: appleboy/drone-ssh
     host: foo.com
     username: root
+    password: 1234
     port: 22
-    key: ${DEPLOY_KEY}
     script:
       - echo hello
       - echo world
 +   proxy_host: 10.130.33.145
 +   proxy_user: ubuntu
 +   proxy_port: 22
-+   proxy_key: ${PROXY_KEY}
++   proxy_password: 1234
 ```
 
 Example configuration for success build:
@@ -142,7 +110,38 @@ pipeline:
 +     event: tag
 ```
 
-Example configuration for using custom secrets:
+Example configuration using password from secrets:
+
+```diff
+pipeline:
+  ssh:
+    image: appleboy/drone-ssh
+    host: foo.com
+    username: root
+-   password: 1234
+    port: 22
++   secrets: [ ssh_password ]
+    script:
+      - echo hello
+      - echo world
+```
+
+Example configuration using ssh key from secrets:
+
+```diff
+pipeline:
+  ssh:
+    image: appleboy/drone-ssh
+    host: foo.com
+    username: root
+    port: 22
++   secrets: [ ssh_key ]
+    script:
+      - echo hello
+      - echo world
+```
+
+Example configuration for exporting custom secrets:
 
 ```diff
 pipeline:
@@ -158,7 +157,25 @@ pipeline:
       - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 ```
 
-This allows us to use custom secrets (The one's that the plugin doesn't expect) which can be used in the script section.
+# Secret Reference
+
+ssh_username
+: account for target host user
+
+ssh_password
+: password for target host user
+
+ssh_key
+: plain text of user private key
+
+proxy_ssh_username
+: account for user of proxy server
+
+proxy_ssh_password
+: password for user of proxy server
+
+proxy_ssh_key
+: plain text of user private key for proxy server
 
 # Parameter Reference
 
