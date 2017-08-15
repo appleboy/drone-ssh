@@ -1,6 +1,6 @@
 FROM appleboy/golang-testing AS build-env
 ADD . /go/src/github.com/appleboy/drone-ssh
-RUN cd /go/src/github.com/appleboy/drone-ssh && make static_build
+RUN cd /go/src/github.com/appleboy/drone-ssh && make docker_build
 
 FROM alpine:3.4
 
