@@ -125,10 +125,7 @@ endif
 	docker push $(DEPLOY_ACCOUNT)/$(DEPLOY_IMAGE):$(tag)
 
 coverage:
-	sed -i '/main.go/d' .cover/coverage.txt
-	curl -s https://codecov.io/bash > .codecov && \
-	chmod +x .codecov && \
-	./.codecov -f .cover/coverage.txt
+	sed -i '/main.go/d' coverage.txt
 
 clean:
 	$(GO) clean -x -i ./...
