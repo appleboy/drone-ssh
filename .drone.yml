@@ -39,7 +39,6 @@ lint:
     environment:
       TAGS: netgo
       GOPATH: /srv/app
-    secrets: [ codecov_token ]
     commands:
       - make ssh-server
       - coverage all
