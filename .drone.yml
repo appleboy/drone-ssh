@@ -19,7 +19,6 @@ pipeline:
     commands:
       - make vet
       - make lint
-      - make test
       - make test-vendor
 
   build:
@@ -41,7 +40,8 @@ pipeline:
       GOPATH: /srv/app
     commands:
       - make ssh-server
-      - coverage all
+      - make test
+      - make coverage
 
   codecov:
     image: robertstettner/drone-codecov
