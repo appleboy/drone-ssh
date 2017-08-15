@@ -9,24 +9,49 @@ clone:
     tags: true
 
 pipeline:
+  lint:
+    image: appleboy/golang-testing
+    pull: true
+    group: golang
+    environment:
+      TAGS: netgo
+      GOPATH: /srv/app
+    commands:
+      - make vet
+      - make lint
+      - make test
+      - make test-vendor
+
+lint:
+    image: appleboy/golang-testing
+    pull: true
+    group: golang
+    environment:
+      TAGS: netgo
+      GOPATH: /srv/app
+    commands:
+      - make build
+
   test:
     image: appleboy/golang-testing
     pull: true
+    group: golang
     environment:
       TAGS: netgo
       GOPATH: /srv/app
     secrets: [ codecov_token ]
     commands:
       - make ssh-server
-      - make vet
-      - make lint
-      # - make test
-      - make test-vendor
       - coverage all
-      - make coverage
-      - make build
+
+  codecov:
+    image: robertstettner/drone-codecov
+    secrets: [ codecov_token ]
+    files:
+      - .cover/coverage.txt
     when:
-      event: [ push, tag, pull_request ]
+      event: [ push, pull_request ]
+      status: [ success ]
 
   publish_latest:
     image: plugins/docker
