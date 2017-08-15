@@ -2,7 +2,7 @@
 
 DIST := dist
 EXECUTABLE := drone-ssh
-$(GO) ?= go
+GO ?= go
 
 # for dockerhub
 DEPLOY_ACCOUNT := appleboy
