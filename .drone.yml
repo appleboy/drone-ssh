@@ -22,7 +22,7 @@ pipeline:
       - make test
       - make test-vendor
 
-lint:
+  build:
     image: appleboy/golang-testing
     pull: true
     group: golang
