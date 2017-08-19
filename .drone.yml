@@ -23,7 +23,7 @@ pipeline:
     pull: true
     group: golang
     commands:
-      - make build
+      - make docker_build
 
   test:
     image: appleboy/golang-testing
