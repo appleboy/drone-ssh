@@ -143,5 +143,10 @@ ssh-server:
 	rm -rf /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_dsa_key
 	./tests/entrypoint.sh /usr/sbin/sshd -D &
 
+# Show source statistics.
+cloc:
+	@cloc -exclude-dir=vendor,node_modules .
+.PHONY: cloc
+
 version:
 	@echo $(VERSION)
