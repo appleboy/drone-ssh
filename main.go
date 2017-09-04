@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/appleboy/easyssh-proxy"
@@ -9,10 +10,17 @@ import (
 	"github.com/urfave/cli"
 )
 
+// build number set at compile-time
+var build = "0"
+
 // Version set at compile-time
-var Version = "v1.1.0-dev"
+var Version string
 
 func main() {
+	if Version == "" {
+		Version = fmt.Sprintf("1.3.1+%s", build)
+	}
+
 	app := cli.NewApp()
 	app.Name = "Drone SSH"
 	app.Usage = "Executing remote ssh commands"

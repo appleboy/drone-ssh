@@ -14,7 +14,7 @@ PACKAGES ?= $(shell $(GO) list ./... | grep -v /vendor/)
 GOFILES := $(shell find . -name "*.go" -type f -not -path "./vendor/*")
 SOURCES ?= $(shell find . -name "*.go" -type f)
 TAGS ?=
-LDFLAGS ?= -X 'main.Version=$(VERSION)'
+LDFLAGS ?= -X 'main.Version=$(VERSION)' -X 'main.build=$(NUMBER)'
 TMPDIR := $(shell mktemp -d 2>/dev/null || mktemp -d -t 'tempdir')
 
 ifneq ($(shell uname), Darwin)
@@ -25,6 +25,10 @@ endif
 
 ifneq ($(DRONE_TAG),)
 	VERSION ?= $(DRONE_TAG)
+endif
+
+ifneq ($(DRONE_BUILD_NUMBER),)
+	NUMBER ?= $(DRONE_BUILD_NUMBER)
 else
 	VERSION ?= $(shell git describe --tags --always || git rev-parse --short HEAD)
 endif
@@ -84,12 +88,12 @@ html:
 	$(GO) tool cover -html=coverage.txt
 
 install: $(SOURCES)
-	$(GO) install -v -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)'
+	$(GO) install -v -tags '$(TAGS)' -ldflags "$(EXTLDFLAGS)-s -w $(LDFLAGS)"
 
 build: $(EXECUTABLE)
 
 $(EXECUTABLE): $(SOURCES)
-	$(GO) build -v -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o $@
+	$(GO) build -v -tags '$(TAGS)' -ldflags "$(EXTLDFLAGS)-s -w $(LDFLAGS)" -o $@
 
 release: release-dirs release-build release-copy release-check
 
@@ -110,7 +114,7 @@ release-check:
 
 # for docker.
 docker_build:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build -a -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o $(DEPLOY_IMAGE)
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build -a -tags '$(TAGS)' -ldflags "$(EXTLDFLAGS)-s -w $(LDFLAGS)" -o $(DEPLOY_IMAGE)
 
 docker_image:
 	docker build -t $(DEPLOY_ACCOUNT)/$(DEPLOY_IMAGE) .
