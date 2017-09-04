@@ -75,7 +75,7 @@ pipeline:
 +   proxy_password: 1234
 ```
 
-Example configuration for success build:
+Example configuration for `master` branch:
 
 ```diff
 pipeline:
@@ -89,10 +89,10 @@ pipeline:
       - echo hello
       - echo world
 +   when:
-+     status: success
++     branch: master
 ```
 
-Example configuration for tag event:
+Example configuration for `tag` event:
 
 ```diff
 pipeline:
@@ -106,7 +106,6 @@ pipeline:
       - echo hello
       - echo world
 +   when:
-+     status: success
 +     event: tag
 ```
 
