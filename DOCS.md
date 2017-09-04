@@ -50,7 +50,7 @@ pipeline:
     username: root
     password: 1234
     port: 22
-+   command_timeout: 10
++   command_timeout: 120
     script:
       - echo hello
       - echo world
