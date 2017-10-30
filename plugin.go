@@ -34,6 +34,7 @@ type (
 		Envs           []string
 		Proxy          easyssh.DefaultConfig
 		Debug          bool
+		Sync           bool
 	}
 
 	// Plugin structure
@@ -41,6 +42,80 @@ type (
 		Config Config
 	}
 )
+
+func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
+	// Create MakeConfig instance with remote username, server address and path to private key.
+	ssh := &easyssh.MakeConfig{
+		Server:   host,
+		User:     p.Config.UserName,
+		Password: p.Config.Password,
+		Port:     strconv.Itoa(p.Config.Port),
+		Key:      p.Config.Key,
+		KeyPath:  p.Config.KeyPath,
+		Timeout:  p.Config.Timeout,
+		Proxy: easyssh.DefaultConfig{
+			Server:   p.Config.Proxy.Server,
+			User:     p.Config.Proxy.User,
+			Password: p.Config.Proxy.Password,
+			Port:     p.Config.Proxy.Port,
+			Key:      p.Config.Proxy.Key,
+			KeyPath:  p.Config.Proxy.KeyPath,
+			Timeout:  p.Config.Proxy.Timeout,
+		},
+	}
+
+	p.log(host, "======CMD======")
+	p.log(host, strings.Join(p.Config.Script, "\n"))
+	p.log(host, "======END======")
+
+	env := []string{}
+	for _, key := range p.Config.Envs {
+		key = strings.ToUpper(key)
+		val := os.Getenv(key)
+		val = strings.Replace(val, " ", "", -1)
+		env = append(env, key+"="+val)
+	}
+
+	p.Config.Script = append(env, p.Config.Script...)
+
+	if p.Config.Debug {
+		p.log(host, "======ENV======")
+		p.log(host, strings.Join(env, "\n"))
+		p.log(host, "======END======")
+	}
+
+	stdoutChan, stderrChan, doneChan, errChan, err := ssh.Stream(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
+	if err != nil {
+		errChannel <- err
+	} else {
+		// read from the output channel until the done signal is passed
+		isTimeout := true
+	loop:
+		for {
+			select {
+			case isTimeout = <-doneChan:
+				break loop
+			case outline := <-stdoutChan:
+				p.log(host, "out:", outline)
+			case errline := <-stderrChan:
+				p.log(host, "err:", errline)
+			case err = <-errChan:
+			}
+		}
+
+		// get exit code or command error.
+		if err != nil {
+			errChannel <- err
+		}
+
+		// command time out
+		if !isTimeout {
+			errChannel <- fmt.Errorf(commandTimeOut)
+		}
+	}
+
+	wg.Done()
+}
 
 func (p Plugin) log(host string, message ...interface{}) {
 	if count := len(p.Config.Host); count == 1 {
@@ -69,85 +144,19 @@ func (p Plugin) Exec() error {
 	errChannel := make(chan error, 1)
 	finished := make(chan bool, 1)
 	for _, host := range p.Config.Host {
-		go func(host string) {
-			// Create MakeConfig instance with remote username, server address and path to private key.
-			ssh := &easyssh.MakeConfig{
-				Server:   host,
-				User:     p.Config.UserName,
-				Password: p.Config.Password,
-				Port:     strconv.Itoa(p.Config.Port),
-				Key:      p.Config.Key,
-				KeyPath:  p.Config.KeyPath,
-				Timeout:  p.Config.Timeout,
-				Proxy: easyssh.DefaultConfig{
-					Server:   p.Config.Proxy.Server,
-					User:     p.Config.Proxy.User,
-					Password: p.Config.Proxy.Password,
-					Port:     p.Config.Proxy.Port,
-					Key:      p.Config.Proxy.Key,
-					KeyPath:  p.Config.Proxy.KeyPath,
-					Timeout:  p.Config.Proxy.Timeout,
-				},
-			}
-
-			p.log(host, "======CMD======")
-			p.log(host, strings.Join(p.Config.Script, "\n"))
-			p.log(host, "======END======")
-
-			env := []string{}
-			for _, key := range p.Config.Envs {
-				key = strings.ToUpper(key)
-				val := os.Getenv(key)
-				val = strings.Replace(val, " ", "", -1)
-				env = append(env, key+"="+val)
-			}
-
-			p.Config.Script = append(env, p.Config.Script...)
-
-			if p.Config.Debug {
-				p.log(host, "======ENV======")
-				p.log(host, strings.Join(env, "\n"))
-				p.log(host, "======END======")
-			}
-
-			stdoutChan, stderrChan, doneChan, errChan, err := ssh.Stream(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
-			if err != nil {
-				errChannel <- err
-			} else {
-				// read from the output channel until the done signal is passed
-				isTimeout := true
-			loop:
-				for {
-					select {
-					case isTimeout = <-doneChan:
-						break loop
-					case outline := <-stdoutChan:
-						p.log(host, "out:", outline)
-					case errline := <-stderrChan:
-						p.log(host, "err:", errline)
-					case err = <-errChan:
-					}
-				}
-
-				// get exit code or command error.
-				if err != nil {
-					errChannel <- err
-				}
-
-				// command time out
-				if !isTimeout {
-					errChannel <- fmt.Errorf(commandTimeOut)
-				}
-			}
-
-			wg.Done()
-		}(host)
+		if p.Config.Sync {
+			p.exec(host, &wg, errChannel)
+		} else {
+			go p.exec(host, &wg, errChannel)
+		}
 	}
 
-	go func() {
-		wg.Wait()
-		close(finished)
-	}()
+	if !p.Config.Sync {
+		go func() {
+			wg.Wait()
+			close(finished)
+		}()
+	}
 
 	select {
 	case <-finished:
