@@ -156,6 +156,8 @@ func (p Plugin) Exec() error {
 			wg.Wait()
 			close(finished)
 		}()
+	} else {
+		close(finished)
 	}
 
 	select {
