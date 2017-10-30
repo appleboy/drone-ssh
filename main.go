@@ -66,6 +66,11 @@ func main() {
 			EnvVar: "PLUGIN_PORT,SSH_PORT",
 			Value:  22,
 		},
+		cli.BoolFlag{
+			Name:   "sync",
+			Usage:  "sync mode",
+			EnvVar: "PLUGIN_SYNC",
+		},
 		cli.DurationFlag{
 			Name:   "timeout,t",
 			Usage:  "connection timeout",
@@ -195,6 +200,7 @@ func run(c *cli.Context) error {
 			Secrets:        c.StringSlice("secrets"),
 			Envs:           c.StringSlice("envs"),
 			Debug:          c.Bool("debug"),
+			Sync:           c.Bool("sync"),
 			Proxy: easyssh.DefaultConfig{
 				Key:      c.String("proxy.ssh-key"),
 				KeyPath:  c.String("proxy.key-path"),
