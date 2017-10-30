@@ -151,14 +151,10 @@ func (p Plugin) Exec() error {
 		}
 	}
 
-	if !p.Config.Sync {
-		go func() {
-			wg.Wait()
-			close(finished)
-		}()
-	} else {
+	go func() {
+		wg.Wait()
 		close(finished)
-	}
+	}()
 
 	select {
 	case <-finished:
