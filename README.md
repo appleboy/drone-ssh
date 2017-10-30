@@ -50,3 +50,26 @@ docker run --rm \
   -w $(pwd) \
   appleboy/drone-ssh
 ```
+
+## Mount key from file path
+
+Please make sure that enable the `trusted` mode in project setting.
+
+![trusted mode](./screenshot/trust.png)
+
+Mount private key in `volumes` setting of `.drone.yml` config
+
+```diff
+pipeline:
+  ssh:
+    image: appleboy/drone-ssh
+    host: xxxxx.com
+    username: deploy
++   volumes:
++     - /root/drone_rsa:/root/ssh/drone_rsa
+    key_path: /root/ssh/drone_rsa
+    script:
+      - echo "test ssh"
+```
+
+See the detail of [issue comment](https://github.com/appleboy/drone-ssh/issues/51#issuecomment-336732928).
