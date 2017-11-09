@@ -160,7 +160,6 @@ func (p Plugin) Exec() error {
 	case <-finished:
 	case err := <-errChannel:
 		if err != nil {
-			fmt.Println("drone-ssh error: ", err)
 			return err
 		}
 	}
