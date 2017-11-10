@@ -67,7 +67,7 @@ pipeline:
       status: [ success ]
 
   publish:
-    image: appleboy/drone-docker
+    image: plugins/docker
     pull: true
     repo: ${DRONE_REPO}
     default_tags: true
