@@ -43,6 +43,10 @@ type (
 	}
 )
 
+func escapeArg(arg string) string {
+	return "'" + strings.Replace(arg, "'", `'\''`, -1) + "'"
+}
+
 func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	// Create MakeConfig instance with remote username, server address and path to private key.
 	ssh := &easyssh.MakeConfig{
@@ -72,8 +76,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	for _, key := range p.Config.Envs {
 		key = strings.ToUpper(key)
 		val := os.Getenv(key)
-		val = strings.Replace(val, " ", "", -1)
-		env = append(env, key+"='"+val+"'")
+		env = append(env, key+"="+escapeArg(val))
 	}
 
 	p.Config.Script = append(env, p.Config.Script...)
