@@ -12,5 +12,5 @@ LABEL org.label-schema.name="drone-ssh"
 LABEL org.label-schema.vendor="Bo-Yi Wu"
 LABEL org.label-schema.schema-version="1.0"
 
-ADD drone-ssh /bin/
+ADD release/linux/amd64/drone-ssh /bin/
 ENTRYPOINT ["/bin/drone-ssh"]
