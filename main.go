@@ -178,7 +178,10 @@ REPOSITORY:
     Github: https://github.com/appleboy/drone-ssh
 `
 
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		fmt.Println("drone-ssh error: ", err)
+		os.Exit(1)
+	}
 }
 
 func run(c *cli.Context) error {
