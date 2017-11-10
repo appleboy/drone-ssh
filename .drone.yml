@@ -48,15 +48,6 @@ pipeline:
       - make test
       - make coverage
 
-  codecov:
-    image: robertstettner/drone-codecov
-    secrets: [ codecov_token ]
-    files:
-      - .cover/coverage.txt
-    when:
-      event: [ push, pull_request ]
-      status: [ success ]
-
   release:
     image: appleboy/golang-testing
     pull: true
@@ -65,6 +56,15 @@ pipeline:
     when:
       event: [ tag ]
       local: false
+
+  codecov:
+    image: robertstettner/drone-codecov
+    secrets: [ codecov_token ]
+    files:
+      - .cover/coverage.txt
+    when:
+      event: [ push, pull_request ]
+      status: [ success ]
 
   publish:
     image: appleboy/drone-docker
