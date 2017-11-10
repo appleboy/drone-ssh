@@ -18,12 +18,26 @@ pipeline:
       - make lint
       - make test-vendor
 
-  build:
+  linux_amd64:
     image: appleboy/golang-testing
     pull: true
     group: golang
     commands:
-      - make docker_build
+      - make linux_amd64
+
+  linux_arm64:
+    image: appleboy/golang-testing
+    pull: true
+    group: golang
+    commands:
+      - make linux_arm64
+
+  linux_arm:
+    image: appleboy/golang-testing
+    pull: true
+    group: golang
+    commands:
+      - make linux_arm
 
   test:
     image: appleboy/golang-testing
