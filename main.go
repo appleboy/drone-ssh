@@ -180,7 +180,7 @@ REPOSITORY:
 
 	if err := app.Run(os.Args); err != nil {
 		fmt.Println("drone-ssh error: ", err)
-		os.Exit(1);
+		os.Exit(1)
 	}
 }
 
