@@ -48,6 +48,15 @@ pipeline:
       - make test
       - make coverage
 
+  release:
+    image: appleboy/golang-testing
+    pull: true
+    commands:
+      - make release
+    when:
+      event: [ tag ]
+      local: false
+
   codecov:
     image: robertstettner/drone-codecov
     secrets: [ codecov_token ]
@@ -57,49 +66,26 @@ pipeline:
       event: [ push, pull_request ]
       status: [ success ]
 
-  publish_latest:
+  publish:
     image: plugins/docker
-    repo: ${DRONE_REPO}
-    tags: [ 'latest' ]
-    secrets: [ docker_username, docker_password ]
-    when:
-      event: [ push ]
-      branch: [ master ]
-      local: false
-
-  release:
-    image: appleboy/golang-testing
     pull: true
-    environment:
-      TAGS: netgo
-      GOPATH: /srv/app
-    commands:
-      - make release
-    when:
-      event: [ tag ]
-      branch: [ refs/tags/* ]
-      local: false
-
-  publish_tag:
-    image: plugins/docker
     repo: ${DRONE_REPO}
-    tags: [ '${DRONE_TAG}' ]
+    default_tags: true
     secrets: [ docker_username, docker_password ]
     group: release
     when:
-      event: [ tag ]
-      branch: [ refs/tags/* ]
+      event: [ push, tag ]
       local: false
 
   release_tag:
     image: plugins/github-release
+    pull: true
     secrets: [ github_release_api_key ]
     group: release
     files:
       - dist/release/*
     when:
       event: [ tag ]
-      branch: [ refs/tags/* ]
       local: false
 
   facebook:
