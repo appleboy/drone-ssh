@@ -73,7 +73,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 		key = strings.ToUpper(key)
 		val := os.Getenv(key)
 		val = strings.Replace(val, " ", "", -1)
-		env = append(env, key+"="+val)
+		env = append(env, key+"='"+val+"'")
 	}
 
 	p.Config.Script = append(env, p.Config.Script...)

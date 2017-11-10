@@ -232,7 +232,7 @@ func TestSSHCommandExitCodeError(t *testing.T) {
 }
 
 func TestSetENV(t *testing.T) {
-	os.Setenv("FOO", "1")
+	os.Setenv("FOO", "1)")
 	plugin := Plugin{
 		Config: Config{
 			Host:           []string{"localhost"},
