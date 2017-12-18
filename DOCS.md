@@ -75,40 +75,6 @@ pipeline:
 +   proxy_password: 1234
 ```
 
-Example configuration for `master` branch:
-
-```diff
-pipeline:
-  ssh:
-    image: appleboy/drone-ssh
-    host: foo.com
-    username: root
-    password: 1234
-    port: 22
-    script:
-      - echo hello
-      - echo world
-+   when:
-+     branch: master
-```
-
-Example configuration for `tag` event:
-
-```diff
-pipeline:
-  ssh:
-    image: appleboy/drone-ssh
-    host: foo.com
-    username: root
-    password: 1234
-    port: 22
-    script:
-      - echo hello
-      - echo world
-+   when:
-+     event: tag
-```
-
 Example configuration using password from secrets:
 
 ```diff
