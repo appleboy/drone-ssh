@@ -21,6 +21,11 @@ func main() {
 		Version = fmt.Sprintf("1.3.1+%s", build)
 	}
 
+	// Load env-file if it exists first
+	if filename, found := os.LookupEnv("PLUGIN_ENV_FILE"); found {
+		_ = godotenv.Load(filename)
+	}
+
 	app := cli.NewApp()
 	app.Name = "Drone SSH"
 	app.Usage = "Executing remote ssh commands"
@@ -86,10 +91,6 @@ func main() {
 			Name:   "script,s",
 			Usage:  "execute commands",
 			EnvVar: "PLUGIN_SCRIPT,SSH_SCRIPT",
-		},
-		cli.StringFlag{
-			Name:  "env-file",
-			Usage: "source env file",
 		},
 		cli.StringFlag{
 			Name:   "proxy.ssh-key",
@@ -185,10 +186,6 @@ REPOSITORY:
 }
 
 func run(c *cli.Context) error {
-	if c.String("env-file") != "" {
-		_ = godotenv.Load(c.String("env-file"))
-	}
-
 	plugin := Plugin{
 		Config: Config{
 			Key:            c.String("ssh-key"),
