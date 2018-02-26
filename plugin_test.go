@@ -257,6 +257,33 @@ func TestSetENV(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func TestSetExistingENV(t *testing.T) {
+	os.Setenv("FOO", "Value for foo")
+	os.Setenv("BAR", "")
+	plugin := Plugin{
+		Config: Config{
+			Host:           []string{"localhost"},
+			UserName:       "drone-scp",
+			Port:           22,
+			KeyPath:        "./tests/.ssh/id_rsa",
+			Secrets:        []string{"FOO"},
+			Envs:           []string{"foo", "bar", "baz"},
+			Debug:          true,
+			Script:         []string{"export FOO", "export BAR", "export BAZ", "env | grep -q '^FOO=Value for foo$'", "env | grep -q '^BAR=$'", "if env | grep -q BAZ; then false; else true; fi"},
+			CommandTimeout: 1,
+			Proxy: easyssh.DefaultConfig{
+				Server:  "localhost",
+				User:    "drone-scp",
+				Port:    "22",
+				KeyPath: "./tests/.ssh/id_rsa",
+			},
+		},
+	}
+
+	err := plugin.Exec()
+	assert.Nil(t, err)
+}
+
 func TestSyncMode(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
