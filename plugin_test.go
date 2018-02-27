@@ -273,3 +273,36 @@ func TestSyncMode(t *testing.T) {
 	err := plugin.Exec()
 	assert.Nil(t, err)
 }
+
+func Test_escapeArg(t *testing.T) {
+	type args struct {
+		arg string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "escape nothing",
+			args: args{
+				arg: "Hi I am appleboy",
+			},
+			want: `'Hi I am appleboy'`,
+		},
+		{
+			name: "escape single quote",
+			args: args{
+				arg: "Hi I am 'appleboy'",
+			},
+			want: `'Hi I am '\''appleboy'\'''`,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := escapeArg(tt.args.arg); got != tt.want {
+				t.Errorf("escapeArg() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
