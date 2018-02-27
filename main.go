@@ -211,6 +211,7 @@ func run(c *cli.Context) error {
 				Timeout:  c.Duration("proxy.timeout"),
 			},
 		},
+		Writer: os.Stdout,
 	}
 
 	return plugin.Exec()
