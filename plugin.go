@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/appleboy/easyssh-proxy"
+	"io"
 )
 
 const (
@@ -40,6 +41,7 @@ type (
 	// Plugin structure
 	Plugin struct {
 		Config Config
+		Writer io.Writer
 	}
 )
 
@@ -122,10 +124,13 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 }
 
 func (p Plugin) log(host string, message ...interface{}) {
+	if p.Writer == nil {
+		p.Writer = os.Stdout
+	}
 	if count := len(p.Config.Host); count == 1 {
-		fmt.Printf("%s", fmt.Sprintln(message...))
+		fmt.Fprintf(p.Writer, "%s", fmt.Sprintln(message...))
 	} else {
-		fmt.Printf("%s: %s", host, fmt.Sprintln(message...))
+		fmt.Fprintf(p.Writer, "%s: %s", host, fmt.Sprintln(message...))
 	}
 }
 

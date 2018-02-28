@@ -4,8 +4,10 @@ import (
 	"os"
 	"testing"
 
+	"bytes"
 	"github.com/appleboy/easyssh-proxy"
 	"github.com/stretchr/testify/assert"
+	"strings"
 )
 
 func TestMissingHostOrUser(t *testing.T) {
@@ -23,6 +25,7 @@ func TestMissingKeyOrPassword(t *testing.T) {
 			Host:     []string{"localhost"},
 			UserName: "ubuntu",
 		},
+		os.Stdout,
 	}
 
 	err := plugin.Exec()
@@ -39,6 +42,7 @@ func TestSetPasswordAndKey(t *testing.T) {
 			Password: "1234",
 			Key:      "1234",
 		},
+		os.Stdout,
 	}
 
 	err := plugin.Exec()
@@ -327,9 +331,132 @@ func Test_escapeArg(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := escapeArg(tt.args.arg); got != tt.want {
-				t.Errorf("escapeArg() = %v, want %v", got, tt.want)
-			}
+			got := escapeArg(tt.args.arg)
+			assert.Equal(t, tt.want, got)
 		})
 	}
+}
+
+func TestCommandOutput(t *testing.T) {
+	var (
+		buffer   bytes.Buffer
+		expected = `
+			localhost: ======CMD======
+			localhost: pwd
+			whoami
+			uname
+			localhost: ======END======
+			localhost: out: /home/drone-scp
+			localhost: out: drone-scp
+			localhost: out: Linux
+			127.0.0.1: ======CMD======
+			127.0.0.1: pwd
+			whoami
+			uname
+			127.0.0.1: ======END======
+			127.0.0.1: out: /home/drone-scp
+			127.0.0.1: out: drone-scp
+			127.0.0.1: out: Linux
+		`
+	)
+
+	plugin := Plugin{
+		Config: Config{
+			Host:     []string{"localhost", "127.0.0.1"},
+			UserName: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Script: []string{
+				"pwd",
+				"whoami",
+				"uname",
+			},
+			CommandTimeout: 60,
+			Sync:           true,
+		},
+		Writer: &buffer,
+	}
+
+	err := plugin.Exec()
+	assert.Nil(t, err)
+
+	assert.Equal(t, unindent(expected), unindent(buffer.String()))
+}
+
+func TestEnvOutput(t *testing.T) {
+	var (
+		buffer   bytes.Buffer
+		expected = `
+			======CMD======
+			echo "[${ENV_1}]"
+			echo "[${ENV_2}]"
+			echo "[${ENV_3}]"
+			echo "[${ENV_4}]"
+			echo "[${ENV_5}]"
+			echo "[${ENV_6}]"
+			echo "[${ENV_7}]"
+			======END======
+			======ENV======
+			ENV_1='test'
+			ENV_2='test test'
+			ENV_3='test '
+			ENV_4='  test  test  '
+			ENV_5='test'\'''
+			ENV_6='test"'
+			ENV_7='test,!#;?.@$~'\''"'
+			======END======
+			out: [test]
+			out: [test test]
+			out: [test ]
+			out: [  test  test  ]
+			out: [test']
+			out: [test"]
+			out: [test,!#;?.@$~'"]
+		`
+	)
+
+	os.Setenv("ENV_1", `test`)
+	os.Setenv("ENV_2", `test test`)
+	os.Setenv("ENV_3", `test `)
+	os.Setenv("ENV_4", `  test  test  `)
+	os.Setenv("ENV_5", `test'`)
+	os.Setenv("ENV_6", `test"`)
+	os.Setenv("ENV_7", `test,!#;?.@$~'"`)
+
+	plugin := Plugin{
+		Config: Config{
+			Host:     []string{"localhost"},
+			UserName: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Envs:     []string{"env_1", "env_2", "env_3", "env_4", "env_5", "env_6", "env_7"},
+			Debug:    true,
+			Script: []string{
+				`echo "[${ENV_1}]"`,
+				`echo "[${ENV_2}]"`,
+				`echo "[${ENV_3}]"`,
+				`echo "[${ENV_4}]"`,
+				`echo "[${ENV_5}]"`,
+				`echo "[${ENV_6}]"`,
+				`echo "[${ENV_7}]"`,
+			},
+			CommandTimeout: 10,
+			Proxy: easyssh.DefaultConfig{
+				Server:  "localhost",
+				User:    "drone-scp",
+				Port:    "22",
+				KeyPath: "./tests/.ssh/id_rsa",
+			},
+		},
+		Writer: &buffer,
+	}
+
+	err := plugin.Exec()
+	assert.Nil(t, err)
+
+	assert.Equal(t, unindent(expected), unindent(buffer.String()))
+}
+
+func unindent(text string) string {
+	return strings.TrimSpace(strings.Replace(text, "\t", "", -1))
 }
