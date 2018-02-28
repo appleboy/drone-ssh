@@ -75,8 +75,9 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	env := []string{}
 	for _, key := range p.Config.Envs {
 		key = strings.ToUpper(key)
-		val := os.Getenv(key)
-		env = append(env, key+"="+escapeArg(val))
+		if val, found := os.LookupEnv(key); found {
+			env = append(env, key+"="+escapeArg(val))
+		}
 	}
 
 	p.Config.Script = append(env, p.Config.Script...)
