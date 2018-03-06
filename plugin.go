@@ -10,6 +10,7 @@ import (
 
 	"github.com/appleboy/easyssh-proxy"
 	"io"
+	"net"
 )
 
 const (
@@ -29,6 +30,7 @@ type (
 		Host           []string
 		Port           int
 		Timeout        time.Duration
+		RetryTimeout   time.Duration
 		CommandTimeout int
 		Script         []string
 		Secrets        []string
@@ -90,7 +92,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 		p.log(host, "======END======")
 	}
 
-	stdoutChan, stderrChan, doneChan, errChan, err := ssh.Stream(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
+	stdoutChan, stderrChan, doneChan, errChan, err := retryStream(ssh, p)
 	if err != nil {
 		errChannel <- err
 	} else {
@@ -178,4 +180,35 @@ func (p Plugin) Exec() error {
 	fmt.Println("==========================================")
 
 	return nil
+}
+
+func retryStream(ssh *easyssh.MakeConfig, p Plugin) (<-chan string, <-chan string, <-chan bool, <-chan error, error) {
+	var (
+		timeout = time.After(p.Config.RetryTimeout)
+		wait    = time.Second
+	)
+
+	for {
+		stdoutChan, stderrChan, doneChan, errChan, err := ssh.Stream(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
+
+		// If there was no error, return all channels
+		if err == nil {
+			return stdoutChan, stderrChan, doneChan, errChan, nil
+		}
+
+		// If the error was not a net.OpError, return that error
+		if _, ok := err.(*net.OpError); !ok {
+			return nil, nil, nil, nil, err
+		}
+
+		select {
+		case <-timeout:
+			return nil, nil, nil, nil, err
+		case <-time.After(wait):
+			break
+		}
+
+		// Double our back-off time
+		wait *= 2
+	}
 }
