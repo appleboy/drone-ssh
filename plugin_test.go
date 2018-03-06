@@ -8,6 +8,8 @@ import (
 	"github.com/appleboy/easyssh-proxy"
 	"github.com/stretchr/testify/assert"
 	"strings"
+
+	"time"
 )
 
 func TestMissingHostOrUser(t *testing.T) {
@@ -455,6 +457,56 @@ func TestEnvOutput(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
+}
+
+// TestConnectTimeoutRetry tests that when a network error occurs, the connect
+// is retried until it either succeeds or the configured timeout is hit.
+func TestConnectTimeoutRetry(t *testing.T) {
+	start := time.Now()
+
+	plugin := Plugin{
+		Config: Config{
+			Host:         []string{"localhost"},
+			UserName:     "drone-scp",
+			Port:         2200,
+			KeyPath:      "./tests/.ssh/id_rsa",
+			Script:       []string{"exit"},
+			RetryTimeout: 15 * time.Second,
+			Sync:         true,
+		},
+	}
+
+	err := plugin.Exec()
+	assert.NotNil(t, err)
+
+	end := time.Now()
+	assert.WithinDuration(t, start.Local().Add(15*time.Second), end, 2*time.Second)
+
+}
+
+// TestConnectTimeoutRetry tests that when a non-network error occurs, the connect
+// is not retried and instead returns the error immediately.
+func TestConnectTimeoutImmediate(t *testing.T) {
+	start := time.Now()
+
+	plugin := Plugin{
+		Config: Config{
+			Host:         []string{"localhost"},
+			UserName:     "drone-scp",
+			Port:         22,
+			Key:          "",
+			Script:       []string{"exit"},
+			RetryTimeout: 60 * time.Second,
+			Sync:         true,
+		},
+	}
+
+	err := plugin.Exec()
+	assert.NotNil(t, err)
+
+	end := time.Now()
+	assert.WithinDuration(t, start.Local().Add(time.Second), end, 2*time.Second)
+
 }
 
 func unindent(text string) string {

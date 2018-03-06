@@ -71,6 +71,11 @@ func main() {
 			EnvVar: "PLUGIN_PORT,SSH_PORT",
 			Value:  22,
 		},
+		cli.DurationFlag{
+			Name:   "retry-timeout",
+			Usage:  "connection retry timeout",
+			EnvVar: "PLUGIN_RETRY_TIMEOUT",
+		},
 		cli.BoolFlag{
 			Name:   "sync",
 			Usage:  "sync mode",
@@ -194,6 +199,7 @@ func run(c *cli.Context) error {
 			Password:       c.String("password"),
 			Host:           c.StringSlice("host"),
 			Port:           c.Int("port"),
+			RetryTimeout:   c.Duration("retry-timeout"),
 			Timeout:        c.Duration("timeout"),
 			CommandTimeout: c.Int("command.timeout"),
 			Script:         c.StringSlice("script"),
