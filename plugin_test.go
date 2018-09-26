@@ -412,7 +412,7 @@ func TestScriptStop(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.Nil(t, err)
+	assert.NotNil(t, err)
 
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
@@ -446,7 +446,7 @@ func TestNoneScriptStop(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.Nil(t, err)
+	assert.NotNil(t, err)
 
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
