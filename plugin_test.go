@@ -383,15 +383,15 @@ func TestCommandOutput(t *testing.T) {
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
 
-func TestCommandScriptStop(t *testing.T) {
+func TestScriptStop(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			localhost: ======CMD======
-			localhost: mkdir a/b/c
+			======CMD======
+			mkdir a/b/c
 			mkdir d/e/f
-			localhost: ======END======
-			localhost: err: mkdir: d/e: No such file or directory
+			======END======
+			err: mkdir: can't create directory 'a/b/c': No such file or directory
 		`
 	)
 
@@ -407,6 +407,40 @@ func TestCommandScriptStop(t *testing.T) {
 			},
 			CommandTimeout: 10,
 			ScriptStop:     true,
+		},
+		Writer: &buffer,
+	}
+
+	err := plugin.Exec()
+	assert.Nil(t, err)
+
+	assert.Equal(t, unindent(expected), unindent(buffer.String()))
+}
+
+func TestNoneScriptStop(t *testing.T) {
+	var (
+		buffer   bytes.Buffer
+		expected = `
+			======CMD======
+			mkdir a/b/c
+			mkdir d/e/f
+			======END======
+			err: mkdir: can't create directory 'a/b/c': No such file or directory
+			err: mkdir: can't create directory 'd/e/f': No such file or directory
+		`
+	)
+
+	plugin := Plugin{
+		Config: Config{
+			Host:     []string{"localhost"},
+			UserName: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Script: []string{
+				"mkdir a/b/c",
+				"mkdir d/e/f",
+			},
+			CommandTimeout: 10,
 		},
 		Writer: &buffer,
 	}
