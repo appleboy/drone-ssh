@@ -1,13 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"os"
+	"strings"
 	"testing"
 
-	"bytes"
 	"github.com/appleboy/easyssh-proxy"
 	"github.com/stretchr/testify/assert"
-	"strings"
 )
 
 func TestMissingHostOrUser(t *testing.T) {
@@ -373,6 +373,40 @@ func TestCommandOutput(t *testing.T) {
 			},
 			CommandTimeout: 60,
 			Sync:           true,
+		},
+		Writer: &buffer,
+	}
+
+	err := plugin.Exec()
+	assert.Nil(t, err)
+
+	assert.Equal(t, unindent(expected), unindent(buffer.String()))
+}
+
+func TestCommandScriptStop(t *testing.T) {
+	var (
+		buffer   bytes.Buffer
+		expected = `
+			localhost: ======CMD======
+			localhost: mkdir a/b/c
+			mkdir d/e/f
+			localhost: ======END======
+			localhost: err: mkdir: d/e: No such file or directory
+		`
+	)
+
+	plugin := Plugin{
+		Config: Config{
+			Host:     []string{"localhost"},
+			UserName: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Script: []string{
+				"mkdir a/b/c",
+				"mkdir d/e/f",
+			},
+			CommandTimeout: 10,
+			ScriptStop:     true,
 		},
 		Writer: &buffer,
 	}
