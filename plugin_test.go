@@ -1,13 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"os"
+	"strings"
 	"testing"
 
-	"bytes"
 	"github.com/appleboy/easyssh-proxy"
 	"github.com/stretchr/testify/assert"
-	"strings"
 )
 
 func TestMissingHostOrUser(t *testing.T) {
@@ -379,6 +379,74 @@ func TestCommandOutput(t *testing.T) {
 
 	err := plugin.Exec()
 	assert.Nil(t, err)
+
+	assert.Equal(t, unindent(expected), unindent(buffer.String()))
+}
+
+func TestScriptStop(t *testing.T) {
+	var (
+		buffer   bytes.Buffer
+		expected = `
+			======CMD======
+			mkdir a/b/c
+			mkdir d/e/f
+			======END======
+			err: mkdir: can't create directory 'a/b/c': No such file or directory
+		`
+	)
+
+	plugin := Plugin{
+		Config: Config{
+			Host:     []string{"localhost"},
+			UserName: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Script: []string{
+				"mkdir a/b/c",
+				"mkdir d/e/f",
+			},
+			CommandTimeout: 10,
+			ScriptStop:     true,
+		},
+		Writer: &buffer,
+	}
+
+	err := plugin.Exec()
+	assert.NotNil(t, err)
+
+	assert.Equal(t, unindent(expected), unindent(buffer.String()))
+}
+
+func TestNoneScriptStop(t *testing.T) {
+	var (
+		buffer   bytes.Buffer
+		expected = `
+			======CMD======
+			mkdir a/b/c
+			mkdir d/e/f
+			======END======
+			err: mkdir: can't create directory 'a/b/c': No such file or directory
+			err: mkdir: can't create directory 'd/e/f': No such file or directory
+		`
+	)
+
+	plugin := Plugin{
+		Config: Config{
+			Host:     []string{"localhost"},
+			UserName: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Script: []string{
+				"mkdir a/b/c",
+				"mkdir d/e/f",
+			},
+			CommandTimeout: 10,
+		},
+		Writer: &buffer,
+	}
+
+	err := plugin.Exec()
+	assert.NotNil(t, err)
 
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
