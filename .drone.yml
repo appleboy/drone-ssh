@@ -10,7 +10,7 @@ clone:
 
 pipeline:
   lint:
-    image: appleboy/golang-testing
+    image: golang:1.11
     pull: true
     group: golang
     commands:
@@ -19,21 +19,21 @@ pipeline:
       - make test-vendor
 
   linux_amd64:
-    image: appleboy/golang-testing
+    image: golang:1.11
     pull: true
     group: golang
     commands:
       - make linux_amd64
 
   linux_arm64:
-    image: appleboy/golang-testing
+    image: golang:1.11
     pull: true
     group: golang
     commands:
       - make linux_arm64
 
   linux_arm:
-    image: appleboy/golang-testing
+    image: golang:1.11
     pull: true
     group: golang
     commands:
@@ -49,7 +49,7 @@ pipeline:
       - make coverage
 
   release:
-    image: appleboy/golang-testing
+    image: golang:1.11
     pull: true
     commands:
       - make release
