@@ -92,6 +92,11 @@ func main() {
 			Usage:  "execute commands",
 			EnvVar: "PLUGIN_SCRIPT,SSH_SCRIPT",
 		},
+		cli.BoolFlag{
+			Name:   "script.stop",
+			Usage:  "stop script after first failure",
+			EnvVar: "PLUGIN_SCRIPT_STOP",
+		},
 		cli.StringFlag{
 			Name:   "proxy.ssh-key",
 			Usage:  "private ssh key of proxy",
@@ -197,6 +202,7 @@ func run(c *cli.Context) error {
 			Timeout:        c.Duration("timeout"),
 			CommandTimeout: c.Int("command.timeout"),
 			Script:         c.StringSlice("script"),
+			ScriptStop:     c.Bool("script.stop"),
 			Secrets:        c.StringSlice("secrets"),
 			Envs:           c.StringSlice("envs"),
 			Debug:          c.Bool("debug"),

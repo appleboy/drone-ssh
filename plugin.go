@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -9,7 +10,6 @@ import (
 	"time"
 
 	"github.com/appleboy/easyssh-proxy"
-	"io"
 )
 
 const (
@@ -31,6 +31,7 @@ type (
 		Timeout        time.Duration
 		CommandTimeout int
 		Script         []string
+		ScriptStop     bool
 		Secrets        []string
 		Envs           []string
 		Proxy          easyssh.DefaultConfig
@@ -82,7 +83,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 		}
 	}
 
-	p.Config.Script = append(env, p.Config.Script...)
+	p.Config.Script = append(env, p.scriptCommands()...)
 
 	if p.Config.Debug {
 		p.log(host, "======ENV======")
@@ -178,4 +179,23 @@ func (p Plugin) Exec() error {
 	fmt.Println("==========================================")
 
 	return nil
+}
+
+func (p Plugin) scriptCommands() []string {
+	numCommands := len(p.Config.Script)
+	if p.Config.ScriptStop {
+		numCommands *= 2
+	}
+
+	commands := make([]string, numCommands)
+
+	for _, cmd := range p.Config.Script {
+		if p.Config.ScriptStop {
+			commands = append(commands, "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;")
+		}
+
+		commands = append(commands, cmd)
+	}
+
+	return commands
 }
