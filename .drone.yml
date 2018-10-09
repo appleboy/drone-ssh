@@ -88,6 +88,13 @@ pipeline:
       event: [ tag ]
       local: false
 
+  microbadger:
+    image: plugins/webhook:1
+    pull: true
+    secrets: [ webhook_url ]
+    when:
+      status: [ success ]
+
   discord:
     image: appleboy/drone-discord
     pull: true
