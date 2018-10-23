@@ -29,7 +29,7 @@ type (
 		Host           []string
 		Port           int
 		Timeout        time.Duration
-		CommandTimeout time.Duration
+		CommandTimeout int
 		Script         []string
 		ScriptStop     bool
 		Secrets        []string
