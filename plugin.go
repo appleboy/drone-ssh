@@ -91,7 +91,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 		p.log(host, "======END======")
 	}
 
-	stdoutChan, stderrChan, doneChan, errChan, err := ssh.Stream(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
+	stdoutChan, stderrChan, doneChan, errChan, err := ssh.Stream(strings.Join(p.Config.Script, "\n"), time.Duration(p.Config.CommandTimeout) * time.Second)
 	if err != nil {
 		errChannel <- err
 	} else {
