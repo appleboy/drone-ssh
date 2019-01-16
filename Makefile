@@ -10,8 +10,8 @@ DEPLOY_IMAGE := $(EXECUTABLE)
 GOFMT ?= gofmt "-s"
 
 TARGETS ?= linux darwin windows
-PACKAGES ?= $(shell $(GO) list ./... | grep -v /vendor/)
-GOFILES := $(shell find . -name "*.go" -type f -not -path "./vendor/*")
+PACKAGES ?= $(shell $(GO) list ./...)
+GOFILES := $(shell find . -name "*.go" -type f)
 SOURCES ?= $(shell find . -name "*.go" -type f)
 TAGS ?=
 LDFLAGS ?= -X 'main.Version=$(VERSION)' -X 'main.build=$(NUMBER)'
@@ -43,19 +43,6 @@ fmt-check:
 		echo "$${diff}"; \
 		exit 1; \
 	fi;
-
-.PHONY: test-vendor
-test-vendor:
-	@hash govendor > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		$(GO) get -u github.com/kardianos/govendor; \
-	fi
-	govendor list +unused | tee "$(TMPDIR)/wc-gitea-unused"
-	[ $$(cat "$(TMPDIR)/wc-gitea-unused" | wc -l) -eq 0 ] || echo "Warning: /!\\ Some vendor are not used /!\\"
-
-	govendor list +outside | tee "$(TMPDIR)/wc-gitea-outside"
-	[ $$(cat "$(TMPDIR)/wc-gitea-outside" | wc -l) -eq 0 ] || exit 1
-
-	govendor status || exit 1
 
 fmt:
 	$(GOFMT) -w $(GOFILES)

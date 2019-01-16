@@ -12,16 +12,19 @@ pipeline:
   lint:
     image: golang:1.11
     pull: true
+    environment:
+      - GO111MODULE=on
     group: golang
     commands:
       - make vet
       - make lint
-      - make test-vendor
 
   linux_amd64:
     image: golang:1.11
     pull: true
     group: golang
+    environment:
+      - GO111MODULE=on
     commands:
       - make linux_amd64
 
@@ -29,6 +32,8 @@ pipeline:
     image: golang:1.11
     pull: true
     group: golang
+    environment:
+      - GO111MODULE=on
     commands:
       - make linux_arm64
 
@@ -36,6 +41,8 @@ pipeline:
     image: golang:1.11
     pull: true
     group: golang
+    environment:
+      - GO111MODULE=on
     commands:
       - make linux_arm
 
@@ -43,6 +50,8 @@ pipeline:
     image: appleboy/golang-testing
     pull: true
     group: golang
+    environment:
+      - GO111MODULE=on
     commands:
       - make ssh-server
       - make test
@@ -51,6 +60,8 @@ pipeline:
   release:
     image: golang:1.11
     pull: true
+    environment:
+      - GO111MODULE=on
     commands:
       - make release
     when:
