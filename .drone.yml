@@ -47,7 +47,7 @@ pipeline:
       - make linux_arm
 
   test:
-    image: appleboy/golang-testing
+    image: golang:1.11
     pull: true
     group: golang
     environment:
