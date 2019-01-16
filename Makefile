@@ -128,14 +128,14 @@ clean:
 	rm -rf coverage.txt $(EXECUTABLE) $(DIST) vendor
 
 ssh-server:
+	# install ssh and start server
+	apk update && apk add openssh openrc make
 	adduser -h /home/drone-scp -s /bin/bash -D -S drone-scp
 	passwd -d drone-scp
 	mkdir -p /home/drone-scp/.ssh
 	chmod 700 /home/drone-scp/.ssh
 	cp tests/.ssh/id_rsa.pub /home/drone-scp/.ssh/authorized_keys
 	chown -R drone-scp /home/drone-scp/.ssh
-	# install ssh and start server
-	apk update && apk add openssh openrc
 	rm -rf /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_dsa_key
 	./tests/entrypoint.sh /usr/sbin/sshd -D &
 
