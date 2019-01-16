@@ -53,7 +53,7 @@ pipeline:
     environment:
       - GO111MODULE=on
     commands:
-      - apk update && apk add git openssh openrc make gcc
+      - apk update && apk add git openssh openrc make gcc libc-dev
       - make ssh-server
       - make test
       - make coverage
