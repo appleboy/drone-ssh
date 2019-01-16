@@ -47,7 +47,7 @@ pipeline:
       - make linux_arm
 
   test:
-    image: golang:1.11
+    image: golang:1.11-alpine
     pull: true
     group: golang
     environment:
