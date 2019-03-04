@@ -16,13 +16,32 @@ information and a listing of the available options please take a look at [the do
 **Note: Please update your image config path to `appleboy/drone-ssh` for drone. `plugins/ssh` is no longer maintained.**
 
 ![demo](./images/demo2017.05.10.gif)
-## Build
 
-Build the binary with the following commands:
+## Build or Download a binary
+
+The pre-compiled binaries can be downloaded from [release page](https://github.com/appleboy/drone-ssh/releases). Support the following OS type.
+
+* Windows amd64/386
+* Linux arm/amd64/386
+* Darwin amd64/386
+
+With `Go` installed
 
 ```
-go build
-go test
+$ go get -u -v github.com/appleboy/drone-ssh
+``` 
+
+or build the binary with the following command:
+
+```
+$ export GOOS=linux
+$ export GOARCH=amd64
+$ export CGO_ENABLED=0
+$ export GO111MODULE=on
+
+$ go test -cover ./...
+
+$ go build -v -a -tags netgo -o release/linux/amd64/drone-ssh .
 ```
 
 ## Docker

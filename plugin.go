@@ -14,10 +14,10 @@ import (
 )
 
 var (
-	missingHost          = errors.New("Error: missing server host")
-	missingPasswordOrKey = errors.New("Error: can't connect without a private SSH key or password")
-	commandTimeOut       = errors.New("Error: command timeout")
-	setPasswordandKey    = errors.New("can't set password and key at the same time")
+	errMissingHost          = errors.New("Error: missing server host")
+	errMissingPasswordOrKey = errors.New("Error: can't connect without a private SSH key or password")
+	errCommandTimeOut       = errors.New("Error: command timeout")
+	errSetPasswordandKey    = errors.New("can't set password and key at the same time")
 )
 
 type (
@@ -118,7 +118,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 
 		// command time out
 		if !isTimeout {
-			errChannel <- commandTimeOut
+			errChannel <- errCommandTimeOut
 		}
 	}
 
@@ -139,15 +139,15 @@ func (p Plugin) log(host string, message ...interface{}) {
 // Exec executes the plugin.
 func (p Plugin) Exec() error {
 	if len(p.Config.Host) == 0 {
-		return missingHost
+		return errMissingHost
 	}
 
 	if len(p.Config.Key) == 0 && len(p.Config.Password) == 0 && len(p.Config.KeyPath) == 0 {
-		return missingPasswordOrKey
+		return errMissingPasswordOrKey
 	}
 
 	if len(p.Config.Key) != 0 && len(p.Config.Password) != 0 {
-		return setPasswordandKey
+		return errSetPasswordandKey
 	}
 
 	wg := sync.WaitGroup{}
