@@ -24,23 +24,23 @@
           },
         ],
       },
-      // {
-      //   name: 'lint',
-      //   image: 'golang:1.12',
-      //   pull: 'always',
-      //   environment: {
-      //     GO111MODULE: 'on',
-      //   },
-      //   commands: [
-      //     'make lint',
-      //   ],
-      //   volumes: [
-      //     {
-      //       name: 'gopath',
-      //       path: '/go',
-      //     },
-      //   ],
-      // },
+      {
+        name: 'lint',
+        image: 'golang:1.12',
+        pull: 'always',
+        environment: {
+          GO111MODULE: 'on',
+        },
+        commands: [
+          'make lint',
+        ],
+        volumes: [
+          {
+            name: 'gopath',
+            path: '/go',
+          },
+        ],
+      },
       {
         name: 'misspell',
         image: 'golang:1.12',
