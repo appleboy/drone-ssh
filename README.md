@@ -15,7 +15,7 @@ information and a listing of the available options please take a look at [the do
 
 **Note: Please update your image config path to `appleboy/drone-ssh` for drone. `plugins/ssh` is no longer maintained.**
 
-![demo](./screenshot/demo2017.05.10.gif)
+![demo](./images/demo2017.05.10.gif)
 ## Build
 
 Build the binary with the following commands:
@@ -59,9 +59,9 @@ docker run --rm \
 
 ## Mount key from file path
 
-Please make sure that enable the `trusted` mode in project setting.
+Please make sure that enable the `trusted` mode in project setting for [drone 0.8 version](https://0-8-0.docs.drone.io/).
 
-![trusted mode](./screenshot/trust.png)
+![trusted mode](./images/trust.png)
 
 Mount private key in `volumes` setting of `.drone.yml` config
 
