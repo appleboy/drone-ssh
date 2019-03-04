@@ -1,4 +1,4 @@
-<img src="ssh.png">
+<img src="images/ssh.png">
 
 # drone-ssh
 
