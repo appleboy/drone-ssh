@@ -16,7 +16,7 @@ func TestMissingHostOrUser(t *testing.T) {
 	err := plugin.Exec()
 
 	assert.NotNil(t, err)
-	assert.Equal(t, missingHostOrUser, err.Error())
+	assert.Equal(t, missingHost, err)
 }
 
 func TestMissingKeyOrPassword(t *testing.T) {
@@ -31,7 +31,7 @@ func TestMissingKeyOrPassword(t *testing.T) {
 	err := plugin.Exec()
 
 	assert.NotNil(t, err)
-	assert.Equal(t, missingPasswordOrKey, err.Error())
+	assert.Equal(t, missingPasswordOrKey, err)
 }
 
 func TestSetPasswordAndKey(t *testing.T) {
@@ -48,7 +48,7 @@ func TestSetPasswordAndKey(t *testing.T) {
 	err := plugin.Exec()
 
 	assert.NotNil(t, err)
-	assert.Equal(t, setPasswordandKey, err.Error())
+	assert.Equal(t, setPasswordandKey, err)
 }
 
 func TestIncorrectPassword(t *testing.T) {

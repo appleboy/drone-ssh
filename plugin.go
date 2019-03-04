@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -12,11 +13,11 @@ import (
 	"github.com/appleboy/easyssh-proxy"
 )
 
-const (
-	missingHostOrUser    = "Error: missing server host or user"
-	missingPasswordOrKey = "Error: can't connect without a private SSH key or password"
-	commandTimeOut       = "Error: command timeout"
-	setPasswordandKey    = "can't set password and key at the same time"
+var (
+	missingHost          = errors.New("Error: missing server host")
+	missingPasswordOrKey = errors.New("Error: can't connect without a private SSH key or password")
+	commandTimeOut       = errors.New("Error: command timeout")
+	setPasswordandKey    = errors.New("can't set password and key at the same time")
 )
 
 type (
@@ -117,7 +118,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 
 		// command time out
 		if !isTimeout {
-			errChannel <- fmt.Errorf(commandTimeOut)
+			errChannel <- commandTimeOut
 		}
 	}
 
@@ -137,16 +138,16 @@ func (p Plugin) log(host string, message ...interface{}) {
 
 // Exec executes the plugin.
 func (p Plugin) Exec() error {
-	if len(p.Config.Host) == 0 && len(p.Config.UserName) == 0 {
-		return fmt.Errorf(missingHostOrUser)
+	if len(p.Config.Host) == 0 {
+		return missingHost
 	}
 
 	if len(p.Config.Key) == 0 && len(p.Config.Password) == 0 && len(p.Config.KeyPath) == 0 {
-		return fmt.Errorf(missingPasswordOrKey)
+		return missingPasswordOrKey
 	}
 
 	if len(p.Config.Key) != 0 && len(p.Config.Password) != 0 {
-		return fmt.Errorf(setPasswordandKey)
+		return setPasswordandKey
 	}
 
 	wg := sync.WaitGroup{}
