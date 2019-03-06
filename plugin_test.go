@@ -23,7 +23,7 @@ func TestMissingKeyOrPassword(t *testing.T) {
 	plugin := Plugin{
 		Config{
 			Host:     []string{"localhost"},
-			UserName: "ubuntu",
+			Username: "ubuntu",
 		},
 		os.Stdout,
 	}
@@ -38,7 +38,7 @@ func TestSetPasswordAndKey(t *testing.T) {
 	plugin := Plugin{
 		Config{
 			Host:     []string{"localhost"},
-			UserName: "ubuntu",
+			Username: "ubuntu",
 			Password: "1234",
 			Key:      "1234",
 		},
@@ -55,7 +55,7 @@ func TestIncorrectPassword(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:           []string{"localhost"},
-			UserName:       "drone-scp",
+			Username:       "drone-scp",
 			Port:           22,
 			Password:       "123456",
 			Script:         []string{"whoami"},
@@ -71,7 +71,7 @@ func TestSSHScriptFromRawKey(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:           []string{"localhost"},
-			UserName:       "drone-scp",
+			Username:       "drone-scp",
 			Port:           22,
 			CommandTimeout: 60,
 			Key: `-----BEGIN RSA PRIVATE KEY-----
@@ -114,7 +114,7 @@ func TestSSHScriptFromKeyFile(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:           []string{"localhost", "127.0.0.1"},
-			UserName:       "drone-scp",
+			Username:       "drone-scp",
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"whoami", "ls -al"},
@@ -130,7 +130,7 @@ func TestStreamFromSSHCommand(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:           []string{"localhost", "127.0.0.1"},
-			UserName:       "drone-scp",
+			Username:       "drone-scp",
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"whoami", "for i in {1..5}; do echo ${i}; sleep 1; done", "echo 'done'"},
@@ -146,7 +146,7 @@ func TestSSHScriptWithError(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:           []string{"localhost", "127.0.0.1"},
-			UserName:       "drone-scp",
+			Username:       "drone-scp",
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"exit 1"},
@@ -163,7 +163,7 @@ func TestSSHCommandTimeOut(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:           []string{"localhost"},
-			UserName:       "drone-scp",
+			Username:       "drone-scp",
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"sleep 5"},
@@ -179,7 +179,7 @@ func TestProxyCommand(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:           []string{"localhost"},
-			UserName:       "drone-scp",
+			Username:       "drone-scp",
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"whoami"},
@@ -201,7 +201,7 @@ func TestSSHCommandError(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:           []string{"localhost"},
-			UserName:       "drone-scp",
+			Username:       "drone-scp",
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"mkdir a", "mkdir a"},
@@ -217,7 +217,7 @@ func TestSSHCommandExitCodeError(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:     []string{"localhost"},
-			UserName: "drone-scp",
+			Username: "drone-scp",
 			Port:     22,
 			KeyPath:  "./tests/.ssh/id_rsa",
 			Script: []string{
@@ -240,7 +240,7 @@ func TestSetENV(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:           []string{"localhost"},
-			UserName:       "drone-scp",
+			Username:       "drone-scp",
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Secrets:        []string{"FOO"},
@@ -267,7 +267,7 @@ func TestSetExistingENV(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:           []string{"localhost"},
-			UserName:       "drone-scp",
+			Username:       "drone-scp",
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Secrets:        []string{"FOO"},
@@ -292,7 +292,7 @@ func TestSyncMode(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:           []string{"localhost", "127.0.0.1"},
-			UserName:       "drone-scp",
+			Username:       "drone-scp",
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"whoami", "for i in {1..3}; do echo ${i}; sleep 1; done", "echo 'done'"},
@@ -363,7 +363,7 @@ func TestCommandOutput(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:     []string{"localhost", "127.0.0.1"},
-			UserName: "drone-scp",
+			Username: "drone-scp",
 			Port:     22,
 			KeyPath:  "./tests/.ssh/id_rsa",
 			Script: []string{
@@ -398,7 +398,7 @@ func TestScriptStop(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:     []string{"localhost"},
-			UserName: "drone-scp",
+			Username: "drone-scp",
 			Port:     22,
 			KeyPath:  "./tests/.ssh/id_rsa",
 			Script: []string{
@@ -433,7 +433,7 @@ func TestNoneScriptStop(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:     []string{"localhost"},
-			UserName: "drone-scp",
+			Username: "drone-scp",
 			Port:     22,
 			KeyPath:  "./tests/.ssh/id_rsa",
 			Script: []string{
@@ -494,7 +494,7 @@ func TestEnvOutput(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
 			Host:     []string{"localhost"},
-			UserName: "drone-scp",
+			Username: "drone-scp",
 			Port:     22,
 			KeyPath:  "./tests/.ssh/id_rsa",
 			Envs:     []string{"env_1", "env_2", "env_3", "env_4", "env_5", "env_6", "env_7"},

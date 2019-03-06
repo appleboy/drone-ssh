@@ -25,7 +25,7 @@ type (
 	Config struct {
 		Key            string
 		KeyPath        string
-		UserName       string
+		Username       string
 		Password       string
 		Host           []string
 		Port           int
@@ -55,7 +55,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	// Create MakeConfig instance with remote username, server address and path to private key.
 	ssh := &easyssh.MakeConfig{
 		Server:   host,
-		User:     p.Config.UserName,
+		User:     p.Config.Username,
 		Password: p.Config.Password,
 		Port:     strconv.Itoa(p.Config.Port),
 		Key:      p.Config.Key,

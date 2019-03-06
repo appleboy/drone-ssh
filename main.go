@@ -195,7 +195,7 @@ func run(c *cli.Context) error {
 		Config: Config{
 			Key:            c.String("ssh-key"),
 			KeyPath:        c.String("key-path"),
-			UserName:       c.String("user"),
+			Username:       c.String("user"),
 			Password:       c.String("password"),
 			Host:           c.StringSlice("host"),
 			Port:           c.Int("port"),
