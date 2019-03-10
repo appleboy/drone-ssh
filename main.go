@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/appleboy/easyssh-proxy"
@@ -10,17 +10,10 @@ import (
 	"github.com/urfave/cli"
 )
 
-// build number set at compile-time
-var build = "0"
-
 // Version set at compile-time
 var Version string
 
 func main() {
-	if Version == "" {
-		Version = fmt.Sprintf("1.3.1+%s", build)
-	}
-
 	// Load env-file if it exists first
 	if filename, found := os.LookupEnv("PLUGIN_ENV_FILE"); found {
 		_ = godotenv.Load(filename)
@@ -29,7 +22,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "Drone SSH"
 	app.Usage = "Executing remote ssh commands"
-	app.Copyright = "Copyright (c) 2017 Bo-Yi Wu"
+	app.Copyright = "Copyright (c) 2019 Bo-Yi Wu"
 	app.Authors = []cli.Author{
 		{
 			Name:  "Bo-Yi Wu",
