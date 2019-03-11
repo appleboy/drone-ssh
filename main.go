@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"time"
 
 	"github.com/appleboy/easyssh-proxy"
 	"github.com/joho/godotenv"
@@ -74,11 +75,11 @@ func main() {
 			Usage:  "connection timeout",
 			EnvVar: "PLUGIN_TIMEOUT,SSH_TIMEOUT",
 		},
-		cli.IntFlag{
+		cli.DurationFlag{
 			Name:   "command.timeout,T",
 			Usage:  "command timeout",
 			EnvVar: "PLUGIN_COMMAND_TIMEOUT,SSH_COMMAND_TIMEOUT",
-			Value:  60,
+			Value:  60 * time.Second,
 		},
 		cli.StringSliceFlag{
 			Name:   "script,s",
@@ -192,7 +193,7 @@ func run(c *cli.Context) error {
 			Host:           c.StringSlice("host"),
 			Port:           c.Int("port"),
 			Timeout:        c.Duration("timeout"),
-			CommandTimeout: c.Int("command.timeout"),
+			CommandTimeout: c.Duration("command.timeout"),
 			Script:         c.StringSlice("script"),
 			ScriptStop:     c.Bool("script.stop"),
 			Secrets:        c.StringSlice("secrets"),

@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/appleboy/easyssh-proxy"
 	"github.com/stretchr/testify/assert"
@@ -59,7 +60,7 @@ func TestIncorrectPassword(t *testing.T) {
 			Port:           22,
 			Password:       "123456",
 			Script:         []string{"whoami"},
-			CommandTimeout: 60,
+			CommandTimeout: 60 * time.Second,
 		},
 	}
 
@@ -73,7 +74,7 @@ func TestSSHScriptFromRawKey(t *testing.T) {
 			Host:           []string{"localhost"},
 			Username:       "drone-scp",
 			Port:           22,
-			CommandTimeout: 60,
+			CommandTimeout: 60 * time.Second,
 			Key: `-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEA4e2D/qPN08pzTac+a8ZmlP1ziJOXk45CynMPtva0rtK/RB26
 VbfAF0hIJji7ltvnYnqCU9oFfvEM33cTn7T96+od8ib/Vz25YU8ZbstqtIskPuwC
@@ -118,7 +119,7 @@ func TestSSHScriptFromKeyFile(t *testing.T) {
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"whoami", "ls -al"},
-			CommandTimeout: 60,
+			CommandTimeout: 60 * time.Second,
 		},
 	}
 
@@ -134,7 +135,7 @@ func TestStreamFromSSHCommand(t *testing.T) {
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"whoami", "for i in {1..5}; do echo ${i}; sleep 1; done", "echo 'done'"},
-			CommandTimeout: 60,
+			CommandTimeout: 60 * time.Second,
 		},
 	}
 
@@ -150,7 +151,7 @@ func TestSSHScriptWithError(t *testing.T) {
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"exit 1"},
-			CommandTimeout: 60,
+			CommandTimeout: 60 * time.Second,
 		},
 	}
 
@@ -167,7 +168,7 @@ func TestSSHCommandTimeOut(t *testing.T) {
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"sleep 5"},
-			CommandTimeout: 1,
+			CommandTimeout: 1 * time.Second,
 		},
 	}
 
@@ -183,7 +184,7 @@ func TestProxyCommand(t *testing.T) {
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"whoami"},
-			CommandTimeout: 1,
+			CommandTimeout: 1 * time.Second,
 			Proxy: easyssh.DefaultConfig{
 				Server:  "localhost",
 				User:    "drone-scp",
@@ -205,7 +206,7 @@ func TestSSHCommandError(t *testing.T) {
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"mkdir a", "mkdir a"},
-			CommandTimeout: 60,
+			CommandTimeout: 60 * time.Second,
 		},
 	}
 
@@ -227,7 +228,7 @@ func TestSSHCommandExitCodeError(t *testing.T) {
 				"mkdir a",
 				"echo 2",
 			},
-			CommandTimeout: 60,
+			CommandTimeout: 60 * time.Second,
 		},
 	}
 
@@ -247,7 +248,7 @@ func TestSetENV(t *testing.T) {
 			Envs:           []string{"foo"},
 			Debug:          true,
 			Script:         []string{"whoami; echo $FOO"},
-			CommandTimeout: 1,
+			CommandTimeout: 1 * time.Second,
 			Proxy: easyssh.DefaultConfig{
 				Server:  "localhost",
 				User:    "drone-scp",
@@ -274,7 +275,7 @@ func TestSetExistingENV(t *testing.T) {
 			Envs:           []string{"foo", "bar", "baz"},
 			Debug:          true,
 			Script:         []string{"export FOO", "export BAR", "export BAZ", "env | grep -q '^FOO=Value for foo$'", "env | grep -q '^BAR=$'", "if env | grep -q BAZ; then false; else true; fi"},
-			CommandTimeout: 1,
+			CommandTimeout: 1 * time.Second,
 			Proxy: easyssh.DefaultConfig{
 				Server:  "localhost",
 				User:    "drone-scp",
@@ -296,7 +297,7 @@ func TestSyncMode(t *testing.T) {
 			Port:           22,
 			KeyPath:        "./tests/.ssh/id_rsa",
 			Script:         []string{"whoami", "for i in {1..3}; do echo ${i}; sleep 1; done", "echo 'done'"},
-			CommandTimeout: 60,
+			CommandTimeout: 60 * time.Second,
 			Sync:           true,
 		},
 	}
@@ -371,7 +372,7 @@ func TestCommandOutput(t *testing.T) {
 				"whoami",
 				"uname",
 			},
-			CommandTimeout: 60,
+			CommandTimeout: 60 * time.Second,
 			Sync:           true,
 		},
 		Writer: &buffer,
@@ -405,7 +406,7 @@ func TestScriptStop(t *testing.T) {
 				"mkdir a/b/c",
 				"mkdir d/e/f",
 			},
-			CommandTimeout: 10,
+			CommandTimeout: 10 * time.Second,
 			ScriptStop:     true,
 		},
 		Writer: &buffer,
@@ -440,7 +441,7 @@ func TestNoneScriptStop(t *testing.T) {
 				"mkdir a/b/c",
 				"mkdir d/e/f",
 			},
-			CommandTimeout: 10,
+			CommandTimeout: 10 * time.Second,
 		},
 		Writer: &buffer,
 	}
@@ -508,7 +509,7 @@ func TestEnvOutput(t *testing.T) {
 				`echo "[${ENV_6}]"`,
 				`echo "[${ENV_7}]"`,
 			},
-			CommandTimeout: 10,
+			CommandTimeout: 10 * time.Second,
 			Proxy: easyssh.DefaultConfig{
 				Server:  "localhost",
 				User:    "drone-scp",

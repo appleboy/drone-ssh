@@ -17,6 +17,28 @@ information and a listing of the available options please take a look at [the do
 
 ![demo](./images/demo2017.05.10.gif)
 
+## Breaking changes
+
+`v1.5.0`: change command timeout flag to `Duration`. See the following setting:
+
+```diff
+pipeline:
+  scp:
+    image: appleboy/drone-scp
+    settings:
+      host:
+        - example1.com
+        - example2.com
+      username: ubuntu
+      password:
+        from_secret: ssh_password
+      port: 22
+-     command_timeout: 120
++     command_timeout: 2m
+      script:
+        - echo "Hello World"
+```
+
 ## Build or Download a binary
 
 The pre-compiled binaries can be downloaded from [release page](https://github.com/appleboy/drone-ssh/releases). Support the following OS type.
