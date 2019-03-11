@@ -14,13 +14,14 @@ Use the SSH plugin to execute commands on a remote server. The below pipeline co
 pipeline:
   ssh:
     image: appleboy/drone-ssh
-    host: foo.com
-    username: root
-    password: 1234
-    port: 22
-    script:
-      - echo hello
-      - echo world
+    settings:
+      host: foo.com
+      username: root
+      password: 1234
+      port: 22
+      script:
+        - echo hello
+        - echo world
 ```
 
 Example configuration in your `.drone.yml` file for multiple hosts:
@@ -29,31 +30,33 @@ Example configuration in your `.drone.yml` file for multiple hosts:
 pipeline:
   ssh:
     image: appleboy/drone-ssh
-    host:
-+    - foo.com
-+    - bar.com
-    username: root
-    password: 1234
-    port: 22
-    script:
-      - echo hello
-      - echo world
+    settings:
+      host:
++       - foo.com
++       - bar.com
+      username: root
+      password: 1234
+      port: 22
+      script:
+        - echo hello
+        - echo world
 ```
 
-Example configuration for command timeout (unit: second), default value is 60 seconds:
+Example configuration for command timeout, default value is 60 seconds:
 
 ```diff
 pipeline:
   ssh:
     image: appleboy/drone-ssh
-    host: foo.com
-    username: root
-    password: 1234
-    port: 22
-+   command_timeout: 120
-    script:
-      - echo hello
-      - echo world
+    settings:
+      host: foo.com
+      username: root
+      password: 1234
+      port: 22
++     command_timeout: 2m
+      script:
+        - echo hello
+        - echo world
 ```
 
 Example configuration for execute commands on a remote server using ｀SSHProxyCommand｀:
@@ -62,17 +65,18 @@ Example configuration for execute commands on a remote server using ｀SSHProxyC
 pipeline:
   ssh:
     image: appleboy/drone-ssh
-    host: foo.com
-    username: root
-    password: 1234
-    port: 22
-    script:
-      - echo hello
-      - echo world
-+   proxy_host: 10.130.33.145
-+   proxy_user: ubuntu
-+   proxy_port: 22
-+   proxy_password: 1234
+    settings:
+      host: foo.com
+      username: root
+      password: 1234
+      port: 22
+      script:
+        - echo hello
+        - echo world
++     proxy_host: 10.130.33.145
++     proxy_user: ubuntu
++     proxy_port: 22
++     proxy_password: 1234
 ```
 
 Example configuration using password from secrets:
@@ -81,14 +85,15 @@ Example configuration using password from secrets:
 pipeline:
   ssh:
     image: appleboy/drone-ssh
-    host: foo.com
-    username: root
--   password: 1234
-    port: 22
-+   secrets: [ ssh_password ]
-    script:
-      - echo hello
-      - echo world
+    settings:
+      host: foo.com
+      username: root
++     password:
++       from_secret: ssh_password
+      port: 22
+      script:
+        - echo hello
+        - echo world
 ```
 
 Example configuration using ssh key from secrets:
@@ -97,13 +102,15 @@ Example configuration using ssh key from secrets:
 pipeline:
   ssh:
     image: appleboy/drone-ssh
-    host: foo.com
-    username: root
-    port: 22
-+   secrets: [ ssh_key ]
-    script:
-      - echo hello
-      - echo world
+    settings:
+      host: foo.com
+      username: root
+      port: 22
++     key:
++       from_secret: ssh_key
+      script:
+        - echo hello
+        - echo world
 ```
 
 Example configuration for exporting custom secrets:
@@ -112,14 +119,15 @@ Example configuration for exporting custom secrets:
 pipeline:
   ssh:
     image: appleboy/drone-ssh
-    host: foo.com
-    username: root
-    password: 1234
-    port: 22
-+   secrets: [ aws_access_key_id ]
-+   envs: [ aws_access_key_id ]
-    script:
-      - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+    settings:
+      host: foo.com
+      username: root
+      password: 1234
+      port: 22
++     envs: 
+        - aws_access_key_id
+      script:
+        - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 ```
 
 # Secret Reference
