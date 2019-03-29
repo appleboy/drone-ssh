@@ -152,8 +152,8 @@ func (p Plugin) Exec() error {
 
 	wg := sync.WaitGroup{}
 	wg.Add(len(p.Config.Host))
-	errChannel := make(chan error, 1)
-	finished := make(chan bool, 1)
+	errChannel := make(chan error)
+	finished := make(chan struct{})
 	for _, host := range p.Config.Host {
 		if p.Config.Sync {
 			p.exec(host, &wg, errChannel)
