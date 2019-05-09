@@ -71,16 +71,7 @@ $ go build -v -a -tags netgo -o release/linux/amd64/drone-ssh .
 Build the docker image with the following commands:
 
 ```
-CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -tags netgo
-docker build -t appleboy/drone-ssh .
-```
-
-Please note incorrectly building the image for the correct x64 linux and with
-GCO disabled will result in an error when running the Docker image:
-
-```
-docker: Error response from daemon: Container command
-'/bin/drone-ssh' not found or does not exist..
+$ make docker
 ```
 
 ## Usage
