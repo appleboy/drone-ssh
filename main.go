@@ -36,60 +36,60 @@ func main() {
 		cli.StringFlag{
 			Name:   "ssh-key",
 			Usage:  "private ssh key",
-			EnvVar: "PLUGIN_SSH_KEY,PLUGIN_KEY,SSH_KEY",
+			EnvVar: "PLUGIN_SSH_KEY,PLUGIN_KEY,SSH_KEY,KEY",
 		},
 		cli.StringFlag{
 			Name:   "key-path,i",
 			Usage:  "ssh private key path",
-			EnvVar: "PLUGIN_KEY_PATH,SSH_KEY_PATH",
+			EnvVar: "PLUGIN_KEY_PATH,SSH_KEY_PATH,PATH",
 		},
 		cli.StringFlag{
 			Name:   "username,user,u",
 			Usage:  "connect as user",
-			EnvVar: "PLUGIN_USERNAME,PLUGIN_USER,SSH_USERNAME",
+			EnvVar: "PLUGIN_USERNAME,PLUGIN_USER,SSH_USERNAME,USERNAME",
 			Value:  "root",
 		},
 		cli.StringFlag{
 			Name:   "password,P",
 			Usage:  "user password",
-			EnvVar: "PLUGIN_PASSWORD,SSH_PASSWORD",
+			EnvVar: "PLUGIN_PASSWORD,SSH_PASSWORD,PASSWORD",
 		},
 		cli.StringSliceFlag{
 			Name:   "host,H",
 			Usage:  "connect to host",
-			EnvVar: "PLUGIN_HOST,SSH_HOST",
+			EnvVar: "PLUGIN_HOST,SSH_HOST,HOST",
 		},
 		cli.IntFlag{
 			Name:   "port,p",
 			Usage:  "connect to port",
-			EnvVar: "PLUGIN_PORT,SSH_PORT",
+			EnvVar: "PLUGIN_PORT,SSH_PORT,PORT",
 			Value:  22,
 		},
 		cli.BoolFlag{
 			Name:   "sync",
 			Usage:  "sync mode",
-			EnvVar: "PLUGIN_SYNC",
+			EnvVar: "PLUGIN_SYNC,SYNC",
 		},
 		cli.DurationFlag{
 			Name:   "timeout,t",
 			Usage:  "connection timeout",
-			EnvVar: "PLUGIN_TIMEOUT,SSH_TIMEOUT",
+			EnvVar: "PLUGIN_TIMEOUT,SSH_TIMEOUT,TIMEOUT",
 		},
 		cli.DurationFlag{
 			Name:   "command.timeout,T",
 			Usage:  "command timeout",
-			EnvVar: "PLUGIN_COMMAND_TIMEOUT,SSH_COMMAND_TIMEOUT",
+			EnvVar: "PLUGIN_COMMAND_TIMEOUT,SSH_COMMAND_TIMEOUT,COMMAND_TIMEOUT",
 			Value:  60 * time.Second,
 		},
 		cli.StringSliceFlag{
 			Name:   "script,s",
 			Usage:  "execute commands",
-			EnvVar: "PLUGIN_SCRIPT,SSH_SCRIPT",
+			EnvVar: "PLUGIN_SCRIPT,SSH_SCRIPT,SCRIPT",
 		},
 		cli.BoolFlag{
 			Name:   "script.stop",
 			Usage:  "stop script after first failure",
-			EnvVar: "PLUGIN_SCRIPT_STOP",
+			EnvVar: "PLUGIN_SCRIPT_STOP,STOP",
 		},
 		cli.StringFlag{
 			Name:   "proxy.ssh-key",
@@ -141,7 +141,7 @@ func main() {
 		cli.BoolFlag{
 			Name:   "debug",
 			Usage:  "debug mode",
-			EnvVar: "PLUGIN_DEBUG",
+			EnvVar: "PLUGIN_DEBUG,DEBUG",
 		},
 	}
 
@@ -196,7 +196,6 @@ func run(c *cli.Context) error {
 			CommandTimeout: c.Duration("command.timeout"),
 			Script:         c.StringSlice("script"),
 			ScriptStop:     c.Bool("script.stop"),
-			Secrets:        c.StringSlice("secrets"),
 			Envs:           c.StringSlice("envs"),
 			Debug:          c.Bool("debug"),
 			Sync:           c.Bool("sync"),

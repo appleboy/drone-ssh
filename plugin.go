@@ -33,7 +33,6 @@ type (
 		CommandTimeout time.Duration
 		Script         []string
 		ScriptStop     bool
-		Secrets        []string
 		Envs           []string
 		Proxy          easyssh.DefaultConfig
 		Debug          bool
