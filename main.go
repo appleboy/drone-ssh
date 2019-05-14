@@ -129,11 +129,6 @@ func main() {
 			EnvVar: "PLUGIN_PROXY_TIMEOUT,PROXY_SSH_TIMEOUT",
 		},
 		cli.StringSliceFlag{
-			Name:   "secrets",
-			Usage:  "plugin secret",
-			EnvVar: "PLUGIN_SECRETS",
-		},
-		cli.StringSliceFlag{
 			Name:   "envs",
 			Usage:  "Pass envs",
 			EnvVar: "PLUGIN_ENVS",
