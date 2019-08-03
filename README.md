@@ -1,14 +1,14 @@
-<img src="images/ssh.png">
-
 # drone-ssh
 
-[![GitHub tag](https://img.shields.io/github/tag/appleboy/drone-ssh.svg)](https://github.com/appleboy/drone-ssh/releases) 
-[![GoDoc](https://godoc.org/github.com/appleboy/drone-ssh?status.svg)](https://godoc.org/github.com/appleboy/drone-ssh) 
+![sshlog](images/ssh.png)
+
+[![GitHub tag](https://img.shields.io/github/tag/appleboy/drone-ssh.svg)](https://github.com/appleboy/drone-ssh/releases)
+[![GoDoc](https://godoc.org/github.com/appleboy/drone-ssh?status.svg)](https://godoc.org/github.com/appleboy/drone-ssh)
 [![Build Status](https://cloud.drone.io/api/badges/appleboy/drone-ssh/status.svg)](https://cloud.drone.io/appleboy/drone-ssh)
-[![codecov](https://codecov.io/gh/appleboy/drone-ssh/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-ssh) 
-[![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-ssh)](https://goreportcard.com/report/github.com/appleboy/drone-ssh) 
+[![codecov](https://codecov.io/gh/appleboy/drone-ssh/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-ssh)
+[![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-ssh)](https://goreportcard.com/report/github.com/appleboy/drone-ssh)
 [![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-ssh.svg)](https://hub.docker.com/r/appleboy/drone-ssh/)
-[![](https://images.microbadger.com/badges/image/appleboy/drone-ssh.svg)](https://microbadger.com/images/appleboy/drone-ssh "Get your own image badge on microbadger.com")
+[![micro badger](https://images.microbadger.com/badges/image/appleboy/drone-ssh.svg)](https://microbadger.com/images/appleboy/drone-ssh "Get your own image badge on microbadger.com")
 
 Drone plugin to execute commands on a remote host through SSH. For the usage
 information and a listing of the available options please take a look at [the docs](http://plugins.drone.io/appleboy/drone-ssh/).
@@ -49,29 +49,29 @@ The pre-compiled binaries can be downloaded from [release page](https://github.c
 
 With `Go` installed
 
+```sh
+go get -u -v github.com/appleboy/drone-ssh
 ```
-$ go get -u -v github.com/appleboy/drone-ssh
-``` 
 
 or build the binary with the following command:
 
-```
-$ export GOOS=linux
-$ export GOARCH=amd64
-$ export CGO_ENABLED=0
-$ export GO111MODULE=on
+```sh
+export GOOS=linux
+export GOARCH=amd64
+export CGO_ENABLED=0
+export GO111MODULE=on
 
-$ go test -cover ./...
+go test -cover ./...
 
-$ go build -v -a -tags netgo -o release/linux/amd64/drone-ssh .
+go build -v -a -tags netgo -o release/linux/amd64/drone-ssh .
 ```
 
 ## Docker
 
 Build the docker image with the following commands:
 
-```
-$ make docker
+```sh
+make docker
 ```
 
 ## Usage

@@ -1,8 +1,8 @@
 ---
-date: 2017-01-29T00:00:00+00:00
+date: 2019-08-04T00:00:00+00:00
 title: SSH
 author: appleboy
-tags: [ publish, ssh ]
+tags: [ deploy, publish, ssh ]
 repo: appleboy/drone-ssh
 logo: term.svg
 image: appleboy/drone-ssh
@@ -124,13 +124,13 @@ pipeline:
       username: root
       password: 1234
       port: 22
-+     envs: 
++     envs:
         - aws_access_key_id
       script:
         - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 ```
 
-# Secret Reference
+## Secret Reference
 
 ssh_username
 : account for target host user
@@ -150,7 +150,7 @@ proxy_ssh_password
 proxy_ssh_key
 : plain text of user private key for proxy server
 
-# Parameter Reference
+## Parameter Reference
 
 host
 : target hostname or IP
