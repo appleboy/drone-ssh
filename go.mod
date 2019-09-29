@@ -1,10 +1,10 @@
 module github.com/appleboy/drone-ssh
 
-go 1.12
+go 1.13
 
 require (
 	github.com/appleboy/easyssh-proxy v1.2.0
 	github.com/joho/godotenv v1.3.0
-	github.com/stretchr/testify v1.3.0
-	github.com/urfave/cli v1.20.0
+	github.com/stretchr/testify v1.4.0
+	github.com/urfave/cli v1.22.1
 )
