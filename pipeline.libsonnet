@@ -9,11 +9,8 @@
     steps: [
       {
         name: 'vet',
-        image: 'golang:1.12',
+        image: 'golang:1.13',
         pull: 'always',
-        environment: {
-          GO111MODULE: 'on',
-        },
         commands: [
           'make vet',
         ],
@@ -26,11 +23,8 @@
       },
       {
         name: 'lint',
-        image: 'golang:1.12',
+        image: 'golang:1.13',
         pull: 'always',
-        environment: {
-          GO111MODULE: 'on',
-        },
         commands: [
           'make lint',
         ],
@@ -43,11 +37,8 @@
       },
       {
         name: 'misspell',
-        image: 'golang:1.12',
+        image: 'golang:1.13',
         pull: 'always',
-        environment: {
-          GO111MODULE: 'on',
-        },
         commands: [
           'make misspell-check',
         ],
@@ -60,11 +51,8 @@
       },
       {
         name: 'test',
-        image: 'golang:1.12-alpine',
+        image: 'golang:1.13-alpine',
         pull: 'always',
-        environment: {
-          GO111MODULE: 'on',
-        },
         commands: [
           'apk add git make curl perl bash build-base zlib-dev ucl-dev',
           'make ssh-server',
@@ -105,11 +93,10 @@
     steps: [
       {
         name: 'build-push',
-        image: 'golang:1.12',
+        image: 'golang:1.13',
         pull: 'always',
         environment: {
           CGO_ENABLED: '0',
-          GO111MODULE: 'on',
         },
         commands: [
           'go build -v -ldflags \'-X main.build=${DRONE_BUILD_NUMBER}\' -a -o release/' + os + '/' + arch + '/' + name,
@@ -122,11 +109,10 @@
       },
       {
         name: 'build-tag',
-        image: 'golang:1.12',
+        image: 'golang:1.13',
         pull: 'always',
         environment: {
           CGO_ENABLED: '0',
-          GO111MODULE: 'on',
         },
         commands: [
           'go build -v -ldflags \'-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}\' -a -o release/' + os + '/' + arch + '/' + name,
@@ -137,7 +123,7 @@
       },
       {
         name: 'executable',
-        image: 'golang:1.12',
+        image: 'golang:1.13',
         pull: 'always',
         commands: [
           './release/' + os + '/' + arch + '/' + name + ' --help',
@@ -202,11 +188,8 @@
     steps: [
       {
         name: 'build-all-binary',
-        image: 'golang:1.12',
+        image: 'golang:1.13',
         pull: 'always',
-        environment: {
-          GO111MODULE: 'on',
-        },
         commands: [
           'make release'
         ],
