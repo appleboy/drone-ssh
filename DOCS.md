@@ -117,6 +117,21 @@ Example configuration for exporting custom secrets:
       - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 ```
 
+Example configuration for stoping script after first failure:
+
+```diff
+  image: appleboy/drone-ssh
+  settings:
+    host: foo.com
+    username: root
+    password: 1234
+    port: 22
++   script_stop: true
+    script:
+      - mkdir abc/def/efg
+      - echo "you can't see the steps."
+```
+
 ## Secret Reference
 
 ssh_username
