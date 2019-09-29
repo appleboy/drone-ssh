@@ -131,7 +131,7 @@ func main() {
 		},
 		cli.StringSliceFlag{
 			Name:   "envs",
-			Usage:  "Pass envs",
+			Usage:  "pass environment variable to shell script",
 			EnvVar: "PLUGIN_ENVS,INPUT_ENVS",
 		},
 		cli.BoolFlag{
