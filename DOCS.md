@@ -26,110 +26,117 @@ Use the SSH plugin to execute commands on a remote server. The below pipeline co
 Example configuration in your `.drone.yml` file for multiple hosts:
 
 ```diff
-  image: appleboy/drone-ssh
-  settings:
-    host:
-+     - foo.com
-+     - bar.com
-    username: root
-    password: 1234
-    port: 22
-    script:
-    - echo hello
-    - echo world
+  - name: ssh commands
+    image: appleboy/drone-ssh
+    settings:
+      host:
++       - foo.com
++       - bar.com
+      username: root
+      password: 1234
+      port: 22
+      script:
+      - echo hello
+      - echo world
 ```
 
 Example configuration for command timeout, default value is 60 seconds:
 
 ```diff
-  image: appleboy/drone-ssh
-  settings:
-    host: foo.com
-    username: root
-    password: 1234
-    port: 22
-+     command_timeout: 2m
-    script:
-      - echo hello
-      - echo world
+  - name: ssh commands
+    image: appleboy/drone-ssh
+    settings:
+      host: foo.com
+      username: root
+      password: 1234
+      port: 22
++       command_timeout: 2m
+      script:
+        - echo hello
+        - echo world
 ```
 
 Example configuration for execute commands on a remote server using ｀SSHProxyCommand｀:
 
 ```diff
-  image: appleboy/drone-ssh
-  settings:
-    host: foo.com
-    username: root
-    password: 1234
-    port: 22
-    script:
-      - echo hello
-      - echo world
-+   proxy_host: 10.130.33.145
-+   proxy_user: ubuntu
-+   proxy_port: 22
-+   proxy_password: 1234
+  - name: ssh commands
+    image: appleboy/drone-ssh
+    settings:
+      host: foo.com
+      username: root
+      password: 1234
+      port: 22
+      script:
+        - echo hello
+        - echo world
++     proxy_host: 10.130.33.145
++     proxy_user: ubuntu
++     proxy_port: 22
++     proxy_password: 1234
 ```
 
 Example configuration using password from secrets:
 
 ```diff
-  image: appleboy/drone-ssh
-  settings:
-    host: foo.com
-    username: root
-+   password:
-+     from_secret: ssh_password
-    port: 22
-    script:
-      - echo hello
-      - echo world
+  - name: ssh commands
+    image: appleboy/drone-ssh
+    settings:
+      host: foo.com
+      username: root
++     password:
++       from_secret: ssh_password
+      port: 22
+      script:
+        - echo hello
+        - echo world
 ```
 
 Example configuration using ssh key from secrets:
 
 ```diff
-  image: appleboy/drone-ssh
-  settings:
-    host: foo.com
-    username: root
-    port: 22
-+   key:
-+     from_secret: ssh_key
-    script:
-      - echo hello
-      - echo world
+  - name: ssh commands
+    image: appleboy/drone-ssh
+    settings:
+      host: foo.com
+      username: root
+      port: 22
++     key:
++       from_secret: ssh_key
+      script:
+        - echo hello
+        - echo world
 ```
 
 Example configuration for exporting custom secrets:
 
 ```diff
-  image: appleboy/drone-ssh
-  settings:
-    host: foo.com
-    username: root
-    password: 1234
-    port: 22
-+   envs:
-      - aws_access_key_id
-    script:
-      - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+  - name: ssh commands
+    image: appleboy/drone-ssh
+    settings:
+      host: foo.com
+      username: root
+      password: 1234
+      port: 22
++     envs:
+        - aws_access_key_id
+      script:
+        - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 ```
 
 Example configuration for stoping script after first failure:
 
 ```diff
-  image: appleboy/drone-ssh
-  settings:
-    host: foo.com
-    username: root
-    password: 1234
-    port: 22
-+   script_stop: true
-    script:
-      - mkdir abc/def/efg
-      - echo "you can't see the steps."
+  - name: ssh commands
+    image: appleboy/drone-ssh
+    settings:
+      host: foo.com
+      username: root
+      password: 1234
+      port: 22
++     script_stop: true
+      script:
+        - mkdir abc/def/efg
+        - echo "you can't see the steps."
 ```
 
 ## Secret Reference
