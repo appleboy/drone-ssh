@@ -2,7 +2,9 @@ package main
 
 import (
 	"bytes"
+	"io"
 	"os"
+	"reflect"
 	"strings"
 	"testing"
 	"time"
@@ -526,4 +528,57 @@ func TestEnvOutput(t *testing.T) {
 
 func unindent(text string) string {
 	return strings.TrimSpace(strings.Replace(text, "\t", "", -1))
+}
+
+func TestPlugin_scriptCommands(t *testing.T) {
+	type fields struct {
+		Config Config
+		Writer io.Writer
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		want   []string
+	}{
+		{
+			name: "normal testing",
+			fields: fields{
+				Config: Config{
+					Script: []string{"mkdir a", "mkdir b"},
+				},
+			},
+			want: []string{"mkdir a", "mkdir b"},
+		},
+		{
+			name: "script stop",
+			fields: fields{
+				Config: Config{
+					Script:     []string{"mkdir a", "mkdir b"},
+					ScriptStop: true,
+				},
+			},
+			want: []string{"mkdir a", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;", "mkdir b", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;"},
+		},
+		{
+			name: "normal testing 2",
+			fields: fields{
+				Config: Config{
+					Script:     []string{"mkdir a\nmkdir c", "mkdir b"},
+					ScriptStop: true,
+				},
+			},
+			want: []string{"mkdir a", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;", "mkdir c", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;", "mkdir b", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := Plugin{
+				Config: tt.fields.Config,
+				Writer: tt.fields.Writer,
+			}
+			if got := p.scriptCommands(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Plugin.scriptCommands() = %#v, want %#v", got, tt.want)
+			}
+		})
+	}
 }

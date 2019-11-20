@@ -182,19 +182,23 @@ func (p Plugin) Exec() error {
 }
 
 func (p Plugin) scriptCommands() []string {
-	numCommands := len(p.Config.Script)
-	if p.Config.ScriptStop {
-		numCommands *= 2
-	}
-
-	commands := make([]string, numCommands)
+	scripts := []string{}
 
 	for _, cmd := range p.Config.Script {
 		if p.Config.ScriptStop {
+			scripts = append(scripts, strings.Split(cmd, "\n")...)
+		} else {
+			scripts = append(scripts, cmd)
+		}
+	}
+
+	commands := make([]string, 0)
+
+	for _, cmd := range scripts {
+		commands = append(commands, cmd)
+		if p.Config.ScriptStop {
 			commands = append(commands, "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;")
 		}
-
-		commands = append(commands, cmd)
 	}
 
 	return commands
