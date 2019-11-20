@@ -85,7 +85,12 @@ func main() {
 		cli.StringSliceFlag{
 			Name:   "script,s",
 			Usage:  "execute commands",
-			EnvVar: "PLUGIN_SCRIPT,SSH_SCRIPT,SCRIPT,INPUT_SCRIPT",
+			EnvVar: "PLUGIN_SCRIPT,SSH_SCRIPT,SCRIPT",
+		},
+		cli.StringFlag{
+			Name:   "script.string",
+			Usage:  "execute single commands for github action",
+			EnvVar: "INPUT_SCRIPT",
 		},
 		cli.BoolFlag{
 			Name:   "script.stop",
@@ -180,6 +185,10 @@ REPOSITORY:
 }
 
 func run(c *cli.Context) error {
+	scripts := c.StringSlice("script")
+	if s := c.String("script.string"); s != "" {
+		scripts = append(scripts, s)
+	}
 	plugin := Plugin{
 		Config: Config{
 			Key:            c.String("ssh-key"),
@@ -190,7 +199,7 @@ func run(c *cli.Context) error {
 			Port:           c.Int("port"),
 			Timeout:        c.Duration("timeout"),
 			CommandTimeout: c.Duration("command.timeout"),
-			Script:         c.StringSlice("script"),
+			Script:         scripts,
 			ScriptStop:     c.Bool("script.stop"),
 			Envs:           c.StringSlice("envs"),
 			Debug:          c.Bool("debug"),
