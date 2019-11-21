@@ -569,6 +569,16 @@ func TestPlugin_scriptCommands(t *testing.T) {
 			},
 			want: []string{"mkdir a", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;", "mkdir c", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;", "mkdir b", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;"},
 		},
+		{
+			name: "trim space",
+			fields: fields{
+				Config: Config{
+					Script:     []string{"mkdir a", "mkdir b", "\t", " "},
+					ScriptStop: false,
+				},
+			},
+			want: []string{"mkdir a", "mkdir b"},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

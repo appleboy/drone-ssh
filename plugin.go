@@ -195,6 +195,9 @@ func (p Plugin) scriptCommands() []string {
 	commands := make([]string, 0)
 
 	for _, cmd := range scripts {
+		if strings.TrimSpace(cmd) == "" {
+			continue
+		}
 		commands = append(commands, cmd)
 		if p.Config.ScriptStop {
 			commands = append(commands, "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;")
