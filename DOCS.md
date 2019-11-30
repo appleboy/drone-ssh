@@ -189,10 +189,10 @@ script_stop
 : stop script after first failure
 
 timeout
-: Timeout is the maximum amount of time for the TCP connection to establish.
+: Timeout is the maximum amount of time for the ssh connection to establish, default is 30 seconds.
 
 command_timeout
-: Command timeout is the maximum amount of time for the execute commands, default is 60 secs.
+: Command timeout is the maximum amount of time for the execute commands, default is 10 minutes.
 
 proxy_host
 : proxy hostname or IP
