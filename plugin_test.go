@@ -494,12 +494,13 @@ func TestEnvOutput(t *testing.T) {
 
 	plugin := Plugin{
 		Config: Config{
-			Host:     []string{"localhost"},
-			Username: "drone-scp",
-			Port:     22,
-			KeyPath:  "./tests/.ssh/id_rsa",
-			Envs:     []string{"env_1", "env_2", "env_3", "env_4", "env_5", "env_6", "env_7"},
-			Debug:    true,
+			Host:       []string{"localhost"},
+			Username:   "drone-scp",
+			Port:       22,
+			KeyPath:    "./tests/.ssh/test",
+			Passphrase: "1234",
+			Envs:       []string{"env_1", "env_2", "env_3", "env_4", "env_5", "env_6", "env_7"},
+			Debug:      true,
 			Script: []string{
 				`echo "[${ENV_1}]"`,
 				`echo "[${ENV_2}]"`,

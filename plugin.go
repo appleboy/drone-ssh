@@ -24,6 +24,7 @@ type (
 	// Config for the plugin.
 	Config struct {
 		Key            string
+		Passphrase     string
 		KeyPath        string
 		Username       string
 		Password       string
@@ -53,21 +54,23 @@ func escapeArg(arg string) string {
 func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	// Create MakeConfig instance with remote username, server address and path to private key.
 	ssh := &easyssh.MakeConfig{
-		Server:   host,
-		User:     p.Config.Username,
-		Password: p.Config.Password,
-		Port:     strconv.Itoa(p.Config.Port),
-		Key:      p.Config.Key,
-		KeyPath:  p.Config.KeyPath,
-		Timeout:  p.Config.Timeout,
+		Server:     host,
+		User:       p.Config.Username,
+		Password:   p.Config.Password,
+		Port:       strconv.Itoa(p.Config.Port),
+		Key:        p.Config.Key,
+		KeyPath:    p.Config.KeyPath,
+		Passphrase: p.Config.Passphrase,
+		Timeout:    p.Config.Timeout,
 		Proxy: easyssh.DefaultConfig{
-			Server:   p.Config.Proxy.Server,
-			User:     p.Config.Proxy.User,
-			Password: p.Config.Proxy.Password,
-			Port:     p.Config.Proxy.Port,
-			Key:      p.Config.Proxy.Key,
-			KeyPath:  p.Config.Proxy.KeyPath,
-			Timeout:  p.Config.Proxy.Timeout,
+			Server:     p.Config.Proxy.Server,
+			User:       p.Config.Proxy.User,
+			Password:   p.Config.Proxy.Password,
+			Port:       p.Config.Proxy.Port,
+			Key:        p.Config.Proxy.Key,
+			KeyPath:    p.Config.Proxy.KeyPath,
+			Passphrase: p.Config.Proxy.Passphrase,
+			Timeout:    p.Config.Proxy.Timeout,
 		},
 	}
 
