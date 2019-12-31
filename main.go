@@ -40,7 +40,7 @@ func main() {
 		},
 		cli.StringFlag{
 			Name:   "ssh-passphrase",
-			Usage:  "ssh passphrase",
+			Usage:  "The purpose of the passphrase is usually to encrypt the private key.",
 			EnvVar: "PLUGIN_SSH_PASSPHRASE,PLUGIN_PASSPHRASE,SSH_PASSPHRASE,PASSPHRASE,INPUT_PASSPHRASE",
 		},
 		cli.StringFlag{
@@ -109,7 +109,7 @@ func main() {
 		},
 		cli.StringFlag{
 			Name:   "proxy.ssh-passphrase",
-			Usage:  "proxy ssh passphrase",
+			Usage:  "The purpose of the passphrase is usually to encrypt the private key.",
 			EnvVar: "PLUGIN_PROXY_SSH_PASSPHRASE,PLUGIN_PROXY_PASSPHRASE,PROXY_SSH_PASSPHRASE,PROXY_PASSPHRASE,INPUT_PROXY_PASSPHRASE",
 		},
 		cli.StringFlag{

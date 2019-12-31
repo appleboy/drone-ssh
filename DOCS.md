@@ -139,6 +139,23 @@ Example configuration for stoping script after first failure:
         - echo "you can't see the steps."
 ```
 
+Example configuration for passphrase which protecting a private key:
+
+```diff
+  - name: ssh commands
+    image: appleboy/drone-ssh
+    settings:
+      host: foo.com
+      username: root
++     key:
++       from_secret: ssh_key
++     passphrase: 1234
+      port: 22
+      script:
+        - mkdir abc/def/efg
+        - echo "you can't see the steps."
+```
+
 ## Secret Reference
 
 ssh_username
@@ -146,6 +163,9 @@ ssh_username
 
 ssh_password
 : password for target host user
+
+ssh_passphrase
+: The purpose of the passphrase is usually to encrypt the private key.
 
 ssh_key
 : plain text of user private key
@@ -155,6 +175,9 @@ proxy_ssh_username
 
 proxy_ssh_password
 : password for user of proxy server
+
+proxy_ssh_passphrase
+: The purpose of the passphrase is usually to encrypt the private key.
 
 proxy_ssh_key
 : plain text of user private key for proxy server
