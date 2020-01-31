@@ -9,7 +9,6 @@ DEPLOY_IMAGE := $(EXECUTABLE)
 
 TARGETS ?= linux darwin windows
 ARCHS ?= amd64 386
-PACKAGES ?= $(shell $(GO) list ./...)
 SOURCES ?= $(shell find . -name "*.go" -type f)
 TAGS ?=
 LDFLAGS ?= -X 'main.Version=$(VERSION)'
@@ -32,7 +31,7 @@ fmt:
 	$(GOFMT) -w $(SOURCES)
 
 vet:
-	$(GO) vet $(PACKAGES)
+	$(GO) vet ./...
 
 lint:
 	@hash revive > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
@@ -64,7 +63,7 @@ fmt-check:
 	fi;
 
 test: fmt-check
-	@$(GO) test -v -cover -coverprofile coverage.txt $(PACKAGES) && echo "\n==>\033[32m Ok\033[m\n" || exit 1
+	@$(GO) test -v -cover -coverprofile coverage.txt ./... && echo "\n==>\033[32m Ok\033[m\n" || exit 1
 
 install: $(SOURCES)
 	$(GO) install -v -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)'
