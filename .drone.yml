@@ -9,7 +9,7 @@ platform:
 steps:
 - name: vet
   pull: always
-  image: golang:1.13
+  image: golang:1.14
   commands:
   - make vet
   volumes:
@@ -18,7 +18,7 @@ steps:
 
 - name: lint
   pull: always
-  image: golang:1.13
+  image: golang:1.14
   commands:
   - make lint
   volumes:
@@ -27,7 +27,7 @@ steps:
 
 - name: misspell
   pull: always
-  image: golang:1.13
+  image: golang:1.14
   commands:
   - make misspell-check
   volumes:
@@ -36,7 +36,7 @@ steps:
 
 - name: test
   pull: always
-  image: golang:1.13-alpine
+  image: golang:1.14-alpine
   commands:
   - apk add git make curl perl bash build-base zlib-dev ucl-dev
   - make ssh-server
@@ -68,7 +68,7 @@ platform:
 steps:
 - name: build-push
   pull: always
-  image: golang:1.13
+  image: golang:1.14
   commands:
   - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-ssh
   environment:
@@ -80,7 +80,7 @@ steps:
 
 - name: build-tag
   pull: always
-  image: golang:1.13
+  image: golang:1.14
   commands:
   - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-ssh
   environment:
@@ -91,7 +91,7 @@ steps:
 
 - name: executable
   pull: always
-  image: golang:1.13
+  image: golang:1.14
   commands:
   - ./release/linux/amd64/drone-ssh --help
 
@@ -147,7 +147,7 @@ platform:
 steps:
 - name: build-push
   pull: always
-  image: golang:1.13
+  image: golang:1.14
   commands:
   - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-ssh
   environment:
@@ -159,7 +159,7 @@ steps:
 
 - name: build-tag
   pull: always
-  image: golang:1.13
+  image: golang:1.14
   commands:
   - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-ssh
   environment:
@@ -170,7 +170,7 @@ steps:
 
 - name: executable
   pull: always
-  image: golang:1.13
+  image: golang:1.14
   commands:
   - ./release/linux/arm64/drone-ssh --help
 
@@ -226,7 +226,7 @@ platform:
 steps:
 - name: build-push
   pull: always
-  image: golang:1.13
+  image: golang:1.14
   commands:
   - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-ssh
   environment:
@@ -238,7 +238,7 @@ steps:
 
 - name: build-tag
   pull: always
-  image: golang:1.13
+  image: golang:1.14
   commands:
   - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-ssh
   environment:
@@ -249,7 +249,7 @@ steps:
 
 - name: executable
   pull: always
-  image: golang:1.13
+  image: golang:1.14
   commands:
   - ./release/linux/arm/drone-ssh --help
 
@@ -305,7 +305,7 @@ platform:
 steps:
 - name: build-all-binary
   pull: always
-  image: golang:1.13
+  image: golang:1.14
   commands:
   - make release
   when:
