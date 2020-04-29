@@ -60,9 +60,10 @@ func main() {
 			EnvVar: "PLUGIN_PASSWORD,SSH_PASSWORD,PASSWORD,INPUT_PASSWORD",
 		},
 		cli.StringSliceFlag{
-			Name:   "host,H",
-			Usage:  "connect to host",
-			EnvVar: "PLUGIN_HOST,SSH_HOST,HOST,INPUT_HOST",
+			Name:     "host,H",
+			Usage:    "connect to host",
+			EnvVar:   "PLUGIN_HOST,SSH_HOST,HOST,INPUT_HOST",
+			FilePath: ".host",
 		},
 		cli.IntFlag{
 			Name:   "port,p",
