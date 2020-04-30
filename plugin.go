@@ -73,7 +73,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 			KeyPath:    p.Config.Proxy.KeyPath,
 			Passphrase: p.Config.Proxy.Passphrase,
 			Timeout:    p.Config.Proxy.Timeout,
-			Ciphers:    p.Config.Ciphers,
+			Ciphers:    p.Config.Proxy.Ciphers,
 		},
 	}
 

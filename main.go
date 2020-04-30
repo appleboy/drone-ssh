@@ -152,6 +152,12 @@ func main() {
 			EnvVar: "PLUGIN_PROXY_TIMEOUT,PROXY_SSH_TIMEOUT,INPUT_PROXY_TIMEOUT",
 		},
 		cli.StringSliceFlag{
+			Name:   "proxy.ciphers",
+			Usage:  "The allowed cipher algorithms. If unspecified then a sensible",
+			EnvVar: "PLUGIN_PROXY_CIPHERS,SSH_PROXY_CIPHERS,PROXY_CIPHERS,INPUT_PROXY_CIPHERS",
+			Value:  &defaultCiphers,
+		},
+		cli.StringSliceFlag{
 			Name:   "envs",
 			Usage:  "pass environment variable to shell script",
 			EnvVar: "PLUGIN_ENVS,INPUT_ENVS",
@@ -232,6 +238,7 @@ func run(c *cli.Context) error {
 				Server:     c.String("proxy.host"),
 				Port:       c.String("proxy.port"),
 				Timeout:    c.Duration("proxy.timeout"),
+				Ciphers:    c.StringSlice("proxy.ciphers"),
 			},
 		},
 		Writer: os.Stdout,
