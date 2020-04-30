@@ -19,7 +19,7 @@ func main() {
 	if filename, found := os.LookupEnv("PLUGIN_ENV_FILE"); found {
 		_ = godotenv.Load(filename)
 	}
-
+	defaultCiphers := cli.StringSlice{"aes128-ctr", "aes192-ctr", "aes256-ctr", "aes128-gcm@openssh.com", "arcfour256", "arcfour128", "aes128-cbc", "3des-cbc"}
 	app := cli.NewApp()
 	app.Name = "Drone SSH"
 	app.Usage = "Executing remote ssh commands"
@@ -58,6 +58,12 @@ func main() {
 			Name:   "password,P",
 			Usage:  "user password",
 			EnvVar: "PLUGIN_PASSWORD,SSH_PASSWORD,PASSWORD,INPUT_PASSWORD",
+		},
+		cli.StringSliceFlag{
+			Name:   "ciphers",
+			Usage:  "The allowed cipher algorithms. If unspecified then a sensible",
+			EnvVar: "PLUGIN_CIPHERS,SSH_CIPHERS,CIPHERS,INPUT_CIPHERS",
+			Value:  &defaultCiphers,
 		},
 		cli.StringSliceFlag{
 			Name:     "host,H",
@@ -216,6 +222,7 @@ func run(c *cli.Context) error {
 			Envs:           c.StringSlice("envs"),
 			Debug:          c.Bool("debug"),
 			Sync:           c.Bool("sync"),
+			Ciphers:        c.StringSlice("ciphers"),
 			Proxy: easyssh.DefaultConfig{
 				Key:        c.String("proxy.ssh-key"),
 				KeyPath:    c.String("proxy.key-path"),

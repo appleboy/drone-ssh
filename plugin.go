@@ -38,6 +38,7 @@ type (
 		Proxy          easyssh.DefaultConfig
 		Debug          bool
 		Sync           bool
+		Ciphers        []string
 	}
 
 	// Plugin structure
@@ -62,6 +63,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 		KeyPath:    p.Config.KeyPath,
 		Passphrase: p.Config.Passphrase,
 		Timeout:    p.Config.Timeout,
+		Ciphers:    p.Config.Ciphers,
 		Proxy: easyssh.DefaultConfig{
 			Server:     p.Config.Proxy.Server,
 			User:       p.Config.Proxy.User,
@@ -71,6 +73,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 			KeyPath:    p.Config.Proxy.KeyPath,
 			Passphrase: p.Config.Proxy.Passphrase,
 			Timeout:    p.Config.Proxy.Timeout,
+			Ciphers:    p.Config.Ciphers,
 		},
 	}
 
