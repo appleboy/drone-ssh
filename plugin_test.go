@@ -384,6 +384,29 @@ func TestCommandOutput(t *testing.T) {
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
 
+func TestFingerprint(t *testing.T) {
+	var (
+		buffer bytes.Buffer
+	)
+
+	plugin := Plugin{
+		Config: Config{
+			Host:     []string{"localhost"},
+			Username: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Script: []string{
+				"whoami",
+			},
+			Fingerprint: "wrong",
+		},
+		Writer: &buffer,
+	}
+
+	err := plugin.Exec()
+	assert.NotNil(t, err)
+}
+
 func TestScriptStop(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
