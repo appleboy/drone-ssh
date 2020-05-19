@@ -431,7 +431,7 @@ func TestFingerprint(t *testing.T) {
 		buffer   bytes.Buffer
 		expected = `
 			localhost: ======CMD======
-			localhost: pwd
+			localhost: whoami
 			localhost: ======END======
 			localhost: out: drone-scp
 		`
@@ -449,7 +449,8 @@ func TestFingerprint(t *testing.T) {
 			Script: []string{
 				"whoami",
 			},
-			Fingerprint: ssh.FingerprintSHA256(hostKey),
+			Fingerprint:    ssh.FingerprintSHA256(hostKey),
+			CommandTimeout: 10 * time.Second,
 		},
 		Writer: &buffer,
 	}
