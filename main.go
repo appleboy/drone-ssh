@@ -67,7 +67,7 @@ func main() {
 		},
 		cli.StringFlag{
 			Name:   "fingerprint",
-			Usage:  "fingerprint as unpadded base64 encoded sha256 hash.",
+			Usage:  "fingerprint SHA256 of the host public key, default is to skip verification",
 			EnvVar: "PLUGIN_FINGERPRINT,SSH_FINGERPRINT,FINGERPRINT,INPUT_FINGERPRINT",
 		},
 		cli.StringSliceFlag{
@@ -164,7 +164,7 @@ func main() {
 		},
 		cli.StringFlag{
 			Name:   "proxy.fingerprint",
-			Usage:  "fingerprint as unpadded base64 encoded sha256 hash.",
+			Usage:  "fingerprint SHA256 of the host public key, default is to skip verification",
 			EnvVar: "PLUGIN_PROXY_FINGERPRINT,SSH_PROXY_FINGERPRINT,PROXY_FINGERPRINT,INPUT_PROXY_FINGERPRINT",
 		},
 		cli.StringSliceFlag{
