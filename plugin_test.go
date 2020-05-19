@@ -430,10 +430,10 @@ func TestFingerprint(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			localhost: ======CMD======
-			localhost: whoami
-			localhost: ======END======
-			localhost: out: drone-scp
+			======CMD======
+			whoami
+			======END======
+			out: drone-scp
 		`
 	)
 
