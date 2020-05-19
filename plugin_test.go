@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"io"
+	"io/ioutil"
 	"os"
 	"reflect"
 	"strings"
@@ -11,6 +12,7 @@ import (
 
 	"github.com/appleboy/easyssh-proxy"
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/crypto/ssh"
 )
 
 func TestMissingHostOrUser(t *testing.T) {
@@ -384,7 +386,7 @@ func TestCommandOutput(t *testing.T) {
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
 
-func TestFingerprint(t *testing.T) {
+func TestWrongFingerprint(t *testing.T) {
 	var (
 		buffer bytes.Buffer
 	)
@@ -405,6 +407,56 @@ func TestFingerprint(t *testing.T) {
 
 	err := plugin.Exec()
 	assert.NotNil(t, err)
+}
+
+func getHostPublicKeyFile(keypath string) (ssh.PublicKey, error) {
+	var pubkey ssh.PublicKey
+	var err error
+	buf, err := ioutil.ReadFile(keypath)
+	if err != nil {
+		return nil, err
+	}
+
+	pubkey, _, _, _, err = ssh.ParseAuthorizedKey(buf)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return pubkey, nil
+}
+
+func TestFingerprint(t *testing.T) {
+	var (
+		buffer   bytes.Buffer
+		expected = `
+			localhost: ======CMD======
+			localhost: pwd
+			localhost: ======END======
+			localhost: out: drone-scp
+		`
+	)
+
+	hostKey, err := getHostPublicKeyFile("/etc/ssh/ssh_host_rsa_key.pub")
+	assert.NoError(t, err)
+
+	plugin := Plugin{
+		Config: Config{
+			Host:     []string{"localhost"},
+			Username: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Script: []string{
+				"whoami",
+			},
+			Fingerprint: ssh.FingerprintSHA256(hostKey),
+		},
+		Writer: &buffer,
+	}
+
+	err = plugin.Exec()
+	assert.Nil(t, err)
+	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
 
 func TestScriptStop(t *testing.T) {
