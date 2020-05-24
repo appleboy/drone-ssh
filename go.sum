@@ -1,10 +1,6 @@
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/ScaleFT/sshkeys v0.0.0-20181112160850-82451a803681 h1:JS2rl38kZmHgWa0xINSaSYH0Whtvem64/4+Ef0+Y5pE=
 github.com/ScaleFT/sshkeys v0.0.0-20181112160850-82451a803681/go.mod h1:WfDateMPQ/55dPbZRp5Zxrux5WiEaHsjk9puUhz0KgY=
-github.com/appleboy/easyssh-proxy v1.3.4 h1:yNgzsJ9qaDNGzQILDXEK4boioJMmUUaTUsxYtCTSGqo=
-github.com/appleboy/easyssh-proxy v1.3.4/go.mod h1:Kk57I3w7OCafOjp5kgZFvxk2fO8Tca5CriBTOsbSbjY=
-github.com/appleboy/easyssh-proxy v1.3.5 h1:EGTCbqAVRcGKHQMFSxz30lQmb+0nXL+jUiCrg/FjHQM=
-github.com/appleboy/easyssh-proxy v1.3.5/go.mod h1:Kk57I3w7OCafOjp5kgZFvxk2fO8Tca5CriBTOsbSbjY=
 github.com/appleboy/easyssh-proxy v1.3.6 h1:YELdI5z/NK/hSspkkcohSa9uJQxA4/e2H+f5jDD6pGA=
 github.com/appleboy/easyssh-proxy v1.3.6/go.mod h1:Kk57I3w7OCafOjp5kgZFvxk2fO8Tca5CriBTOsbSbjY=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d h1:U+s90UTSYgptZMwQh2aRr3LuazLJIa+Pg3Kc1ylSYVY=
