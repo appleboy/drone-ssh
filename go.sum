@@ -5,6 +5,8 @@ github.com/appleboy/easyssh-proxy v1.3.4 h1:yNgzsJ9qaDNGzQILDXEK4boioJMmUUaTUsxY
 github.com/appleboy/easyssh-proxy v1.3.4/go.mod h1:Kk57I3w7OCafOjp5kgZFvxk2fO8Tca5CriBTOsbSbjY=
 github.com/appleboy/easyssh-proxy v1.3.5 h1:EGTCbqAVRcGKHQMFSxz30lQmb+0nXL+jUiCrg/FjHQM=
 github.com/appleboy/easyssh-proxy v1.3.5/go.mod h1:Kk57I3w7OCafOjp5kgZFvxk2fO8Tca5CriBTOsbSbjY=
+github.com/appleboy/easyssh-proxy v1.3.6 h1:YELdI5z/NK/hSspkkcohSa9uJQxA4/e2H+f5jDD6pGA=
+github.com/appleboy/easyssh-proxy v1.3.6/go.mod h1:Kk57I3w7OCafOjp5kgZFvxk2fO8Tca5CriBTOsbSbjY=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d h1:U+s90UTSYgptZMwQh2aRr3LuazLJIa+Pg3Kc1ylSYVY=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=

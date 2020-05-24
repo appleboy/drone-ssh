@@ -19,7 +19,6 @@ func main() {
 	if filename, found := os.LookupEnv("PLUGIN_ENV_FILE"); found {
 		_ = godotenv.Load(filename)
 	}
-	defaultCiphers := cli.StringSlice{"aes128-ctr", "aes192-ctr", "aes256-ctr", "aes128-gcm@openssh.com", "arcfour256", "arcfour128", "aes128-cbc", "3des-cbc"}
 	app := cli.NewApp()
 	app.Name = "Drone SSH"
 	app.Usage = "Executing remote ssh commands"
@@ -63,7 +62,11 @@ func main() {
 			Name:   "ciphers",
 			Usage:  "The allowed cipher algorithms. If unspecified then a sensible",
 			EnvVar: "PLUGIN_CIPHERS,SSH_CIPHERS,CIPHERS,INPUT_CIPHERS",
-			Value:  &defaultCiphers,
+		},
+		cli.BoolFlag{
+			Name:   "useInsecureCipher",
+			Usage:  "include more ciphers with use_insecure_cipher",
+			EnvVar: "PLUGIN_USE_INSECURE_CIPHER,SSH_USE_INSECURE_CIPHER,USE_INSECURE_CIPHER,INPUT_USE_INSECURE_CIPHER",
 		},
 		cli.StringFlag{
 			Name:   "fingerprint",
@@ -160,7 +163,11 @@ func main() {
 			Name:   "proxy.ciphers",
 			Usage:  "The allowed cipher algorithms. If unspecified then a sensible",
 			EnvVar: "PLUGIN_PROXY_CIPHERS,SSH_PROXY_CIPHERS,PROXY_CIPHERS,INPUT_PROXY_CIPHERS",
-			Value:  &defaultCiphers,
+		},
+		cli.BoolFlag{
+			Name:   "proxy.useInsecureCipher",
+			Usage:  "include more ciphers with use_insecure_cipher",
+			EnvVar: "PLUGIN_PROXY_USE_INSECURE_CIPHER,SSH_PROXY_USE_INSECURE_CIPHER,PROXY_USE_INSECURE_CIPHER,INPUT_PROXY_USE_INSECURE_CIPHER",
 		},
 		cli.StringFlag{
 			Name:   "proxy.fingerprint",
@@ -224,33 +231,35 @@ func run(c *cli.Context) error {
 	}
 	plugin := Plugin{
 		Config: Config{
-			Key:            c.String("ssh-key"),
-			KeyPath:        c.String("key-path"),
-			Username:       c.String("user"),
-			Password:       c.String("password"),
-			Passphrase:     c.String("ssh-passphrase"),
-			Fingerprint:    c.String("fingerprint"),
-			Host:           c.StringSlice("host"),
-			Port:           c.Int("port"),
-			Timeout:        c.Duration("timeout"),
-			CommandTimeout: c.Duration("command.timeout"),
-			Script:         scripts,
-			ScriptStop:     c.Bool("script.stop"),
-			Envs:           c.StringSlice("envs"),
-			Debug:          c.Bool("debug"),
-			Sync:           c.Bool("sync"),
-			Ciphers:        c.StringSlice("ciphers"),
+			Key:               c.String("ssh-key"),
+			KeyPath:           c.String("key-path"),
+			Username:          c.String("user"),
+			Password:          c.String("password"),
+			Passphrase:        c.String("ssh-passphrase"),
+			Fingerprint:       c.String("fingerprint"),
+			Host:              c.StringSlice("host"),
+			Port:              c.Int("port"),
+			Timeout:           c.Duration("timeout"),
+			CommandTimeout:    c.Duration("command.timeout"),
+			Script:            scripts,
+			ScriptStop:        c.Bool("script.stop"),
+			Envs:              c.StringSlice("envs"),
+			Debug:             c.Bool("debug"),
+			Sync:              c.Bool("sync"),
+			Ciphers:           c.StringSlice("ciphers"),
+			UseInsecureCipher: c.Bool("useInsecureCipher"),
 			Proxy: easyssh.DefaultConfig{
-				Key:         c.String("proxy.ssh-key"),
-				KeyPath:     c.String("proxy.key-path"),
-				User:        c.String("proxy.username"),
-				Password:    c.String("proxy.password"),
-				Passphrase:  c.String("proxy.ssh-passphrase"),
-				Fingerprint: c.String("proxy.fingerprint"),
-				Server:      c.String("proxy.host"),
-				Port:        c.String("proxy.port"),
-				Timeout:     c.Duration("proxy.timeout"),
-				Ciphers:     c.StringSlice("proxy.ciphers"),
+				Key:               c.String("proxy.ssh-key"),
+				KeyPath:           c.String("proxy.key-path"),
+				User:              c.String("proxy.username"),
+				Password:          c.String("proxy.password"),
+				Passphrase:        c.String("proxy.ssh-passphrase"),
+				Fingerprint:       c.String("proxy.fingerprint"),
+				Server:            c.String("proxy.host"),
+				Port:              c.String("proxy.port"),
+				Timeout:           c.Duration("proxy.timeout"),
+				Ciphers:           c.StringSlice("proxy.ciphers"),
+				UseInsecureCipher: c.Bool("proxy.useInsecureCipher"),
 			},
 		},
 		Writer: os.Stdout,
