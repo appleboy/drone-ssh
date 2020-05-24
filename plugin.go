@@ -23,23 +23,24 @@ var (
 type (
 	// Config for the plugin.
 	Config struct {
-		Key            string
-		Passphrase     string
-		KeyPath        string
-		Username       string
-		Password       string
-		Host           []string
-		Port           int
-		Fingerprint    string
-		Timeout        time.Duration
-		CommandTimeout time.Duration
-		Script         []string
-		ScriptStop     bool
-		Envs           []string
-		Proxy          easyssh.DefaultConfig
-		Debug          bool
-		Sync           bool
-		Ciphers        []string
+		Key               string
+		Passphrase        string
+		KeyPath           string
+		Username          string
+		Password          string
+		Host              []string
+		Port              int
+		Fingerprint       string
+		Timeout           time.Duration
+		CommandTimeout    time.Duration
+		Script            []string
+		ScriptStop        bool
+		Envs              []string
+		Proxy             easyssh.DefaultConfig
+		Debug             bool
+		Sync              bool
+		Ciphers           []string
+		UseInsecureCipher bool
 	}
 
 	// Plugin structure
@@ -56,27 +57,29 @@ func escapeArg(arg string) string {
 func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	// Create MakeConfig instance with remote username, server address and path to private key.
 	ssh := &easyssh.MakeConfig{
-		Server:      host,
-		User:        p.Config.Username,
-		Password:    p.Config.Password,
-		Port:        strconv.Itoa(p.Config.Port),
-		Key:         p.Config.Key,
-		KeyPath:     p.Config.KeyPath,
-		Passphrase:  p.Config.Passphrase,
-		Timeout:     p.Config.Timeout,
-		Ciphers:     p.Config.Ciphers,
-		Fingerprint: p.Config.Fingerprint,
+		Server:            host,
+		User:              p.Config.Username,
+		Password:          p.Config.Password,
+		Port:              strconv.Itoa(p.Config.Port),
+		Key:               p.Config.Key,
+		KeyPath:           p.Config.KeyPath,
+		Passphrase:        p.Config.Passphrase,
+		Timeout:           p.Config.Timeout,
+		Ciphers:           p.Config.Ciphers,
+		Fingerprint:       p.Config.Fingerprint,
+		UseInsecureCipher: p.Config.UseInsecureCipher,
 		Proxy: easyssh.DefaultConfig{
-			Server:      p.Config.Proxy.Server,
-			User:        p.Config.Proxy.User,
-			Password:    p.Config.Proxy.Password,
-			Port:        p.Config.Proxy.Port,
-			Key:         p.Config.Proxy.Key,
-			KeyPath:     p.Config.Proxy.KeyPath,
-			Passphrase:  p.Config.Proxy.Passphrase,
-			Timeout:     p.Config.Proxy.Timeout,
-			Ciphers:     p.Config.Proxy.Ciphers,
-			Fingerprint: p.Config.Proxy.Fingerprint,
+			Server:            p.Config.Proxy.Server,
+			User:              p.Config.Proxy.User,
+			Password:          p.Config.Proxy.Password,
+			Port:              p.Config.Proxy.Port,
+			Key:               p.Config.Proxy.Key,
+			KeyPath:           p.Config.Proxy.KeyPath,
+			Passphrase:        p.Config.Proxy.Passphrase,
+			Timeout:           p.Config.Proxy.Timeout,
+			Ciphers:           p.Config.Proxy.Ciphers,
+			Fingerprint:       p.Config.Proxy.Fingerprint,
+			UseInsecureCipher: p.Config.Proxy.UseInsecureCipher,
 		},
 	}
 
