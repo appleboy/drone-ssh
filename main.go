@@ -18,6 +18,11 @@ func main() {
 	if filename, found := os.LookupEnv("PLUGIN_ENV_FILE"); found {
 		_ = godotenv.Load(filename)
 	}
+
+	if _, err := os.Stat("/run/drone/env"); err == nil {
+		godotenv.Overload("/run/drone/env")
+	}
+
 	app := cli.NewApp()
 	app.Name = "Drone SSH"
 	app.Usage = "Executing remote ssh commands"
