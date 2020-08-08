@@ -646,6 +646,17 @@ func TestPlugin_scriptCommands(t *testing.T) {
 			},
 			want: []string{"mkdir a", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;", "mkdir c", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;", "mkdir b", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;"},
 		},
+		// See: https://github.com/appleboy/ssh-action/issues/75#issuecomment-668314271
+		{
+			name: "Multiline SSH commands interpreted as single lines",
+			fields: fields{
+				Config: Config{
+					Script:     []string{"ls \\ ", "-lah", "mkdir a"},
+					ScriptStop: true,
+				},
+			},
+			want: []string{"ls \\", "-lah", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;", "mkdir a", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;"},
+		},
 		{
 			name: "trim space",
 			fields: fields{
