@@ -112,6 +112,8 @@ Example configuration for exporting custom secrets:
 ```diff
   - name: ssh commands
     image: appleboy/drone-ssh
+    environment:
+      commit: ${DRONE_BUILD_NUMBER}
     settings:
       host: foo.com
       username: root
@@ -119,6 +121,7 @@ Example configuration for exporting custom secrets:
       port: 22
 +     envs:
         - aws_access_key_id
+        - commit
       script:
         - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 ```
