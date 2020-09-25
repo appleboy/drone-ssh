@@ -124,6 +124,7 @@ Example configuration for exporting custom secrets:
         - commit
       script:
         - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+        - echo $commit
 ```
 
 Example configuration for stoping script after first failure:
