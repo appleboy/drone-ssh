@@ -715,3 +715,62 @@ func TestUseInsecureCipher(t *testing.T) {
 
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
+
+func TestPlugin_hostPort(t *testing.T) {
+	type fields struct {
+		Config Config
+		Writer io.Writer
+	}
+	type args struct {
+		h string
+	}
+	tests := []struct {
+		name     string
+		fields   fields
+		args     args
+		wantHost string
+		wantPort string
+	}{
+		{
+			name: "default host and port",
+			fields: fields{
+				Config: Config{
+					Port: 22,
+				},
+			},
+			args: args{
+				h: "localhost",
+			},
+			wantHost: "localhost",
+			wantPort: "22",
+		},
+		{
+			name: "different port",
+			fields: fields{
+				Config: Config{
+					Port: 22,
+				},
+			},
+			args: args{
+				h: "localhost:443",
+			},
+			wantHost: "localhost",
+			wantPort: "443",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			p := Plugin{
+				Config: tt.fields.Config,
+				Writer: tt.fields.Writer,
+			}
+			gotHost, gotPort := p.hostPort(tt.args.h)
+			if gotHost != tt.wantHost {
+				t.Errorf("Plugin.hostPort() gotHost = %v, want %v", gotHost, tt.wantHost)
+			}
+			if gotPort != tt.wantPort {
+				t.Errorf("Plugin.hostPort() gotPort = %v, want %v", gotPort, tt.wantPort)
+			}
+		})
+	}
+}

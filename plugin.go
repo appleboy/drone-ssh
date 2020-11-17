@@ -54,13 +54,25 @@ func escapeArg(arg string) string {
 	return "'" + strings.Replace(arg, "'", `'\''`, -1) + "'"
 }
 
+func (p Plugin) hostPort(host string) (string, string) {
+	hosts := strings.Split(host, ":")
+	port := strconv.Itoa(p.Config.Port)
+	if len(hosts) > 1 {
+		host = hosts[0]
+		port = hosts[1]
+	}
+
+	return host, port
+}
+
 func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
+	host, port := p.hostPort(host)
 	// Create MakeConfig instance with remote username, server address and path to private key.
 	ssh := &easyssh.MakeConfig{
 		Server:            host,
 		User:              p.Config.Username,
 		Password:          p.Config.Password,
-		Port:              strconv.Itoa(p.Config.Port),
+		Port:              port,
 		Key:               p.Config.Key,
 		KeyPath:           p.Config.KeyPath,
 		Passphrase:        p.Config.Passphrase,
