@@ -40,7 +40,7 @@ Example configuration in your `.drone.yml` file for multiple hosts:
       - echo world
 ```
 
-Example configuration for multiple hosts with differend port:
+Example configuration for multiple hosts with different port:
 
 ```diff
   - name: ssh commands
