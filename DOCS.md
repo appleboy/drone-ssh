@@ -40,6 +40,23 @@ Example configuration in your `.drone.yml` file for multiple hosts:
       - echo world
 ```
 
+Example configuration for multiple hosts with differend port:
+
+```diff
+  - name: ssh commands
+    image: appleboy/drone-ssh
+    settings:
+      host:
++       - foo.com:1234
++       - bar.com:5678
+      username: root
+      password: 1234
+-     port: 22
+      script:
+      - echo hello
+      - echo world
+```
+
 Example configuration for command timeout, default value is 60 seconds:
 
 ```diff
