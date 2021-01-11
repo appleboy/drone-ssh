@@ -387,9 +387,7 @@ func TestCommandOutput(t *testing.T) {
 }
 
 func TestWrongFingerprint(t *testing.T) {
-	var (
-		buffer bytes.Buffer
-	)
+	var buffer bytes.Buffer
 
 	plugin := Plugin{
 		Config: Config{
