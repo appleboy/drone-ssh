@@ -1,105 +1,96 @@
 ---
 kind: pipeline
 name: testing
-
 platform:
-  os: linux
   arch: amd64
-
+  os: linux
 steps:
-- name: vet
-  pull: always
-  image: golang:1.16
-  commands:
+- commands:
   - make vet
+  image: golang:1.17
+  name: vet
+  pull: always
   volumes:
   - name: gopath
     path: /go
-
-- name: lint
-  pull: always
-  image: golang:1.16
-  commands:
+- commands:
   - make lint
+  image: golang:1.17
+  name: lint
+  pull: always
   volumes:
   - name: gopath
     path: /go
-
-- name: misspell
-  pull: always
-  image: golang:1.16
-  commands:
+- commands:
   - make misspell-check
+  image: golang:1.17
+  name: misspell
+  pull: always
   volumes:
   - name: gopath
     path: /go
-
-- name: test
-  pull: always
-  image: golang:1.16-alpine
-  commands:
+- commands:
   - apk add git make curl perl bash build-base zlib-dev ucl-dev
   - make ssh-server
   - make test
   - make coverage
+  image: golang:1.17-alpine
+  name: test
+  pull: always
   volumes:
   - name: gopath
     path: /go
-
-- name: codecov
+- image: robertstettner/drone-codecov
+  name: codecov
   pull: always
-  image: robertstettner/drone-codecov
   settings:
     token:
       from_secret: codecov_token
-
 volumes:
 - name: gopath
   temp: {}
-
 ---
+depends_on:
+- testing
 kind: pipeline
 name: linux-amd64
-
 platform:
-  os: linux
   arch: amd64
-
+  os: linux
 steps:
-- name: build-push
-  pull: always
-  image: golang:1.16
-  commands:
+- commands:
   - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-ssh
   environment:
-    CGO_ENABLED: 0
+    CGO_ENABLED: "0"
+  image: golang:1.17
+  name: build-push
+  pull: always
   when:
     event:
       exclude:
       - tag
-
-- name: build-tag
-  pull: always
-  image: golang:1.16
-  commands:
-  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-ssh
+- commands:
+  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}'
+    -a -o release/linux/amd64/drone-ssh
   environment:
-    CGO_ENABLED: 0
+    CGO_ENABLED: "0"
+  image: golang:1.17
+  name: build-tag
+  pull: always
   when:
     event:
     - tag
-
-- name: executable
-  pull: always
-  image: golang:1.16
-  commands:
+- commands:
   - ./release/linux/amd64/drone-ssh --help
-
-- name: dryrun
+  image: golang:1.17
+  name: executable
   pull: always
-  image: plugins/docker:linux-amd64
+- image: plugins/docker:linux-amd64
+  name: dryrun
+  pull: always
   settings:
     cache_from: appleboy/drone-ssh
+    daemon_off: false
     dockerfile: docker/Dockerfile.linux.amd64
     dry_run: true
     repo: appleboy/drone-ssh
@@ -107,15 +98,14 @@ steps:
   when:
     event:
     - pull_request
-
-- name: publish
+- image: plugins/docker:linux-amd64
+  name: publish
   pull: always
-  image: plugins/docker:linux-amd64
   settings:
     auto_tag: true
     auto_tag_suffix: linux-amd64
     cache_from: appleboy/drone-ssh
-    daemon_off: false
+    daemon_off: "false"
     dockerfile: docker/Dockerfile.linux.amd64
     password:
       from_secret: docker_password
@@ -126,59 +116,53 @@ steps:
     event:
       exclude:
       - pull_request
-
 trigger:
   ref:
   - refs/heads/master
   - refs/pull/**
   - refs/tags/**
-
+---
 depends_on:
 - testing
-
----
 kind: pipeline
 name: linux-arm64
-
 platform:
-  os: linux
   arch: arm64
-
+  os: linux
 steps:
-- name: build-push
-  pull: always
-  image: golang:1.16
-  commands:
+- commands:
   - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-ssh
   environment:
-    CGO_ENABLED: 0
+    CGO_ENABLED: "0"
+  image: golang:1.17
+  name: build-push
+  pull: always
   when:
     event:
       exclude:
       - tag
-
-- name: build-tag
-  pull: always
-  image: golang:1.16
-  commands:
-  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-ssh
+- commands:
+  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}'
+    -a -o release/linux/arm64/drone-ssh
   environment:
-    CGO_ENABLED: 0
+    CGO_ENABLED: "0"
+  image: golang:1.17
+  name: build-tag
+  pull: always
   when:
     event:
     - tag
-
-- name: executable
-  pull: always
-  image: golang:1.16
-  commands:
+- commands:
   - ./release/linux/arm64/drone-ssh --help
-
-- name: dryrun
+  image: golang:1.17
+  name: executable
   pull: always
-  image: plugins/docker:linux-arm64
+- image: plugins/docker:linux-arm64
+  name: dryrun
+  pull: always
   settings:
     cache_from: appleboy/drone-ssh
+    daemon_off: false
     dockerfile: docker/Dockerfile.linux.arm64
     dry_run: true
     repo: appleboy/drone-ssh
@@ -186,15 +170,14 @@ steps:
   when:
     event:
     - pull_request
-
-- name: publish
+- image: plugins/docker:linux-arm64
+  name: publish
   pull: always
-  image: plugins/docker:linux-arm64
   settings:
     auto_tag: true
     auto_tag_suffix: linux-arm64
     cache_from: appleboy/drone-ssh
-    daemon_off: false
+    daemon_off: "false"
     dockerfile: docker/Dockerfile.linux.arm64
     password:
       from_secret: docker_password
@@ -205,59 +188,53 @@ steps:
     event:
       exclude:
       - pull_request
-
 trigger:
   ref:
   - refs/heads/master
   - refs/pull/**
   - refs/tags/**
-
+---
 depends_on:
 - testing
-
----
 kind: pipeline
 name: linux-arm
-
 platform:
-  os: linux
   arch: arm
-
+  os: linux
 steps:
-- name: build-push
-  pull: always
-  image: golang:1.16
-  commands:
+- commands:
   - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-ssh
   environment:
-    CGO_ENABLED: 0
+    CGO_ENABLED: "0"
+  image: golang:1.17
+  name: build-push
+  pull: always
   when:
     event:
       exclude:
       - tag
-
-- name: build-tag
-  pull: always
-  image: golang:1.16
-  commands:
-  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-ssh
+- commands:
+  - go build -v -ldflags '-X main.version=${DRONE_TAG##v} -X main.build=${DRONE_BUILD_NUMBER}'
+    -a -o release/linux/arm/drone-ssh
   environment:
-    CGO_ENABLED: 0
+    CGO_ENABLED: "0"
+  image: golang:1.17
+  name: build-tag
+  pull: always
   when:
     event:
     - tag
-
-- name: executable
-  pull: always
-  image: golang:1.16
-  commands:
+- commands:
   - ./release/linux/arm/drone-ssh --help
-
-- name: dryrun
+  image: golang:1.17
+  name: executable
   pull: always
-  image: plugins/docker:linux-arm
+- image: plugins/docker:linux-arm
+  name: dryrun
+  pull: always
   settings:
     cache_from: appleboy/drone-ssh
+    daemon_off: false
     dockerfile: docker/Dockerfile.linux.arm
     dry_run: true
     repo: appleboy/drone-ssh
@@ -265,15 +242,14 @@ steps:
   when:
     event:
     - pull_request
-
-- name: publish
+- image: plugins/docker:linux-arm
+  name: publish
   pull: always
-  image: plugins/docker:linux-arm
   settings:
     auto_tag: true
     auto_tag_suffix: linux-arm
     cache_from: appleboy/drone-ssh
-    daemon_off: false
+    daemon_off: "false"
     dockerfile: docker/Dockerfile.linux.arm
     password:
       from_secret: docker_password
@@ -284,37 +260,31 @@ steps:
     event:
       exclude:
       - pull_request
-
 trigger:
   ref:
   - refs/heads/master
   - refs/pull/**
   - refs/tags/**
-
+---
 depends_on:
 - testing
-
----
 kind: pipeline
 name: release-binary
-
 platform:
-  os: linux
   arch: amd64
-
+  os: linux
 steps:
-- name: build-all-binary
-  pull: always
-  image: golang:1.16
-  commands:
+- commands:
   - make release
+  image: golang:1.17
+  name: build-all-binary
+  pull: always
   when:
     event:
     - tag
-
-- name: deploy-all-binary
+- image: plugins/github-release
+  name: deploy-all-binary
   pull: always
-  image: plugins/github-release
   settings:
     api_key:
       from_secret: github_release_api_key
@@ -323,26 +293,24 @@ steps:
   when:
     event:
     - tag
-
 trigger:
   ref:
   - refs/tags/**
-
-depends_on:
-- testing
-
 ---
+depends_on:
+- linux-amd64
+- linux-arm64
+- linux-arm
+- release-binary
 kind: pipeline
 name: notifications
-
 platform:
-  os: linux
   arch: amd64
-
+  os: linux
 steps:
-- name: manifest
+- image: plugins/manifest
+  name: manifest
   pull: always
-  image: plugins/manifest
   settings:
     ignore_missing: true
     password:
@@ -350,16 +318,7 @@ steps:
     spec: docker/manifest.tmpl
     username:
       from_secret: docker_username
-
 trigger:
   ref:
   - refs/heads/master
   - refs/tags/**
-
-depends_on:
-- linux-amd64
-- linux-arm64
-- linux-arm
-- release-binary
-
-...
