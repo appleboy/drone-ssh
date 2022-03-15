@@ -130,18 +130,19 @@ Example configuration for exporting custom secrets:
   - name: ssh commands
     image: appleboy/drone-ssh
     environment:
-      commit: ${DRONE_BUILD_NUMBER}
+      # MUST BE in UPPERCASE
+      COMMIT:
+        from_secret: commit
     settings:
       host: foo.com
       username: root
       password: 1234
       port: 22
 +     envs:
-        - aws_access_key_id
+        # can be in lowercase (uppercased in code)
         - commit
       script:
-        - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-        - echo $commit
+        - echo $COMMIT
 ```
 
 Example configuration for stoping script after first failure:
