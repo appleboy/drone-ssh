@@ -14,14 +14,6 @@ steps:
   - name: gopath
     path: /go
 - commands:
-  - make lint
-  image: golang:1.18
-  name: lint
-  pull: always
-  volumes:
-  - name: gopath
-    path: /go
-- commands:
   - apk add git make curl perl bash build-base zlib-dev ucl-dev
   - make ssh-server
   - make test

@@ -22,20 +22,6 @@
         ],
       },
       {
-        name: 'lint',
-        image: 'golang:1.18',
-        pull: 'always',
-        commands: [
-          'make lint',
-        ],
-        volumes: [
-          {
-            name: 'gopath',
-            path: '/go',
-          },
-        ],
-      },
-      {
         name: 'test',
         image: 'golang:1.18-alpine',
         pull: 'always',

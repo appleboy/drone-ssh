@@ -36,12 +36,6 @@ fmt:
 vet:
 	$(GO) vet ./...
 
-lint:
-	@hash revive > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		$(GO) install github.com/mgechev/revive; \
-	fi
-	revive -config .revive.toml ./... || exit 1
-
 .PHONY: fmt-check
 fmt-check:
 	@hash gofumpt > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
@@ -72,7 +66,7 @@ release-dirs:
 
 release-build:
 	@which gox > /dev/null; if [ $$? -ne 0 ]; then \
-		$(GO) install github.com/mitchellh/gox; \
+		$(GO) install github.com/mitchellh/gox@master; \
 	fi
 	gox -os="$(TARGETS)" -arch="$(ARCHS)" -tags="$(TAGS)" -ldflags="-s -w $(LDFLAGS)" -output="$(DIST)/binaries/$(EXECUTABLE)-$(VERSION)-{{.OS}}-{{.Arch}}"
 
