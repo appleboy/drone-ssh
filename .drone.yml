@@ -7,7 +7,7 @@ platform:
 steps:
 - commands:
   - make vet
-  image: golang:1.17
+  image: golang:1.18
   name: vet
   pull: always
   volumes:
@@ -15,16 +15,8 @@ steps:
     path: /go
 - commands:
   - make lint
-  image: golang:1.17
+  image: golang:1.18
   name: lint
-  pull: always
-  volumes:
-  - name: gopath
-    path: /go
-- commands:
-  - make misspell-check
-  image: golang:1.17
-  name: misspell
   pull: always
   volumes:
   - name: gopath
@@ -34,7 +26,7 @@ steps:
   - make ssh-server
   - make test
   - make coverage
-  image: golang:1.17-alpine
+  image: golang:1.18-alpine
   name: test
   pull: always
   volumes:
@@ -62,7 +54,7 @@ steps:
   - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-ssh
   environment:
     CGO_ENABLED: "0"
-  image: golang:1.17
+  image: golang:1.18
   name: build-push
   pull: always
   when:
@@ -74,7 +66,7 @@ steps:
     -a -o release/linux/amd64/drone-ssh
   environment:
     CGO_ENABLED: "0"
-  image: golang:1.17
+  image: golang:1.18
   name: build-tag
   pull: always
   when:
@@ -82,7 +74,7 @@ steps:
     - tag
 - commands:
   - ./release/linux/amd64/drone-ssh --help
-  image: golang:1.17
+  image: golang:1.18
   name: executable
   pull: always
 - image: plugins/docker:linux-amd64
@@ -134,7 +126,7 @@ steps:
   - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-ssh
   environment:
     CGO_ENABLED: "0"
-  image: golang:1.17
+  image: golang:1.18
   name: build-push
   pull: always
   when:
@@ -146,7 +138,7 @@ steps:
     -a -o release/linux/arm64/drone-ssh
   environment:
     CGO_ENABLED: "0"
-  image: golang:1.17
+  image: golang:1.18
   name: build-tag
   pull: always
   when:
@@ -154,7 +146,7 @@ steps:
     - tag
 - commands:
   - ./release/linux/arm64/drone-ssh --help
-  image: golang:1.17
+  image: golang:1.18
   name: executable
   pull: always
 - image: plugins/docker:linux-arm64
@@ -206,7 +198,7 @@ steps:
   - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-ssh
   environment:
     CGO_ENABLED: "0"
-  image: golang:1.17
+  image: golang:1.18
   name: build-push
   pull: always
   when:
@@ -218,7 +210,7 @@ steps:
     -a -o release/linux/arm/drone-ssh
   environment:
     CGO_ENABLED: "0"
-  image: golang:1.17
+  image: golang:1.18
   name: build-tag
   pull: always
   when:
@@ -226,7 +218,7 @@ steps:
     - tag
 - commands:
   - ./release/linux/arm/drone-ssh --help
-  image: golang:1.17
+  image: golang:1.18
   name: executable
   pull: always
 - image: plugins/docker:linux-arm
@@ -276,7 +268,7 @@ platform:
 steps:
 - commands:
   - make release
-  image: golang:1.17
+  image: golang:1.18
   name: build-all-binary
   pull: always
   when:
