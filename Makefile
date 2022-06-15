@@ -111,7 +111,6 @@ ssh-server:
 	cat tests/.ssh/test.pub >> /home/drone-scp/.ssh/authorized_keys
 	chmod 600 /home/drone-scp/.ssh/authorized_keys
 	chown -R drone-scp /home/drone-scp/.ssh
-	# install ssh and start server
 	apk add --update openssh openrc
 	rm -rf /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_dsa_key
 	sed -i 's/^#PubkeyAuthentication yes/PubkeyAuthentication yes/g' /etc/ssh/sshd_config

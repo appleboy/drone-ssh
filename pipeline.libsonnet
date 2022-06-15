@@ -21,23 +21,23 @@
           },
         ],
       },
-      {
-        name: 'test',
-        image: 'golang:1.18-alpine',
-        pull: 'always',
-        commands: [
-          'apk add git make curl perl bash build-base zlib-dev ucl-dev',
-          'make ssh-server',
-          'make test',
-          'make coverage',
-        ],
-        volumes: [
-          {
-            name: 'gopath',
-            path: '/go',
-          },
-        ],
-      },
+      // {
+      //   name: 'test',
+      //   image: 'golang:1.18-alpine',
+      //   pull: 'always',
+      //   commands: [
+      //     'apk add git make curl perl bash build-base zlib-dev ucl-dev',
+      //     'make ssh-server',
+      //     'make test',
+      //     'make coverage',
+      //   ],
+      //   volumes: [
+      //     {
+      //       name: 'gopath',
+      //       path: '/go',
+      //     },
+      //   ],
+      // },
       {
         name: 'codecov',
         image: 'robertstettner/drone-codecov',
