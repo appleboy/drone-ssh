@@ -23,3 +23,42 @@ jobs:
         with:
           version: v1.46.2
           args: --verbose
+
+  # build:
+  #   strategy:
+  #     matrix:
+  #       os: [ubuntu-latest]
+  #       go: [ 1.18]
+  #       include:
+  #         - os: ubuntu-latest
+  #           go-build: ~/.cache/go-build
+  #   name: ${{ matrix.os }} @ Go ${{ matrix.go }}
+  #   runs-on: ${{ matrix.os }}
+  #   env:
+  #     GO111MODULE: on
+  #     GOPROXY: https://proxy.golang.org
+  #   steps:
+  #     - name: Set up Go ${{ matrix.go }}
+  #       uses: actions/setup-go@v3
+  #       with:
+  #         go-version: ${{ matrix.go }}
+
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v3
+  #       with:
+  #         ref: ${{ github.ref }}
+
+  #     - uses: actions/cache@v3
+  #       with:
+  #         path: |
+  #           ${{ matrix.go-build }}
+  #           ~/go/pkg/mod
+  #         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-go-
+  #     - name: initial docker
+  #       uses: docker-practice/actions-setup-docker@master
+  #     - name: build all binaries
+  #       run: |
+  #         set -x
+  #         make release

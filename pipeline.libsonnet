@@ -160,9 +160,10 @@
     steps: [
       {
         name: 'build-all-binary',
-        image: 'golang:1.18',
+        image: 'techknowlogick/xgo:go-1.18.x',
         pull: 'always',
         commands: [
+          'export PATH=$PATH:$GOPATH/bin',
           'make release'
         ],
         when: {

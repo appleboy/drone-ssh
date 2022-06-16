@@ -248,8 +248,9 @@ platform:
   os: linux
 steps:
 - commands:
+  - export PATH=$PATH:$GOPATH/bin
   - make release
-  image: golang:1.18
+  image: techknowlogick/xgo:go-1.18.x
   name: build-all-binary
   pull: always
   when:

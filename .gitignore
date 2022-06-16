@@ -28,3 +28,4 @@ coverage.txt
 release
 drone-ssh
 .cover
+dist
