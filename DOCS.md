@@ -144,6 +144,29 @@ Example configuration for exporting custom secrets:
         - echo $commit
 ```
 
+Example configuration for exporting secrets from drone:
+
+```
+  - name: ssh commands
+    image: appleboy/drone-ssh
++   environment:
++     AWS_ACCESS_KEY_ID:
++       from_secret: aws_access_key_id
++     CONSUL_HTTP_TOKEN:
++       from_secret: consul_http_token
+    settings:
+      host: foo.com
+      username: root
+      password: 1234
+      port: 22
++     envs:
++       - AWS_ACCESS_KEY_ID
++       - CONSUL_HTTP_TOKEN
+      script:
++       - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
++       - export CONSUL_HTTP_TOKEN=$CONSUL_HTTP_TOKEN
+```
+
 Example configuration for stoping script after first failure:
 
 ```diff
