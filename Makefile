@@ -133,7 +133,7 @@ deps-backend:
 	$(GO) install $(XGO_PACKAGE)
 
 .PHONY: release
-release: release-linux release-darwin release-copy release-compress release-check
+release: release-windows release-linux release-darwin release-copy release-compress release-check
 
 $(DIST_DIRS):
 	mkdir -p $(DIST_DIRS)
