@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/appleboy/easyssh-proxy v1.3.9
 	github.com/joho/godotenv v1.4.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 	github.com/urfave/cli v1.22.10
 	golang.org/x/crypto v0.3.0
 )
