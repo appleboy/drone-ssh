@@ -127,9 +127,13 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 			case isTimeout = <-doneChan:
 				break loop
 			case outline := <-stdoutChan:
-				p.log(host, "out:", outline)
+				if outline != "" {
+					p.log(host, "out:", outline)
+				}
 			case errline := <-stderrChan:
-				p.log(host, "err:", errline)
+				if errline != "" {
+					p.log(host, "err:", errline)
+				}
 			case err = <-errChan:
 			}
 		}
