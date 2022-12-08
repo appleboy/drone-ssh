@@ -21,27 +21,5 @@ jobs:
       - name: Setup golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
-          version: v1.46.2
+          version: v1.50.1
           args: --verbose
-
-  build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        go: [ 1.19]
-        include:
-          - os: ubuntu-latest
-            go-build: ~/.cache/go-build
-    name: ${{ matrix.os }} @ Go ${{ matrix.go }}
-    runs-on: ${{ matrix.os }}
-    env:
-      GO111MODULE: on
-      GOPROXY: https://proxy.golang.org
-    container:
-      image: techknowlogick/xgo:go-1.18.x
-    steps:
-      - name: build all binaries
-        run: |
-          set -x
-          export PATH=$PATH:$GOPATH/bin
-          make release
