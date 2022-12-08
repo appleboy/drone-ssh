@@ -9,7 +9,7 @@
     steps: [
       {
         name: 'vet',
-        image: 'golang:1.18',
+        image: 'golang:1.19',
         pull: 'always',
         commands: [
           'make vet',
@@ -23,7 +23,7 @@
       },
       // {
       //   name: 'test',
-      //   image: 'golang:1.18-alpine',
+      //   image: 'golang:1.19-alpine',
       //   pull: 'always',
       //   commands: [
       //     'apk add git make curl perl bash build-base zlib-dev ucl-dev',
@@ -65,7 +65,7 @@
     steps: [
       {
         name: 'build-push',
-        image: 'golang:1.18',
+        image: 'golang:1.19',
         pull: 'always',
         environment: {
           CGO_ENABLED: '0',
@@ -81,7 +81,7 @@
       },
       {
         name: 'build-tag',
-        image: 'golang:1.18',
+        image: 'golang:1.19',
         pull: 'always',
         environment: {
           CGO_ENABLED: '0',
@@ -95,7 +95,7 @@
       },
       {
         name: 'executable',
-        image: 'golang:1.18',
+        image: 'golang:1.19',
         pull: 'always',
         commands: [
           './release/' + os + '/' + arch + '/' + name + ' --help',
@@ -160,7 +160,7 @@
     steps: [
       {
         name: 'build-all-binary',
-        image: 'techknowlogick/xgo:go-1.18.x',
+        image: 'techknowlogick/xgo:go-1.19.x',
         pull: 'always',
         commands: [
           'export PATH=$PATH:$GOPATH/bin',

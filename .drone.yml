@@ -7,7 +7,7 @@ platform:
 steps:
 - commands:
   - make vet
-  image: golang:1.18
+  image: golang:1.19
   name: vet
   pull: always
   volumes:
@@ -35,7 +35,7 @@ steps:
   - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/amd64/drone-ssh
   environment:
     CGO_ENABLED: "0"
-  image: golang:1.18
+  image: golang:1.19
   name: build-push
   pull: always
   when:
@@ -47,7 +47,7 @@ steps:
     -a -o release/linux/amd64/drone-ssh
   environment:
     CGO_ENABLED: "0"
-  image: golang:1.18
+  image: golang:1.19
   name: build-tag
   pull: always
   when:
@@ -55,7 +55,7 @@ steps:
     - tag
 - commands:
   - ./release/linux/amd64/drone-ssh --help
-  image: golang:1.18
+  image: golang:1.19
   name: executable
   pull: always
 - image: plugins/docker:linux-amd64
@@ -107,7 +107,7 @@ steps:
   - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm64/drone-ssh
   environment:
     CGO_ENABLED: "0"
-  image: golang:1.18
+  image: golang:1.19
   name: build-push
   pull: always
   when:
@@ -119,7 +119,7 @@ steps:
     -a -o release/linux/arm64/drone-ssh
   environment:
     CGO_ENABLED: "0"
-  image: golang:1.18
+  image: golang:1.19
   name: build-tag
   pull: always
   when:
@@ -127,7 +127,7 @@ steps:
     - tag
 - commands:
   - ./release/linux/arm64/drone-ssh --help
-  image: golang:1.18
+  image: golang:1.19
   name: executable
   pull: always
 - image: plugins/docker:linux-arm64
@@ -179,7 +179,7 @@ steps:
   - go build -v -ldflags '-X main.build=${DRONE_BUILD_NUMBER}' -a -o release/linux/arm/drone-ssh
   environment:
     CGO_ENABLED: "0"
-  image: golang:1.18
+  image: golang:1.19
   name: build-push
   pull: always
   when:
@@ -191,7 +191,7 @@ steps:
     -a -o release/linux/arm/drone-ssh
   environment:
     CGO_ENABLED: "0"
-  image: golang:1.18
+  image: golang:1.19
   name: build-tag
   pull: always
   when:
@@ -199,7 +199,7 @@ steps:
     - tag
 - commands:
   - ./release/linux/arm/drone-ssh --help
-  image: golang:1.18
+  image: golang:1.19
   name: executable
   pull: always
 - image: plugins/docker:linux-arm
@@ -250,7 +250,7 @@ steps:
 - commands:
   - export PATH=$PATH:$GOPATH/bin
   - make release
-  image: techknowlogick/xgo:go-1.18.x
+  image: techknowlogick/xgo:go-1.19.x
   name: build-all-binary
   pull: always
   when:
