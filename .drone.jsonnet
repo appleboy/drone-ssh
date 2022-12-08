@@ -11,6 +11,6 @@ local name = 'drone-ssh';
     'linux-amd64',
     // 'linux-arm64',
     // 'linux-arm',
-    'release-binary',
+    // 'release-binary',
   ]),
 ]

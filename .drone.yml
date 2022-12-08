@@ -129,7 +129,6 @@ trigger:
 ---
 depends_on:
 - linux-amd64
-- release-binary
 kind: pipeline
 name: notifications
 platform:
