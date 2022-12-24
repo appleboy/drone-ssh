@@ -64,8 +64,8 @@ jobs:
             appleboy/drone-ssh
             ghcr.io/appleboy/drone-ssh
           tags: |
-            type=raw,event=push,value=
-            type=raw,event=push,value=latest,suffix=,enable={{is_default_branch}}
+            type=raw,value=,enable={{is_default_branch}}
+            type=raw,value=latest,suffix=,enable={{is_default_branch}}
             type=semver,event=tag,pattern={{version}},suffix=-linux-amd64
             type=semver,event=tag,pattern={{major}}.{{minor}},suffix=-linux-amd64
             type=semver,event=tag,pattern={{major}},suffix=-linux-amd64
@@ -93,7 +93,7 @@ jobs:
             appleboy/drone-ssh
             ghcr.io/appleboy/drone-ssh
           tags: |
-            type=raw,event=push,value=
+            type=raw,value=,enable={{is_default_branch}}
             type=semver,event=tag,pattern={{version}},suffix=-linux-arm64
             type=semver,event=tag,pattern={{major}}.{{minor}},suffix=-linux-arm64
             type=semver,event=tag,pattern={{major}},suffix=-linux-arm64
@@ -121,7 +121,7 @@ jobs:
             appleboy/drone-ssh
             ghcr.io/appleboy/drone-ssh
           tags: |
-            type=raw,event=push,value=
+            type=raw,value=,enable={{is_default_branch}}
             type=semver,event=tag,pattern={{version}},suffix=-linux-arm
             type=semver,event=tag,pattern={{major}}.{{minor}},suffix=-linux-arm
             type=semver,event=tag,pattern={{major}},suffix=-linux-arm
