@@ -8,5 +8,6 @@ LABEL maintainer="Bo-Yi Wu <appleboy.tw@gmail.com>" \
 RUN apk add --no-cache ca-certificates && \
   rm -rf /var/cache/apk/*
 
-ADD release/linux/arm/drone-ssh /bin/
+COPY release/linux/arm/drone-ssh /bin/
+
 ENTRYPOINT ["/bin/drone-ssh"]
