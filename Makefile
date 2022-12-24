@@ -39,24 +39,10 @@ else
 	EXECUTABLE ?= $(EXECUTABLE)
 endif
 
-STORED_VERSION_FILE := VERSION
-
 ifneq ($(DRONE_TAG),)
-	VERSION ?= $(subst v,,$(DRONE_TAG))
-	RELASE_VERSION ?= $(VERSION)
+	VERSION ?= $(DRONE_TAG)
 else
-	ifneq ($(DRONE_BRANCH),)
-		VERSION ?= $(subst release/v,,$(DRONE_BRANCH))
-	else
-		VERSION ?= master
-	endif
-
-	STORED_VERSION=$(shell cat $(STORED_VERSION_FILE) 2>/dev/null)
-	ifneq ($(STORED_VERSION),)
-		RELASE_VERSION ?= $(STORED_VERSION)
-	else
-		RELASE_VERSION ?= $(shell git describe --tags --always | sed 's/-/+/' | sed 's/^v//')
-	endif
+	VERSION ?= $(shell git describe --tags --always || git rev-parse --short HEAD)
 endif
 
 TAGS ?=
