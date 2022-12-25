@@ -2,11 +2,7 @@ name: Run Lint
 
 on:
   push:
-    branches:
-      - master
   pull_request:
-    branches:
-      - master
 
 jobs:
   lint:
@@ -23,3 +19,16 @@ jobs:
         with:
           version: latest
           args: --verbose
+
+      - uses: hadolint/hadolint-action@v3.0.0
+        name: hadolint for Dockerfile.linux.amd64
+        with:
+          dockerfile: docker/Dockerfile.linux.amd64
+      - uses: hadolint/hadolint-action@v3.0.0
+        name: hadolint for Dockerfile.linux.arm64
+        with:
+          dockerfile: docker/Dockerfile.linux.arm64
+      - uses: hadolint/hadolint-action@v3.0.0
+        name: hadolint for Dockerfile.linux.arm
+        with:
+          dockerfile: docker/Dockerfile.linux.arm
