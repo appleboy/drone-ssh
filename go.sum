@@ -1,5 +1,6 @@
-github.com/ScaleFT/sshkeys v0.0.0-20200327173127-6142f742bca5 h1:VauE2GcJNZFun2Och6tIT2zJZK1v6jxALQDA9BIji/E=
 github.com/ScaleFT/sshkeys v0.0.0-20200327173127-6142f742bca5/go.mod h1:gxOHeajFfvGQh/fxlC8oOKBe23xnnJTif00IFFbiT+o=
+github.com/ScaleFT/sshkeys v1.2.0 h1:5BRp6rTVIhJzXT3VcUQrKgXR8zWA3sOsNeuyW15WUA8=
+github.com/ScaleFT/sshkeys v1.2.0/go.mod h1:gxOHeajFfvGQh/fxlC8oOKBe23xnnJTif00IFFbiT+o=
 github.com/appleboy/easyssh-proxy v1.3.9 h1:b+sVSTz+cVFvfA23HQywMMpm0s5g3gH7jYdBcQqaCQI=
 github.com/appleboy/easyssh-proxy v1.3.9/go.mod h1:G1eQomBEME7NWKA3hE49s5HsT44S5fn0aBxX7k9Yjug=
 github.com/cpuguy83/go-md2man/v2 v2.0.2 h1:p1EgwI/C7NhT0JmVkwCD2ZBK8j4aeHQX2pMHHBfMQ6w=

@@ -11,7 +11,7 @@ require (
 )
 
 require (
-	github.com/ScaleFT/sshkeys v0.0.0-20200327173127-6142f742bca5 // indirect
+	github.com/ScaleFT/sshkeys v1.2.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dchest/bcrypt_pbkdf v0.0.0-20150205184540-83f37f9c154a // indirect
