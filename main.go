@@ -7,7 +7,8 @@ import (
 
 	"github.com/appleboy/easyssh-proxy"
 	"github.com/joho/godotenv"
-	"github.com/urfave/cli"
+	_ "github.com/joho/godotenv/autoload"
+	"github.com/urfave/cli/v2"
 )
 
 // Version set at compile-time
@@ -27,7 +28,7 @@ func main() {
 	app.Name = "Drone SSH"
 	app.Usage = "Executing remote ssh commands"
 	app.Copyright = "Copyright (c) 2019 Bo-Yi Wu"
-	app.Authors = []cli.Author{
+	app.Authors = []*cli.Author{
 		{
 			Name:  "Bo-Yi Wu",
 			Email: "appleboy.tw@gmail.com",
@@ -36,157 +37,165 @@ func main() {
 	app.Action = run
 	app.Version = Version
 	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:   "ssh-key",
-			Usage:  "private ssh key",
-			EnvVar: "PLUGIN_SSH_KEY,PLUGIN_KEY,SSH_KEY,KEY,INPUT_KEY",
+		&cli.StringFlag{
+			Name:    "ssh-key",
+			Usage:   "private ssh key",
+			EnvVars: []string{"PLUGIN_SSH_KEY", "PLUGIN_KEY", "SSH_KEY", "KEY", "INPUT_KEY"},
 		},
-		cli.StringFlag{
-			Name:   "ssh-passphrase",
-			Usage:  "The purpose of the passphrase is usually to encrypt the private key.",
-			EnvVar: "PLUGIN_SSH_PASSPHRASE,PLUGIN_PASSPHRASE,SSH_PASSPHRASE,PASSPHRASE,INPUT_PASSPHRASE",
+		&cli.StringFlag{
+			Name:    "ssh-passphrase",
+			Usage:   "The purpose of the passphrase is usually to encrypt the private key.",
+			EnvVars: []string{"PLUGIN_SSH_PASSPHRASE", "PLUGIN_PASSPHRASE", "SSH_PASSPHRASE", "PASSPHRASE", "INPUT_PASSPHRASE"},
 		},
-		cli.StringFlag{
-			Name:   "key-path,i",
-			Usage:  "ssh private key path",
-			EnvVar: "PLUGIN_KEY_PATH,SSH_KEY_PATH,INPUT_KEY_PATH",
+		&cli.StringFlag{
+			Name:    "key-path",
+			Aliases: []string{"i"},
+			Usage:   "ssh private key path",
+			EnvVars: []string{"PLUGIN_KEY_PATH", "SSH_KEY_PATH", "INPUT_KEY_PATH"},
 		},
-		cli.StringFlag{
-			Name:   "username,user,u",
-			Usage:  "connect as user",
-			EnvVar: "PLUGIN_USERNAME,PLUGIN_USER,SSH_USERNAME,USERNAME,INPUT_USERNAME",
-			Value:  "root",
+		&cli.StringFlag{
+			Name:    "username",
+			Aliases: []string{"user", "u"},
+			Usage:   "connect as user",
+			EnvVars: []string{"PLUGIN_USERNAME", "PLUGIN_USER", "SSH_USERNAME", "USERNAME", "INPUT_USERNAME"},
+			Value:   "root",
 		},
-		cli.StringFlag{
-			Name:   "password,P",
-			Usage:  "user password",
-			EnvVar: "PLUGIN_PASSWORD,SSH_PASSWORD,PASSWORD,INPUT_PASSWORD",
+		&cli.StringFlag{
+			Name:    "password",
+			Aliases: []string{"P"},
+			Usage:   "user password",
+			EnvVars: []string{"PLUGIN_PASSWORD", "SSH_PASSWORD", "PASSWORD", "INPUT_PASSWORD"},
 		},
-		cli.StringSliceFlag{
-			Name:   "ciphers",
-			Usage:  "The allowed cipher algorithms. If unspecified then a sensible",
-			EnvVar: "PLUGIN_CIPHERS,SSH_CIPHERS,CIPHERS,INPUT_CIPHERS",
+		&cli.StringSliceFlag{
+			Name:    "ciphers",
+			Usage:   "The allowed cipher algorithms. If unspecified then a sensible",
+			EnvVars: []string{"PLUGIN_CIPHERS", "SSH_CIPHERS", "CIPHERS", "INPUT_CIPHERS"},
 		},
-		cli.BoolFlag{
-			Name:   "useInsecureCipher",
-			Usage:  "include more ciphers with use_insecure_cipher",
-			EnvVar: "PLUGIN_USE_INSECURE_CIPHER,SSH_USE_INSECURE_CIPHER,USE_INSECURE_CIPHER,INPUT_USE_INSECURE_CIPHER",
+		&cli.BoolFlag{
+			Name:    "useInsecureCipher",
+			Usage:   "include more ciphers with use_insecure_cipher",
+			EnvVars: []string{"PLUGIN_USE_INSECURE_CIPHER", "SSH_USE_INSECURE_CIPHER", "USE_INSECURE_CIPHER", "INPUT_USE_INSECURE_CIPHER"},
 		},
-		cli.StringFlag{
-			Name:   "fingerprint",
-			Usage:  "fingerprint SHA256 of the host public key, default is to skip verification",
-			EnvVar: "PLUGIN_FINGERPRINT,SSH_FINGERPRINT,FINGERPRINT,INPUT_FINGERPRINT",
+		&cli.StringFlag{
+			Name:    "fingerprint",
+			Usage:   "fingerprint SHA256 of the host public key, default is to skip verification",
+			EnvVars: []string{"PLUGIN_FINGERPRINT", "SSH_FINGERPRINT", "FINGERPRINT", "INPUT_FINGERPRINT"},
 		},
-		cli.StringSliceFlag{
-			Name:     "host,H",
+		&cli.StringSliceFlag{
+			Name:     "host",
+			Aliases:  []string{"H"},
 			Usage:    "connect to host",
-			EnvVar:   "PLUGIN_HOST,SSH_HOST,HOST,INPUT_HOST",
+			EnvVars:  []string{"PLUGIN_HOST", "SSH_HOST", "HOST", "INPUT_HOST"},
 			FilePath: ".host",
 		},
-		cli.IntFlag{
-			Name:   "port,p",
-			Usage:  "connect to port",
-			EnvVar: "PLUGIN_PORT,SSH_PORT,PORT,INPUT_PORT",
-			Value:  22,
+		&cli.IntFlag{
+			Name:    "port",
+			Aliases: []string{"p"},
+			Usage:   "connect to port",
+			EnvVars: []string{"PLUGIN_PORT", "SSH_PORT", "PORT", "INPUT_PORT"},
+			Value:   22,
 		},
-		cli.BoolFlag{
-			Name:   "sync",
-			Usage:  "sync mode",
-			EnvVar: "PLUGIN_SYNC,SYNC,INPUT_SYNC",
+		&cli.BoolFlag{
+			Name:    "sync",
+			Usage:   "sync mode",
+			EnvVars: []string{"PLUGIN_SYNC", "SYNC", "INPUT_SYNC"},
 		},
-		cli.DurationFlag{
-			Name:   "timeout,t",
-			Usage:  "connection timeout",
-			EnvVar: "PLUGIN_TIMEOUT,SSH_TIMEOUT,TIMEOUT,INPUT_TIMEOUT",
-			Value:  30 * time.Second,
+		&cli.DurationFlag{
+			Name:    "timeout",
+			Aliases: []string{"t"},
+			Usage:   "connection timeout",
+			EnvVars: []string{"PLUGIN_TIMEOUT", "SSH_TIMEOUT", "TIMEOUT", "INPUT_TIMEOUT"},
+			Value:   30 * time.Second,
 		},
-		cli.DurationFlag{
-			Name:   "command.timeout,T",
-			Usage:  "command timeout",
-			EnvVar: "PLUGIN_COMMAND_TIMEOUT,SSH_COMMAND_TIMEOUT,COMMAND_TIMEOUT,INPUT_COMMAND_TIMEOUT",
-			Value:  10 * time.Minute,
+		&cli.DurationFlag{
+			Name:    "command.timeout",
+			Aliases: []string{"T"},
+			Usage:   "command timeout",
+			EnvVars: []string{"PLUGIN_COMMAND_TIMEOUT", "SSH_COMMAND_TIMEOUT", "COMMAND_TIMEOUT", "INPUT_COMMAND_TIMEOUT"},
+			Value:   10 * time.Minute,
 		},
-		cli.StringSliceFlag{
-			Name:   "script,s",
-			Usage:  "execute commands",
-			EnvVar: "PLUGIN_SCRIPT,SSH_SCRIPT,SCRIPT",
+		&cli.StringSliceFlag{
+			Name:    "script",
+			Aliases: []string{"s"},
+			Usage:   "execute commands",
+			EnvVars: []string{"PLUGIN_SCRIPT", "SSH_SCRIPT", "SCRIPT"},
 		},
-		cli.StringFlag{
-			Name:   "script.string",
-			Usage:  "execute single commands for github action",
-			EnvVar: "INPUT_SCRIPT",
+		&cli.StringFlag{
+			Name:    "script.string",
+			Usage:   "execute single commands for github action",
+			EnvVars: []string{"INPUT_SCRIPT"},
 		},
-		cli.BoolFlag{
-			Name:   "script.stop",
-			Usage:  "stop script after first failure",
-			EnvVar: "PLUGIN_SCRIPT_STOP,STOP,INPUT_SCRIPT_STOP",
+		&cli.BoolFlag{
+			Name:    "script.stop",
+			Usage:   "stop script after first failure",
+			EnvVars: []string{"PLUGIN_SCRIPT_STOP", "STOP", "INPUT_SCRIPT_STOP"},
 		},
-		cli.StringFlag{
-			Name:   "proxy.ssh-key",
-			Usage:  "private ssh key of proxy",
-			EnvVar: "PLUGIN_PROXY_SSH_KEY,PLUGIN_PROXY_KEY,PROXY_SSH_KEY,INPUT_PROXY_KEY",
+		&cli.StringFlag{
+			Name:    "proxy.ssh-key",
+			Usage:   "private ssh key of proxy",
+			EnvVars: []string{"PLUGIN_PROXY_SSH_KEY", "PLUGIN_PROXY_KEY", "PROXY_SSH_KEY", "INPUT_PROXY_KEY"},
 		},
-		cli.StringFlag{
-			Name:   "proxy.ssh-passphrase",
-			Usage:  "The purpose of the passphrase is usually to encrypt the private key.",
-			EnvVar: "PLUGIN_PROXY_SSH_PASSPHRASE,PLUGIN_PROXY_PASSPHRASE,PROXY_SSH_PASSPHRASE,PROXY_PASSPHRASE,INPUT_PROXY_PASSPHRASE",
+		&cli.StringFlag{
+			Name:    "proxy.ssh-passphrase",
+			Usage:   "The purpose of the passphrase is usually to encrypt the private key.",
+			EnvVars: []string{"PLUGIN_PROXY_SSH_PASSPHRASE", "PLUGIN_PROXY_PASSPHRASE", "PROXY_SSH_PASSPHRASE", "PROXY_PASSPHRASE", "INPUT_PROXY_PASSPHRASE"},
 		},
-		cli.StringFlag{
-			Name:   "proxy.key-path",
-			Usage:  "ssh private key path of proxy",
-			EnvVar: "PLUGIN_PROXY_KEY_PATH,PROXY_SSH_KEY_PATH,INPUT_PROXY_KEY_PATH",
+		&cli.StringFlag{
+			Name:    "proxy.key-path",
+			Usage:   "ssh private key path of proxy",
+			EnvVars: []string{"PLUGIN_PROXY_KEY_PATH", "PROXY_SSH_KEY_PATH", "INPUT_PROXY_KEY_PATH"},
 		},
-		cli.StringFlag{
-			Name:   "proxy.username",
-			Usage:  "connect as user of proxy",
-			EnvVar: "PLUGIN_PROXY_USERNAME,PLUGIN_PROXY_USER,PROXY_SSH_USERNAME,INPUT_PROXY_USERNAME",
-			Value:  "root",
+		&cli.StringFlag{
+			Name:    "proxy.username",
+			Usage:   "connect as user of proxy",
+			EnvVars: []string{"PLUGIN_PROXY_USERNAME", "PLUGIN_PROXY_USER", "PROXY_SSH_USERNAME", "INPUT_PROXY_USERNAME"},
+			Value:   "root",
 		},
-		cli.StringFlag{
-			Name:   "proxy.password",
-			Usage:  "user password of proxy",
-			EnvVar: "PLUGIN_PROXY_PASSWORD,PROXY_SSH_PASSWORD,INPUT_PROXY_PASSWORD",
+		&cli.StringFlag{
+			Name:    "proxy.password",
+			Usage:   "user password of proxy",
+			EnvVars: []string{"PLUGIN_PROXY_PASSWORD", "PROXY_SSH_PASSWORD", "INPUT_PROXY_PASSWORD"},
 		},
-		cli.StringFlag{
-			Name:   "proxy.host",
-			Usage:  "connect to host of proxy",
-			EnvVar: "PLUGIN_PROXY_HOST,PROXY_SSH_HOST,INPUT_PROXY_HOST",
+		&cli.StringFlag{
+			Name:    "proxy.host",
+			Usage:   "connect to host of proxy",
+			EnvVars: []string{"PLUGIN_PROXY_HOST", "PROXY_SSH_HOST", "INPUT_PROXY_HOST"},
 		},
-		cli.StringFlag{
-			Name:   "proxy.port",
-			Usage:  "connect to port of proxy",
-			EnvVar: "PLUGIN_PROXY_PORT,PROXY_SSH_PORT,INPUT_PROXY_PORT",
-			Value:  "22",
+		&cli.StringFlag{
+			Name:    "proxy.port",
+			Usage:   "connect to port of proxy",
+			EnvVars: []string{"PLUGIN_PROXY_PORT", "PROXY_SSH_PORT", "INPUT_PROXY_PORT"},
+			Value:   "22",
 		},
-		cli.DurationFlag{
-			Name:   "proxy.timeout",
-			Usage:  "proxy connection timeout",
-			EnvVar: "PLUGIN_PROXY_TIMEOUT,PROXY_SSH_TIMEOUT,INPUT_PROXY_TIMEOUT",
+		&cli.DurationFlag{
+			Name:    "proxy.timeout",
+			Usage:   "proxy connection timeout",
+			EnvVars: []string{"PLUGIN_PROXY_TIMEOUT", "PROXY_SSH_TIMEOUT", "INPUT_PROXY_TIMEOUT"},
 		},
-		cli.StringSliceFlag{
-			Name:   "proxy.ciphers",
-			Usage:  "The allowed cipher algorithms. If unspecified then a sensible",
-			EnvVar: "PLUGIN_PROXY_CIPHERS,SSH_PROXY_CIPHERS,PROXY_CIPHERS,INPUT_PROXY_CIPHERS",
+		&cli.StringSliceFlag{
+			Name:    "proxy.ciphers",
+			Usage:   "The allowed cipher algorithms. If unspecified then a sensible",
+			EnvVars: []string{"PLUGIN_PROXY_CIPHERS", "SSH_PROXY_CIPHERS", "PROXY_CIPHERS", "INPUT_PROXY_CIPHERS"},
 		},
-		cli.BoolFlag{
-			Name:   "proxy.useInsecureCipher",
-			Usage:  "include more ciphers with use_insecure_cipher",
-			EnvVar: "PLUGIN_PROXY_USE_INSECURE_CIPHER,SSH_PROXY_USE_INSECURE_CIPHER,PROXY_USE_INSECURE_CIPHER,INPUT_PROXY_USE_INSECURE_CIPHER",
+		&cli.BoolFlag{
+			Name:    "proxy.useInsecureCipher",
+			Usage:   "include more ciphers with use_insecure_cipher",
+			EnvVars: []string{"PLUGIN_PROXY_USE_INSECURE_CIPHER", "SSH_PROXY_USE_INSECURE_CIPHER", "PROXY_USE_INSECURE_CIPHER", "INPUT_PROXY_USE_INSECURE_CIPHER"},
 		},
-		cli.StringFlag{
-			Name:   "proxy.fingerprint",
-			Usage:  "fingerprint SHA256 of the host public key, default is to skip verification",
-			EnvVar: "PLUGIN_PROXY_FINGERPRINT,SSH_PROXY_FINGERPRINT,PROXY_FINGERPRINT,INPUT_PROXY_FINGERPRINT",
+		&cli.StringFlag{
+			Name:    "proxy.fingerprint",
+			Usage:   "fingerprint SHA256 of the host public key, default is to skip verification",
+			EnvVars: []string{"PLUGIN_PROXY_FINGERPRINT", "SSH_PROXY_FINGERPRINT", "PROXY_FINGERPRINT", "INPUT_PROXY_FINGERPRINT"},
 		},
-		cli.StringSliceFlag{
-			Name:   "envs",
-			Usage:  "pass environment variable to shell script",
-			EnvVar: "PLUGIN_ENVS,INPUT_ENVS",
+		&cli.StringSliceFlag{
+			Name:    "envs",
+			Usage:   "pass environment variable to shell script",
+			EnvVars: []string{"PLUGIN_ENVS", "INPUT_ENVS"},
 		},
-		cli.BoolFlag{
-			Name:   "debug",
-			Usage:  "debug mode",
-			EnvVar: "PLUGIN_DEBUG,DEBUG,INPUT_DEBUG",
+		&cli.BoolFlag{
+			Name:    "debug",
+			Usage:   "debug mode",
+			EnvVars: []string{"PLUGIN_DEBUG", "DEBUG", "INPUT_DEBUG"},
 		},
 	}
 
