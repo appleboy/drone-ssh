@@ -4,11 +4,10 @@
 
 [![GitHub tag](https://img.shields.io/github/tag/appleboy/drone-ssh.svg)](https://github.com/appleboy/drone-ssh/releases)
 [![GoDoc](https://godoc.org/github.com/appleboy/drone-ssh?status.svg)](https://godoc.org/github.com/appleboy/drone-ssh)
-[![Build Status](https://cloud.drone.io/api/badges/appleboy/drone-ssh/status.svg)](https://cloud.drone.io/appleboy/drone-ssh)
+[![Lint and Testing](https://github.com/appleboy/drone-ssh/actions/workflows/lint.yml/badge.svg)](https://github.com/appleboy/drone-ssh/actions/workflows/lint.yml)
 [![codecov](https://codecov.io/gh/appleboy/drone-ssh/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-ssh)
 [![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-ssh)](https://goreportcard.com/report/github.com/appleboy/drone-ssh)
 [![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-ssh.svg)](https://hub.docker.com/r/appleboy/drone-ssh/)
-[![micro badger](https://images.microbadger.com/badges/image/appleboy/drone-ssh.svg)](https://microbadger.com/images/appleboy/drone-ssh "Get your own image badge on microbadger.com")
 
 Drone plugin to execute commands on a remote host through SSH. For the usage
 information and a listing of the available options please take a look at [the docs](http://plugins.drone.io/appleboy/drone-ssh/).
