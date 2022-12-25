@@ -7,12 +7,12 @@ GO ?= go
 SHASUM ?= shasum -a 256
 HAS_GO = $(shell hash $(GO) > /dev/null 2>&1 && echo "GO" || echo "NOGO" )
 XGO_PACKAGE ?= src.techknowlogick.com/xgo@latest
-XGO_VERSION := go-1.18.x
-GXZ_PAGAGE ?= github.com/ulikunitz/xz/cmd/gxz@v0.5.10
+XGO_VERSION := go-1.19.x
+GXZ_PAGAGE ?= github.com/ulikunitz/xz/cmd/gxz@v0.5.11
 
 LINUX_ARCHS ?= linux/amd64,linux/arm64
-DARWIN_ARCHS ?= darwin-12/amd64,darwin-12/arm64
-WINDOWS_ARCHS ?= windows/amd64
+DARWIN_ARCHS ?= darwin-10.12/amd64,darwin-10.12/arm64
+WINDOWS_ARCHS ?= windows/*
 
 ifneq ($(shell uname), Darwin)
 	EXTLDFLAGS = -extldflags "-static" $(null)
@@ -119,7 +119,7 @@ deps-backend:
 	$(GO) install $(XGO_PACKAGE)
 
 .PHONY: release
-release: release-linux release-copy release-compress release-check
+release: release-linux release-darwin release-windows release-copy release-compress release-check
 
 $(DIST_DIRS):
 	mkdir -p $(DIST_DIRS)

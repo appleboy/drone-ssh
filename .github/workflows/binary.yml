@@ -1,0 +1,24 @@
+name: Release Binary
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: techknowlogick/xgo:go-1.19.x
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # - name: Release binary
+      #   run: |
+      #     ls -al
+      #     make release
