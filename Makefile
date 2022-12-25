@@ -1,10 +1,11 @@
 DIST := dist
 EXECUTABLE := drone-ssh
-GOFMT ?= gofumpt -l -s
+GOFMT ?= gofumpt -l
 DIST := dist
 DIST_DIRS := $(DIST)/binaries $(DIST)/release
 GO ?= go
 SHASUM ?= shasum -a 256
+GOFILES := $(shell find . -name "*.go" -type f)
 HAS_GO = $(shell hash $(GO) > /dev/null 2>&1 && echo "GO" || echo "NOGO" )
 XGO_PACKAGE ?= src.techknowlogick.com/xgo@latest
 XGO_VERSION := go-1.19.x
@@ -52,9 +53,9 @@ all: build
 
 fmt:
 	@hash gofumpt > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		$(GO) get -u mvdan.cc/gofumpt; \
+		$(GO) install mvdan.cc/gofumpt; \
 	fi
-	$(GOFMT) -w $(SOURCES)
+	$(GOFMT) -w $(GOFILES)
 
 vet:
 	$(GO) vet ./...
@@ -62,24 +63,24 @@ vet:
 .PHONY: fmt-check
 fmt-check:
 	@hash gofumpt > /dev/null 2>&1; if [ $$? -ne 0 ]; then \
-		$(GO) get -u mvdan.cc/gofumpt; \
+		$(GO) install mvdan.cc/gofumpt; \
 	fi
-	@diff=$$($(GOFMT) -d $(SOURCES)); \
+	@diff=$$($(GOFMT) -d $(GOFILES)); \
 	if [ -n "$$diff" ]; then \
 		echo "Please run 'make fmt' and commit the result:"; \
 		echo "$${diff}"; \
 		exit 1; \
 	fi;
 
-test: fmt-check
+test:
 	@$(GO) test -v -cover -coverprofile coverage.txt ./... && echo "\n==>\033[32m Ok\033[m\n" || exit 1
 
-install: $(SOURCES)
+install: $(GOFILES)
 	$(GO) install -v -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)'
 
 build: $(EXECUTABLE)
 
-$(EXECUTABLE): $(SOURCES)
+$(EXECUTABLE): $(GOFILES)
 	$(GO) build -v -tags '$(TAGS)' -ldflags '$(EXTLDFLAGS)-s -w $(LDFLAGS)' -o $@
 
 build_linux_amd64:
