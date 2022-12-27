@@ -25,7 +25,6 @@ func main() {
 	}
 
 	app := cli.NewApp()
-	app.DisableSliceFlagSeparator = true
 	app.Name = "Drone SSH"
 	app.Usage = "Executing remote ssh commands"
 	app.Copyright = "Copyright (c) 2019 Bo-Yi Wu"
