@@ -103,7 +103,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	for _, key := range p.Config.Envs {
 		key = strings.ToUpper(key)
 		if val, found := os.LookupEnv(key); found {
-			env = append(env, key+"="+escapeArg(val))
+			env = append(env, "export "+key+"="+escapeArg(val))
 		}
 	}
 
