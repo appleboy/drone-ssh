@@ -77,7 +77,7 @@ jobs:
             ghcr.io/${{ github.repository }}
           tags: |
             type=raw,value=,enable={{is_default_branch}}
-            type=raw,value=latest,suffix=,enable={{is_default_branch}}
+            type=raw,value=latest,suffix=,enable=${{ matrix.system == 'linux' && matrix.arch == 'amd64' }}
             type=semver,event=tag,pattern={{version}},suffix=-${{ matrix.system }}-${{ matrix.arch }}
             type=semver,event=tag,pattern={{major}}.{{minor}},suffix=-${{ matrix.system }}-${{ matrix.arch }}
             type=semver,event=tag,pattern={{major}},suffix=-${{ matrix.system }}-${{ matrix.arch }}
