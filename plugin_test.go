@@ -539,13 +539,13 @@ func TestEnvOutput(t *testing.T) {
 			echo "[${ENV_7}]"
 			======END======
 			======ENV======
-			ENV_1='test'
-			ENV_2='test test'
-			ENV_3='test '
-			ENV_4='  test  test  '
-			ENV_5='test'\'''
-			ENV_6='test"'
-			ENV_7='test,!#;?.@$~'\''"'
+			export ENV_1='test'
+			export ENV_2='test test'
+			export ENV_3='test '
+			export ENV_4='  test  test  '
+			export ENV_5='test'\'''
+			export ENV_6='test"'
+			export ENV_7='test,!#;?.@$~'\''"'
 			======END======
 			out: [test]
 			out: [test test]
