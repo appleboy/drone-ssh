@@ -117,9 +117,9 @@ See [DOCS.md](./DOCS.md) for examples and full configuration options
 
 Configuration options are loaded from multiple sources:
 
-0.  Hardcoded drone-ssh defaults.  See [main.go CLI Flags](https://github.com/albertyw/drone-ssh/blob/master/main.go#L39) for more information.
-1.  From a `.env` [dotenv](https://github.com/joho/godotenv) file at the root of the repository tested by drone.
-2.  From a dotenv file at a path specified by the `PLUGIN_ENV_FILE` environment variable.
-3.  From your `.drone.yml` Drone configuration.
+0. Hardcoded drone-ssh defaults.  See [main.go CLI Flags](https://github.com/appleboy/drone-ssh/blob/6d9d6acc6aef1f9166118c6ba8bd214d3a582bdb/main.go#L39) for more information.
+1. From a `.env` [dotenv](https://github.com/joho/godotenv) file at the root of the repository tested by drone.
+2. From a dotenv file at a path specified by the `PLUGIN_ENV_FILE` environment variable.
+3. From your `.drone.yml` Drone configuration.
 
 Later sources override previous sources, i.e. if `PORT` is set in an `.env` file committed in the repository or created by previous test steps, it will override the default set `main.go`.
