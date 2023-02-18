@@ -104,7 +104,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	for _, key := range p.Config.Envs {
 		key = strings.ToUpper(key)
 		if val, found := os.LookupEnv(key); found {
-			env = append(env, p.format(p.Config.EnvsFormat, "NAME", key, "VALUE", val))
+			env = append(env, p.format(p.Config.EnvsFormat, "{NAME}", key, "{VALUE}", val))
 		}
 	}
 
