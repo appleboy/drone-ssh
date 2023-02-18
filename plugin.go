@@ -41,6 +41,7 @@ type (
 		Sync              bool
 		Ciphers           []string
 		UseInsecureCipher bool
+		Shell             string
 	}
 
 	// Plugin structure
@@ -99,11 +100,16 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	p.log(host, strings.Join(p.Config.Script, "\n"))
 	p.log(host, "======END======")
 
+	shell := p.Config.Shell
 	env := []string{}
 	for _, key := range p.Config.Envs {
 		key = strings.ToUpper(key)
 		if val, found := os.LookupEnv(key); found {
-			env = append(env, "export "+key+"="+escapeArg(val))
+			if shell == "bash" {
+				env = append(env, "export "+key+"="+escapeArg(val))
+			} else if shell == "powershell" {
+				env = append(env, "$env:"+key+" = "+escapeArg(val))
+			}
 		}
 	}
 

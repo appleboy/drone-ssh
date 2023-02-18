@@ -197,6 +197,12 @@ func main() {
 			Usage:   "debug mode",
 			EnvVars: []string{"PLUGIN_DEBUG", "DEBUG", "INPUT_DEBUG"},
 		},
+		&cli.StringFlag{
+			Name:    "shell",
+			Usage:   "shell on host",
+			EnvVars: []string{"PLUGIN_HOST_SHELL"},
+			Value:   "bash",
+		},
 	}
 
 	// Override a template
@@ -242,6 +248,7 @@ func run(c *cli.Context) error {
 	if s := c.String("script.string"); s != "" {
 		scripts = append(scripts, s)
 	}
+
 	plugin := Plugin{
 		Config: Config{
 			Key:               c.String("ssh-key"),
@@ -261,6 +268,7 @@ func run(c *cli.Context) error {
 			Sync:              c.Bool("sync"),
 			Ciphers:           c.StringSlice("ciphers"),
 			UseInsecureCipher: c.Bool("useInsecureCipher"),
+			Shell:             c.String("shell"),
 			Proxy: easyssh.DefaultConfig{
 				Key:               c.String("proxy.ssh-key"),
 				KeyPath:           c.String("proxy.key-path"),
