@@ -198,10 +198,10 @@ func main() {
 			EnvVars: []string{"PLUGIN_DEBUG", "DEBUG", "INPUT_DEBUG"},
 		},
 		&cli.StringFlag{
-			Name:    "shell",
-			Usage:   "shell on host",
-			EnvVars: []string{"PLUGIN_HOST_SHELL"},
-			Value:   "bash",
+			Name:    "envs.format",
+			Usage:   "",
+			EnvVars: []string{"PLUGIN_ENVS_FORMAT"},
+			Value:   "export {NAME}={VALUE}",
 		},
 	}
 
@@ -264,11 +264,11 @@ func run(c *cli.Context) error {
 			Script:            scripts,
 			ScriptStop:        c.Bool("script.stop"),
 			Envs:              c.StringSlice("envs"),
+			EnvsFormat:        c.String("envs.format"),
 			Debug:             c.Bool("debug"),
 			Sync:              c.Bool("sync"),
 			Ciphers:           c.StringSlice("ciphers"),
 			UseInsecureCipher: c.Bool("useInsecureCipher"),
-			Shell:             c.String("shell"),
 			Proxy: easyssh.DefaultConfig{
 				Key:               c.String("proxy.ssh-key"),
 				KeyPath:           c.String("proxy.key-path"),
