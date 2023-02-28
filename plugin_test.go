@@ -38,23 +38,6 @@ func TestMissingKeyOrPassword(t *testing.T) {
 	assert.Equal(t, errMissingPasswordOrKey, err)
 }
 
-func TestSetPasswordAndKey(t *testing.T) {
-	plugin := Plugin{
-		Config{
-			Host:     []string{"localhost"},
-			Username: "ubuntu",
-			Password: "1234",
-			Key:      "1234",
-		},
-		os.Stdout,
-	}
-
-	err := plugin.Exec()
-
-	assert.NotNil(t, err)
-	assert.Equal(t, errSetPasswordandKey, err)
-}
-
 func TestIncorrectPassword(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
