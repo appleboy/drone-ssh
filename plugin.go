@@ -17,7 +17,6 @@ var (
 	errMissingHost          = errors.New("Error: missing server host")
 	errMissingPasswordOrKey = errors.New("Error: can't connect without a private SSH key or password")
 	errCommandTimeOut       = errors.New("Error: command timeout")
-	errSetPasswordandKey    = errors.New("can't set password and key at the same time")
 )
 
 type (
@@ -171,10 +170,6 @@ func (p Plugin) Exec() error {
 
 	if len(p.Config.Key) == 0 && len(p.Config.Password) == 0 && len(p.Config.KeyPath) == 0 {
 		return errMissingPasswordOrKey
-	}
-
-	if len(p.Config.Key) != 0 && len(p.Config.Password) != 0 {
-		return errSetPasswordandKey
 	}
 
 	wg := sync.WaitGroup{}
