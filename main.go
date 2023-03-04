@@ -7,7 +7,6 @@ import (
 
 	"github.com/appleboy/easyssh-proxy"
 	"github.com/joho/godotenv"
-	_ "github.com/joho/godotenv/autoload"
 	"github.com/urfave/cli/v2"
 )
 
@@ -15,6 +14,13 @@ import (
 var Version string
 
 func main() {
+	// Load dotenv unless explicitly ignored
+	if noAutoEnv, found := os.LookupEnv("PLUGIN_NO_AUTO_ENV"); found {
+		if noAutoEnv != "true" {
+			_ = godotenv.Load()
+		}
+	}
+
 	// Load env-file if it exists first
 	if filename, found := os.LookupEnv("PLUGIN_ENV_FILE"); found {
 		_ = godotenv.Load(filename)
