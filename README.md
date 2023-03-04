@@ -122,4 +122,6 @@ Configuration options are loaded from multiple sources:
 2. From a dotenv file at a path specified by the `PLUGIN_ENV_FILE` environment variable.
 3. From your `.drone.yml` Drone configuration.
 
+If a `PLUGIN_NO_AUTO_ENV` environment variable (or drone configuration setting `no_auto_env`) is `"true"`, the container will skip loading `.env` unless otherwise specified by the `PLUGIN_ENV_FILE` environment variable (or by the `env_file` drone configuration setting).
+
 Later sources override previous sources, i.e. if `PORT` is set in an `.env` file committed in the repository or created by previous test steps, it will override the default set `main.go`.

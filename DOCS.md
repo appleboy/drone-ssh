@@ -211,3 +211,4 @@ Example configuration for passphrase which protecting a private key:
 | `proxy_password` | password for proxy host user |
 | `proxy_key` | plain text of proxy private key |
 | `proxy_key_path` | key path of proxy private key |
+| `no_auto_env` | if true, will not automatically load configs from `.env` file |
