@@ -49,7 +49,7 @@ The pre-compiled binaries can be downloaded from [release page](https://github.c
 With `Go` installed
 
 ```sh
-go get -u -v github.com/appleboy/drone-ssh
+go install github.com/appleboy/drone-ssh@latest
 ```
 
 or build the binary with the following command:
