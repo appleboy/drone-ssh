@@ -6,7 +6,7 @@ require (
 	github.com/appleboy/easyssh-proxy v1.3.9
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.8.1
-	github.com/urfave/cli/v2 v2.24.4
+	github.com/urfave/cli/v2 v2.25.1
 	golang.org/x/crypto v0.6.0
 )
 
