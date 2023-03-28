@@ -23,7 +23,7 @@ information and a listing of the available options please take a look at [the do
 ```diff
 pipeline:
   scp:
-    image: appleboy/drone-scp
+    image: ghcr.io/appleboy/drone-ssh
     settings:
       host:
         - example1.com
@@ -85,7 +85,7 @@ docker run --rm \
   -e PLUGIN_SCRIPT=whoami \
   -v $(pwd):$(pwd) \
   -w $(pwd) \
-  appleboy/drone-ssh
+  ghcr.io/appleboy/drone-ssh
 ```
 
 ## Mount key from file path
@@ -99,7 +99,7 @@ Mount private key in `volumes` setting of `.drone.yml` config
 ```diff
 pipeline:
   ssh:
-    image: appleboy/drone-ssh
+    image: ghcr.io/appleboy/drone-ssh
     host: xxxxx.com
     username: deploy
 +   volumes:

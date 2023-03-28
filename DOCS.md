@@ -5,14 +5,14 @@ author: appleboy
 tags: [ deploy, publish, ssh ]
 repo: appleboy/drone-ssh
 logo: term.svg
-image: appleboy/drone-ssh
+image: ghcr.io/appleboy/drone-ssh
 ---
 
 Use the SSH plugin to execute commands on a remote server. The below pipeline configuration demonstrates simple usage:
 
 ```yaml
 - name: ssh commands
-  image: appleboy/drone-ssh
+  image: ghcr.io/appleboy/drone-ssh
   settings:
     host: foo.com
     username: root
@@ -27,7 +27,7 @@ Example configuration in your `.drone.yml` file for multiple hosts:
 
 ```diff
   - name: ssh commands
-    image: appleboy/drone-ssh
+    image: ghcr.io/appleboy/drone-ssh
     settings:
       host:
 +       - foo.com
@@ -44,7 +44,7 @@ Example configuration for multiple hosts with different port:
 
 ```diff
   - name: ssh commands
-    image: appleboy/drone-ssh
+    image: ghcr.io/appleboy/drone-ssh
     settings:
       host:
 +       - foo.com:1234
@@ -61,7 +61,7 @@ Example configuration for command timeout, default value is 60 seconds:
 
 ```diff
   - name: ssh commands
-    image: appleboy/drone-ssh
+    image: ghcr.io/appleboy/drone-ssh
     settings:
       host: foo.com
       username: root
@@ -77,7 +77,7 @@ Example configuration for execute commands on a remote server using ｀SSHProxyC
 
 ```diff
   - name: ssh commands
-    image: appleboy/drone-ssh
+    image: ghcr.io/appleboy/drone-ssh
     settings:
       host: foo.com
       username: root
@@ -96,7 +96,7 @@ Example configuration using password from secrets:
 
 ```diff
   - name: ssh commands
-    image: appleboy/drone-ssh
+    image: ghcr.io/appleboy/drone-ssh
     settings:
       host: foo.com
       username: root
@@ -112,7 +112,7 @@ Example configuration using ssh key from secrets:
 
 ```diff
   - name: ssh commands
-    image: appleboy/drone-ssh
+    image: ghcr.io/appleboy/drone-ssh
     settings:
       host: foo.com
       username: root
@@ -128,7 +128,7 @@ Example configuration for exporting custom secrets:
 
 ```diff
   - name: ssh commands
-    image: appleboy/drone-ssh
+    image: ghcr.io/appleboy/drone-ssh
     environment:
       commit: ${DRONE_BUILD_NUMBER}
     settings:
@@ -148,7 +148,7 @@ Example configuration for stoping script after first failure:
 
 ```diff
   - name: ssh commands
-    image: appleboy/drone-ssh
+    image: ghcr.io/appleboy/drone-ssh
     settings:
       host: foo.com
       username: root
@@ -164,7 +164,7 @@ Example configuration for passphrase which protecting a private key:
 
 ```diff
   - name: ssh commands
-    image: appleboy/drone-ssh
+    image: ghcr.io/appleboy/drone-ssh
     settings:
       host: foo.com
       username: root
