@@ -59,7 +59,7 @@ builds:
   - -trimpath
   ldflags:
   - -s -w
-  - -X github.com/appleboy/drone-ssh.Version={{.Version}}
+  - -X main.Version={{.Version}}
   binary: >-
     {{ .ProjectName }}-
     {{- if .IsSnapshot }}{{ .Branch }}-
