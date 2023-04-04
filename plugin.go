@@ -65,6 +65,7 @@ func (p Plugin) hostPort(host string) (string, string) {
 }
 
 func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
+	defer wg.Done()
 	host, port := p.hostPort(host)
 	// Create MakeConfig instance with remote username, server address and path to private key.
 	ssh := &easyssh.MakeConfig{
@@ -117,38 +118,36 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	stdoutChan, stderrChan, doneChan, errChan, err := ssh.Stream(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
 	if err != nil {
 		errChannel <- err
-	} else {
-		// read from the output channel until the done signal is passed
-		isTimeout := true
-	loop:
-		for {
-			select {
-			case isTimeout = <-doneChan:
-				break loop
-			case outline := <-stdoutChan:
-				if outline != "" {
-					p.log(host, "out:", outline)
-				}
-			case errline := <-stderrChan:
-				if errline != "" {
-					p.log(host, "err:", errline)
-				}
-			case err = <-errChan:
+		return
+	}
+	// read from the output channel until the done signal is passed
+	isTimeout := true
+loop:
+	for {
+		select {
+		case isTimeout = <-doneChan:
+			break loop
+		case outline := <-stdoutChan:
+			if outline != "" {
+				p.log(host, "out:", outline)
 			}
-		}
-
-		// get exit code or command error.
-		if err != nil {
-			errChannel <- err
-		}
-
-		// command time out
-		if !isTimeout {
-			errChannel <- errCommandTimeOut
+		case errline := <-stderrChan:
+			if errline != "" {
+				p.log(host, "err:", errline)
+			}
+		case err = <-errChan:
 		}
 	}
 
-	wg.Done()
+	// get exit code or command error.
+	if err != nil {
+		errChannel <- err
+	}
+
+	// command time out
+	if !isTimeout {
+		errChannel <- errCommandTimeOut
+	}
 }
 
 func (p Plugin) log(host string, message ...interface{}) {
@@ -164,6 +163,8 @@ func (p Plugin) log(host string, message ...interface{}) {
 
 // Exec executes the plugin.
 func (p Plugin) Exec() error {
+	p.Config.Host = trimValues(p.Config.Host)
+
 	if len(p.Config.Host) == 0 {
 		return errMissingHost
 	}
@@ -176,10 +177,14 @@ func (p Plugin) Exec() error {
 	wg.Add(len(p.Config.Host))
 	errChannel := make(chan error)
 	finished := make(chan struct{})
-	for _, host := range p.Config.Host {
-		if p.Config.Sync {
-			p.exec(host, &wg, errChannel)
-		} else {
+	if p.Config.Sync {
+		go func() {
+			for _, host := range p.Config.Host {
+				p.exec(host, &wg, errChannel)
+			}
+		}()
+	} else {
+		for _, host := range p.Config.Host {
 			go p.exec(host, &wg, errChannel)
 		}
 	}
@@ -229,4 +234,19 @@ func (p Plugin) scriptCommands() []string {
 	}
 
 	return commands
+}
+
+func trimValues(keys []string) []string {
+	var newKeys []string
+
+	for _, value := range keys {
+		value = strings.TrimSpace(value)
+		if len(value) == 0 {
+			continue
+		}
+
+		newKeys = append(newKeys, value)
+	}
+
+	return newKeys
 }
