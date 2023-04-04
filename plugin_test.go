@@ -440,6 +440,41 @@ func TestFingerprint(t *testing.T) {
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
 
+func TestScriptStopWithMultipleHostAndSyncMode(t *testing.T) {
+	var (
+		buffer   bytes.Buffer
+		expected = `
+			======CMD======
+			mkdir a/b/c
+			mkdir d/e/f
+			======END======
+			err: mkdir: can't create directory 'a/b/c': No such file or directory
+		`
+	)
+
+	plugin := Plugin{
+		Config: Config{
+			Host:     []string{"", "localhost"},
+			Username: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Script: []string{
+				"mkdir a/b/c",
+				"mkdir d/e/f",
+			},
+			CommandTimeout: 10 * time.Second,
+			ScriptStop:     true,
+			Sync:           true,
+		},
+		Writer: &buffer,
+	}
+
+	err := plugin.Exec()
+	assert.NotNil(t, err)
+
+	assert.Equal(t, unindent(expected), unindent(buffer.String()))
+}
+
 func TestScriptStop(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
