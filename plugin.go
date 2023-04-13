@@ -17,6 +17,7 @@ var (
 	errMissingHost          = errors.New("Error: missing server host")
 	errMissingPasswordOrKey = errors.New("Error: can't connect without a private SSH key or password")
 	errCommandTimeOut       = errors.New("Error: command timeout")
+	envsFormat              = "export {NAME}={VALUE}"
 )
 
 type (
@@ -177,6 +178,10 @@ func (p Plugin) Exec() error {
 
 	if len(p.Config.Key) == 0 && len(p.Config.Password) == 0 && len(p.Config.KeyPath) == 0 {
 		return errMissingPasswordOrKey
+	}
+
+	if p.Config.EnvsFormat == "" {
+		p.Config.EnvsFormat = envsFormat
 	}
 
 	wg := sync.WaitGroup{}
