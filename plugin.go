@@ -40,6 +40,7 @@ type (
 		Sync              bool
 		Ciphers           []string
 		UseInsecureCipher bool
+		EnvsFormat        string
 	}
 
 	// Plugin structure
@@ -103,7 +104,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	for _, key := range p.Config.Envs {
 		key = strings.ToUpper(key)
 		if val, found := os.LookupEnv(key); found {
-			env = append(env, "export "+key+"="+escapeArg(val))
+			env = append(env, p.format(p.Config.EnvsFormat, "{NAME}", key, "{VALUE}", escapeArg(val)))
 		}
 	}
 
@@ -148,6 +149,11 @@ loop:
 	if !isTimeout {
 		errChannel <- errCommandTimeOut
 	}
+}
+
+func (p Plugin) format(format string, args ...string) string {
+	r := strings.NewReplacer(args...)
+	return r.Replace(format)
 }
 
 func (p Plugin) log(host string, message ...interface{}) {

@@ -196,6 +196,12 @@ func main() {
 			Usage:   "debug mode",
 			EnvVars: []string{"PLUGIN_DEBUG", "INPUT_DEBUG"},
 		},
+		&cli.StringFlag{
+			Name:    "envs.format",
+			Usage:   "",
+			EnvVars: []string{"PLUGIN_ENVS_FORMAT"},
+			Value:   "export {NAME}={VALUE}",
+		},
 	}
 
 	// Override a template
@@ -241,6 +247,7 @@ func run(c *cli.Context) error {
 	if s := c.String("script.string"); s != "" {
 		scripts = append(scripts, s)
 	}
+
 	plugin := Plugin{
 		Config: Config{
 			Key:               c.String("ssh-key"),
@@ -256,6 +263,7 @@ func run(c *cli.Context) error {
 			Script:            scripts,
 			ScriptStop:        c.Bool("script.stop"),
 			Envs:              c.StringSlice("envs"),
+			EnvsFormat:        c.String("envs.format"),
 			Debug:             c.Bool("debug"),
 			Sync:              c.Bool("sync"),
 			Ciphers:           c.StringSlice("ciphers"),
