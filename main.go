@@ -198,7 +198,7 @@ func main() {
 		},
 		&cli.StringFlag{
 			Name:    "envs.format",
-			Usage:   "",
+			Usage:   "flexible configuration of environment value transfer",
 			EnvVars: []string{"PLUGIN_ENVS_FORMAT", "INPUT_ENVS_FORMAT"},
 			Value:   envsFormat,
 		},
