@@ -39,12 +39,12 @@ func main() {
 		&cli.StringFlag{
 			Name:    "ssh-key",
 			Usage:   "private ssh key",
-			EnvVars: []string{"PLUGIN_SSH_KEY", "PLUGIN_KEY", "SSH_KEY", "KEY", "INPUT_KEY"},
+			EnvVars: []string{"PLUGIN_SSH_KEY", "PLUGIN_KEY", "SSH_KEY", "INPUT_KEY"},
 		},
 		&cli.StringFlag{
 			Name:    "ssh-passphrase",
 			Usage:   "The purpose of the passphrase is usually to encrypt the private key.",
-			EnvVars: []string{"PLUGIN_SSH_PASSPHRASE", "PLUGIN_PASSPHRASE", "SSH_PASSPHRASE", "PASSPHRASE", "INPUT_PASSPHRASE"},
+			EnvVars: []string{"PLUGIN_SSH_PASSPHRASE", "PLUGIN_PASSPHRASE", "SSH_PASSPHRASE", "INPUT_PASSPHRASE"},
 		},
 		&cli.StringFlag{
 			Name:    "key-path",
@@ -56,68 +56,68 @@ func main() {
 			Name:    "username",
 			Aliases: []string{"user", "u"},
 			Usage:   "connect as user",
-			EnvVars: []string{"PLUGIN_USERNAME", "PLUGIN_USER", "SSH_USERNAME", "USERNAME", "INPUT_USERNAME"},
+			EnvVars: []string{"PLUGIN_USERNAME", "PLUGIN_USER", "SSH_USERNAME", "INPUT_USERNAME"},
 			Value:   "root",
 		},
 		&cli.StringFlag{
 			Name:    "password",
 			Aliases: []string{"P"},
 			Usage:   "user password",
-			EnvVars: []string{"PLUGIN_PASSWORD", "SSH_PASSWORD", "PASSWORD", "INPUT_PASSWORD"},
+			EnvVars: []string{"PLUGIN_PASSWORD", "SSH_PASSWORD", "INPUT_PASSWORD"},
 		},
 		&cli.StringSliceFlag{
 			Name:    "ciphers",
 			Usage:   "The allowed cipher algorithms. If unspecified then a sensible",
-			EnvVars: []string{"PLUGIN_CIPHERS", "SSH_CIPHERS", "CIPHERS", "INPUT_CIPHERS"},
+			EnvVars: []string{"PLUGIN_CIPHERS", "SSH_CIPHERS", "INPUT_CIPHERS"},
 		},
 		&cli.BoolFlag{
 			Name:    "useInsecureCipher",
 			Usage:   "include more ciphers with use_insecure_cipher",
-			EnvVars: []string{"PLUGIN_USE_INSECURE_CIPHER", "SSH_USE_INSECURE_CIPHER", "USE_INSECURE_CIPHER", "INPUT_USE_INSECURE_CIPHER"},
+			EnvVars: []string{"PLUGIN_USE_INSECURE_CIPHER", "SSH_USE_INSECURE_CIPHER", "INPUT_USE_INSECURE_CIPHER"},
 		},
 		&cli.StringFlag{
 			Name:    "fingerprint",
 			Usage:   "fingerprint SHA256 of the host public key, default is to skip verification",
-			EnvVars: []string{"PLUGIN_FINGERPRINT", "SSH_FINGERPRINT", "FINGERPRINT", "INPUT_FINGERPRINT"},
+			EnvVars: []string{"PLUGIN_FINGERPRINT", "SSH_FINGERPRINT", "INPUT_FINGERPRINT"},
 		},
 		&cli.StringSliceFlag{
 			Name:     "host",
 			Aliases:  []string{"H"},
 			Usage:    "connect to host",
-			EnvVars:  []string{"PLUGIN_HOST", "SSH_HOST", "HOST", "INPUT_HOST"},
+			EnvVars:  []string{"PLUGIN_HOST", "SSH_HOST", "INPUT_HOST"},
 			FilePath: ".host",
 		},
 		&cli.IntFlag{
 			Name:    "port",
 			Aliases: []string{"p"},
 			Usage:   "connect to port",
-			EnvVars: []string{"PLUGIN_PORT", "SSH_PORT", "PORT", "INPUT_PORT"},
+			EnvVars: []string{"PLUGIN_PORT", "SSH_PORT", "INPUT_PORT"},
 			Value:   22,
 		},
 		&cli.BoolFlag{
 			Name:    "sync",
 			Usage:   "sync mode",
-			EnvVars: []string{"PLUGIN_SYNC", "SYNC", "INPUT_SYNC"},
+			EnvVars: []string{"PLUGIN_SYNC", "INPUT_SYNC"},
 		},
 		&cli.DurationFlag{
 			Name:    "timeout",
 			Aliases: []string{"t"},
 			Usage:   "connection timeout",
-			EnvVars: []string{"PLUGIN_TIMEOUT", "SSH_TIMEOUT", "TIMEOUT", "INPUT_TIMEOUT"},
+			EnvVars: []string{"PLUGIN_TIMEOUT", "SSH_TIMEOUT", "INPUT_TIMEOUT"},
 			Value:   30 * time.Second,
 		},
 		&cli.DurationFlag{
 			Name:    "command.timeout",
 			Aliases: []string{"T"},
 			Usage:   "command timeout",
-			EnvVars: []string{"PLUGIN_COMMAND_TIMEOUT", "SSH_COMMAND_TIMEOUT", "COMMAND_TIMEOUT", "INPUT_COMMAND_TIMEOUT"},
+			EnvVars: []string{"PLUGIN_COMMAND_TIMEOUT", "SSH_COMMAND_TIMEOUT", "INPUT_COMMAND_TIMEOUT"},
 			Value:   10 * time.Minute,
 		},
 		&cli.StringSliceFlag{
 			Name:    "script",
 			Aliases: []string{"s"},
 			Usage:   "execute commands",
-			EnvVars: []string{"PLUGIN_SCRIPT", "SSH_SCRIPT", "SCRIPT"},
+			EnvVars: []string{"PLUGIN_SCRIPT", "SSH_SCRIPT"},
 		},
 		&cli.StringFlag{
 			Name:    "script.string",
@@ -127,7 +127,7 @@ func main() {
 		&cli.BoolFlag{
 			Name:    "script.stop",
 			Usage:   "stop script after first failure",
-			EnvVars: []string{"PLUGIN_SCRIPT_STOP", "STOP", "INPUT_SCRIPT_STOP"},
+			EnvVars: []string{"PLUGIN_SCRIPT_STOP", "INPUT_SCRIPT_STOP"},
 		},
 		&cli.StringFlag{
 			Name:    "proxy.ssh-key",
@@ -137,7 +137,7 @@ func main() {
 		&cli.StringFlag{
 			Name:    "proxy.ssh-passphrase",
 			Usage:   "The purpose of the passphrase is usually to encrypt the private key.",
-			EnvVars: []string{"PLUGIN_PROXY_SSH_PASSPHRASE", "PLUGIN_PROXY_PASSPHRASE", "PROXY_SSH_PASSPHRASE", "PROXY_PASSPHRASE", "INPUT_PROXY_PASSPHRASE"},
+			EnvVars: []string{"PLUGIN_PROXY_SSH_PASSPHRASE", "PLUGIN_PROXY_PASSPHRASE", "PROXY_SSH_PASSPHRASE", "INPUT_PROXY_PASSPHRASE"},
 		},
 		&cli.StringFlag{
 			Name:    "proxy.key-path",
@@ -174,17 +174,17 @@ func main() {
 		&cli.StringSliceFlag{
 			Name:    "proxy.ciphers",
 			Usage:   "The allowed cipher algorithms. If unspecified then a sensible",
-			EnvVars: []string{"PLUGIN_PROXY_CIPHERS", "SSH_PROXY_CIPHERS", "PROXY_CIPHERS", "INPUT_PROXY_CIPHERS"},
+			EnvVars: []string{"PLUGIN_PROXY_CIPHERS", "PROXY_SSH_CIPHERS", "INPUT_PROXY_CIPHERS"},
 		},
 		&cli.BoolFlag{
 			Name:    "proxy.useInsecureCipher",
 			Usage:   "include more ciphers with use_insecure_cipher",
-			EnvVars: []string{"PLUGIN_PROXY_USE_INSECURE_CIPHER", "SSH_PROXY_USE_INSECURE_CIPHER", "PROXY_USE_INSECURE_CIPHER", "INPUT_PROXY_USE_INSECURE_CIPHER"},
+			EnvVars: []string{"PLUGIN_PROXY_USE_INSECURE_CIPHER", "PROXY_SSH_USE_INSECURE_CIPHER", "INPUT_PROXY_USE_INSECURE_CIPHER"},
 		},
 		&cli.StringFlag{
 			Name:    "proxy.fingerprint",
 			Usage:   "fingerprint SHA256 of the host public key, default is to skip verification",
-			EnvVars: []string{"PLUGIN_PROXY_FINGERPRINT", "SSH_PROXY_FINGERPRINT", "PROXY_FINGERPRINT", "INPUT_PROXY_FINGERPRINT"},
+			EnvVars: []string{"PLUGIN_PROXY_FINGERPRINT", "PROXY_SSH_FINGERPRINT", "PROXY_FINGERPRINT", "INPUT_PROXY_FINGERPRINT"},
 		},
 		&cli.StringSliceFlag{
 			Name:    "envs",
@@ -194,7 +194,7 @@ func main() {
 		&cli.BoolFlag{
 			Name:    "debug",
 			Usage:   "debug mode",
-			EnvVars: []string{"PLUGIN_DEBUG", "DEBUG", "INPUT_DEBUG"},
+			EnvVars: []string{"PLUGIN_DEBUG", "INPUT_DEBUG"},
 		},
 	}
 
