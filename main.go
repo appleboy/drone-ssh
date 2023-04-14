@@ -36,6 +36,40 @@ func main() {
 	app.Action = run
 	app.Version = Version
 	app.Flags = []cli.Flag{
+		&cli.StringSliceFlag{
+			Name:     "host",
+			Aliases:  []string{"H"},
+			Usage:    "connect to host",
+			EnvVars:  []string{"PLUGIN_HOST", "SSH_HOST", "INPUT_HOST"},
+			FilePath: ".host",
+		},
+		&cli.IntFlag{
+			Name:    "port",
+			Aliases: []string{"p"},
+			Usage:   "connect to port",
+			EnvVars: []string{"PLUGIN_PORT", "SSH_PORT", "INPUT_PORT"},
+			Value:   22,
+		},
+		&cli.StringFlag{
+			Name:    "username",
+			Aliases: []string{"user", "u"},
+			Usage:   "connect as user",
+			EnvVars: []string{"PLUGIN_USERNAME", "PLUGIN_USER", "SSH_USERNAME", "INPUT_USERNAME"},
+			Value:   "root",
+		},
+		&cli.StringFlag{
+			Name:    "password",
+			Aliases: []string{"P"},
+			Usage:   "user password",
+			EnvVars: []string{"PLUGIN_PASSWORD", "SSH_PASSWORD", "INPUT_PASSWORD"},
+		},
+		&cli.DurationFlag{
+			Name:    "timeout",
+			Aliases: []string{"t"},
+			Usage:   "connection timeout",
+			EnvVars: []string{"PLUGIN_TIMEOUT", "SSH_TIMEOUT", "INPUT_TIMEOUT"},
+			Value:   30 * time.Second,
+		},
 		&cli.StringFlag{
 			Name:    "ssh-key",
 			Usage:   "private ssh key",
@@ -52,19 +86,6 @@ func main() {
 			Usage:   "ssh private key path",
 			EnvVars: []string{"PLUGIN_KEY_PATH", "SSH_KEY_PATH", "INPUT_KEY_PATH"},
 		},
-		&cli.StringFlag{
-			Name:    "username",
-			Aliases: []string{"user", "u"},
-			Usage:   "connect as user",
-			EnvVars: []string{"PLUGIN_USERNAME", "PLUGIN_USER", "SSH_USERNAME", "INPUT_USERNAME"},
-			Value:   "root",
-		},
-		&cli.StringFlag{
-			Name:    "password",
-			Aliases: []string{"P"},
-			Usage:   "user password",
-			EnvVars: []string{"PLUGIN_PASSWORD", "SSH_PASSWORD", "INPUT_PASSWORD"},
-		},
 		&cli.StringSliceFlag{
 			Name:    "ciphers",
 			Usage:   "The allowed cipher algorithms. If unspecified then a sensible",
@@ -80,31 +101,10 @@ func main() {
 			Usage:   "fingerprint SHA256 of the host public key, default is to skip verification",
 			EnvVars: []string{"PLUGIN_FINGERPRINT", "SSH_FINGERPRINT", "INPUT_FINGERPRINT"},
 		},
-		&cli.StringSliceFlag{
-			Name:     "host",
-			Aliases:  []string{"H"},
-			Usage:    "connect to host",
-			EnvVars:  []string{"PLUGIN_HOST", "SSH_HOST", "INPUT_HOST"},
-			FilePath: ".host",
-		},
-		&cli.IntFlag{
-			Name:    "port",
-			Aliases: []string{"p"},
-			Usage:   "connect to port",
-			EnvVars: []string{"PLUGIN_PORT", "SSH_PORT", "INPUT_PORT"},
-			Value:   22,
-		},
 		&cli.BoolFlag{
 			Name:    "sync",
 			Usage:   "sync mode",
 			EnvVars: []string{"PLUGIN_SYNC", "INPUT_SYNC"},
-		},
-		&cli.DurationFlag{
-			Name:    "timeout",
-			Aliases: []string{"t"},
-			Usage:   "connection timeout",
-			EnvVars: []string{"PLUGIN_TIMEOUT", "SSH_TIMEOUT", "INPUT_TIMEOUT"},
-			Value:   30 * time.Second,
 		},
 		&cli.DurationFlag{
 			Name:    "command.timeout",
@@ -130,19 +130,15 @@ func main() {
 			EnvVars: []string{"PLUGIN_SCRIPT_STOP", "INPUT_SCRIPT_STOP"},
 		},
 		&cli.StringFlag{
-			Name:    "proxy.ssh-key",
-			Usage:   "private ssh key of proxy",
-			EnvVars: []string{"PLUGIN_PROXY_SSH_KEY", "PLUGIN_PROXY_KEY", "PROXY_SSH_KEY", "INPUT_PROXY_KEY"},
+			Name:    "proxy.host",
+			Usage:   "connect to host of proxy",
+			EnvVars: []string{"PLUGIN_PROXY_HOST", "PROXY_SSH_HOST", "INPUT_PROXY_HOST"},
 		},
 		&cli.StringFlag{
-			Name:    "proxy.ssh-passphrase",
-			Usage:   "The purpose of the passphrase is usually to encrypt the private key.",
-			EnvVars: []string{"PLUGIN_PROXY_SSH_PASSPHRASE", "PLUGIN_PROXY_PASSPHRASE", "PROXY_SSH_PASSPHRASE", "INPUT_PROXY_PASSPHRASE"},
-		},
-		&cli.StringFlag{
-			Name:    "proxy.key-path",
-			Usage:   "ssh private key path of proxy",
-			EnvVars: []string{"PLUGIN_PROXY_KEY_PATH", "PROXY_SSH_KEY_PATH", "INPUT_PROXY_KEY_PATH"},
+			Name:    "proxy.port",
+			Usage:   "connect to port of proxy",
+			EnvVars: []string{"PLUGIN_PROXY_PORT", "PROXY_SSH_PORT", "INPUT_PROXY_PORT"},
+			Value:   "22",
 		},
 		&cli.StringFlag{
 			Name:    "proxy.username",
@@ -156,15 +152,19 @@ func main() {
 			EnvVars: []string{"PLUGIN_PROXY_PASSWORD", "PROXY_SSH_PASSWORD", "INPUT_PROXY_PASSWORD"},
 		},
 		&cli.StringFlag{
-			Name:    "proxy.host",
-			Usage:   "connect to host of proxy",
-			EnvVars: []string{"PLUGIN_PROXY_HOST", "PROXY_SSH_HOST", "INPUT_PROXY_HOST"},
+			Name:    "proxy.ssh-key",
+			Usage:   "private ssh key of proxy",
+			EnvVars: []string{"PLUGIN_PROXY_SSH_KEY", "PLUGIN_PROXY_KEY", "PROXY_SSH_KEY", "INPUT_PROXY_KEY"},
 		},
 		&cli.StringFlag{
-			Name:    "proxy.port",
-			Usage:   "connect to port of proxy",
-			EnvVars: []string{"PLUGIN_PROXY_PORT", "PROXY_SSH_PORT", "INPUT_PROXY_PORT"},
-			Value:   "22",
+			Name:    "proxy.ssh-passphrase",
+			Usage:   "The purpose of the passphrase is usually to encrypt the private key.",
+			EnvVars: []string{"PLUGIN_PROXY_SSH_PASSPHRASE", "PLUGIN_PROXY_PASSPHRASE", "PROXY_SSH_PASSPHRASE", "INPUT_PROXY_PASSPHRASE"},
+		},
+		&cli.StringFlag{
+			Name:    "proxy.key-path",
+			Usage:   "ssh private key path of proxy",
+			EnvVars: []string{"PLUGIN_PROXY_KEY_PATH", "PROXY_SSH_KEY_PATH", "INPUT_PROXY_KEY_PATH"},
 		},
 		&cli.DurationFlag{
 			Name:    "proxy.timeout",
