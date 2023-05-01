@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/appleboy/easyssh-proxy"
@@ -26,7 +27,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "Drone SSH"
 	app.Usage = "Executing remote ssh commands"
-	app.Copyright = "Copyright (c) 2019 Bo-Yi Wu"
+	app.Copyright = "Copyright (c) " + strconv.Itoa(time.Now().Year()) + " Bo-Yi Wu"
 	app.Authors = []*cli.Author{
 		{
 			Name:  "Bo-Yi Wu",
