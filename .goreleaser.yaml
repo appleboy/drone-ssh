@@ -71,6 +71,10 @@ builds:
     {{- else }}{{ .Arch }}{{ end }}
     {{- if .Arm }}-{{ .Arm }}{{ end }}
   no_unique_dist_dir: true
+  hooks:
+    post:
+      - cmd: xz -k -9 {{ .Path }}
+        dir: ./dist/
 
 archives:
   - format: binary
