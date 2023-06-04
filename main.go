@@ -1,13 +1,16 @@
 package main
 
 import (
-	"log"
 	"os"
 	"strconv"
 	"time"
 
 	"github.com/appleboy/easyssh-proxy"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/joho/godotenv"
+	"github.com/mattn/go-isatty"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/urfave/cli/v2"
 )
 
@@ -22,6 +25,26 @@ func main() {
 
 	if _, err := os.Stat("/run/drone/env"); err == nil {
 		_ = godotenv.Overload("/run/drone/env")
+	}
+
+	isTerm := isatty.IsTerminal(os.Stdout.Fd())
+	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	log.Logger = log.Output(
+		zerolog.ConsoleWriter{
+			Out:     os.Stderr,
+			NoColor: !isTerm,
+		},
+	)
+	zerolog.CallerMarshalFunc = func(pc uintptr, file string, line int) string {
+		short := file
+		for i := len(file) - 1; i > 0; i-- {
+			if file[i] == '/' {
+				short = file[i+1:]
+				break
+			}
+		}
+		file = short
+		return file + ":" + strconv.Itoa(line)
 	}
 
 	app := cli.NewApp()
@@ -108,7 +131,7 @@ func main() {
 			EnvVars: []string{"PLUGIN_SYNC", "INPUT_SYNC"},
 		},
 		&cli.DurationFlag{
-			Name:    "command.timeout",
+			Name:    "command-timeout",
 			Aliases: []string{"T"},
 			Usage:   "command timeout",
 			EnvVars: []string{"PLUGIN_COMMAND_TIMEOUT", "SSH_COMMAND_TIMEOUT", "INPUT_COMMAND_TIMEOUT"},
@@ -198,7 +221,7 @@ func main() {
 			EnvVars: []string{"PLUGIN_DEBUG", "INPUT_DEBUG"},
 		},
 		&cli.StringFlag{
-			Name:    "envs.format",
+			Name:    "envs-format",
 			Usage:   "flexible configuration of environment value transfer",
 			EnvVars: []string{"PLUGIN_ENVS_FORMAT", "INPUT_ENVS_FORMAT"},
 			Value:   envsFormat,
@@ -239,11 +262,16 @@ REPOSITORY:
 `
 
 	if err := app.Run(os.Args); err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err).Msg("can't run app")
 	}
 }
 
 func run(c *cli.Context) error {
+	if c.Bool("debug") {
+		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+		log.Logger = log.With().Caller().Logger()
+	}
+
 	scripts := c.StringSlice("script")
 	if s := c.String("script.string"); s != "" {
 		scripts = append(scripts, s)
@@ -264,7 +292,7 @@ func run(c *cli.Context) error {
 			Script:            scripts,
 			ScriptStop:        c.Bool("script.stop"),
 			Envs:              c.StringSlice("envs"),
-			EnvsFormat:        c.String("envs.format"),
+			EnvsFormat:        c.String("envs-format"),
 			Debug:             c.Bool("debug"),
 			Sync:              c.Bool("sync"),
 			Ciphers:           c.StringSlice("ciphers"),
@@ -284,6 +312,10 @@ func run(c *cli.Context) error {
 			},
 		},
 		Writer: os.Stdout,
+	}
+
+	if plugin.Config.Debug {
+		spew.Dump(plugin)
 	}
 
 	return plugin.Exec()

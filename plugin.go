@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/appleboy/easyssh-proxy"
+	"github.com/rs/zerolog/log"
 )
 
 var (
@@ -213,9 +214,9 @@ func (p Plugin) Exec() error {
 		}
 	}
 
-	fmt.Println("==============================================")
-	fmt.Println("✅ Successfully executed commands to all host.")
-	fmt.Println("==============================================")
+	log.Info().Msg("==============================================")
+	log.Info().Msg("✅ Successfully executed commands to all host.")
+	log.Info().Msg("==============================================")
 
 	return nil
 }
