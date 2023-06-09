@@ -52,6 +52,12 @@ func main() {
 			Value:   22,
 		},
 		&cli.StringFlag{
+			Name:    "protocol",
+			Usage:   "The IP protocol to use. Default to tcp (both IPv4 and IPv6).",
+			EnvVars: []string{"PLUGIN_PROTOCOL", "SSH_PROTOCOL", "INPUT_PROTOCOL"},
+			Value:   "tcp",
+		},
+		&cli.StringFlag{
 			Name:    "username",
 			Aliases: []string{"user", "u"},
 			Usage:   "connect as user",
@@ -140,6 +146,12 @@ func main() {
 			Usage:   "connect to port of proxy",
 			EnvVars: []string{"PLUGIN_PROXY_PORT", "PROXY_SSH_PORT", "INPUT_PROXY_PORT"},
 			Value:   "22",
+		},
+		&cli.StringFlag{
+			Name:    "proxy.protocol",
+			Usage:   "The IP protocol to use for the proxy. Default to tcp (both IPv4 and IPv6).",
+			EnvVars: []string{"PLUGIN_PROTOCOL", "SSH_PROTOCOL", "INPUT_PROTOCOL"},
+			Value:   "tcp",
 		},
 		&cli.StringFlag{
 			Name:    "proxy.username",
@@ -259,6 +271,7 @@ func run(c *cli.Context) error {
 			Fingerprint:       c.String("fingerprint"),
 			Host:              c.StringSlice("host"),
 			Port:              c.Int("port"),
+			Protocol:          easyssh.Protocol(c.String("protocol")),
 			Timeout:           c.Duration("timeout"),
 			CommandTimeout:    c.Duration("command.timeout"),
 			Script:            scripts,
@@ -278,6 +291,7 @@ func run(c *cli.Context) error {
 				Fingerprint:       c.String("proxy.fingerprint"),
 				Server:            c.String("proxy.host"),
 				Port:              c.String("proxy.port"),
+				Protocol:          easyssh.Protocol(c.String("proxy.protocol")),
 				Timeout:           c.Duration("proxy.timeout"),
 				Ciphers:           c.StringSlice("proxy.ciphers"),
 				UseInsecureCipher: c.Bool("proxy.useInsecureCipher"),
