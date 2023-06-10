@@ -113,6 +113,40 @@ func TestSSHScriptFromKeyFile(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func TestSSHIPv4Only(t *testing.T) {
+	plugin := Plugin{
+		Config: Config{
+			Host:           []string{"localhost", "127.0.0.1"},
+			Username:       "drone-scp",
+			Port:           22,
+			Protocol:       easyssh.PROTOCOL_TCP4,
+			KeyPath:        "./tests/.ssh/id_rsa",
+			Script:         []string{"whoami", "ls -al"},
+			CommandTimeout: 60 * time.Second,
+		},
+	}
+
+	err := plugin.Exec()
+	assert.Nil(t, err)
+}
+
+func TestSSHIPv6OnlyError(t *testing.T) {
+	plugin := Plugin{
+		Config: Config{
+			Host:           []string{"127.0.0.1"},
+			Username:       "drone-scp",
+			Port:           22,
+			Protocol:       easyssh.PROTOCOL_TCP6,
+			KeyPath:        "./tests/.ssh/id_rsa",
+			Script:         []string{"whoami", "ls -al"},
+			CommandTimeout: 60 * time.Second,
+		},
+	}
+
+	err := plugin.Exec()
+	assert.NotNil(t, err)
+}
+
 func TestStreamFromSSHCommand(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
