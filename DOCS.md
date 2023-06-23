@@ -178,6 +178,23 @@ Example configuration for passphrase which protecting a private key:
         - echo "you can't see the steps."
 ```
 
+Example configuration for forcing protocol to IPv4 only:
+
+```diff
+  - name: ssh commands
+    image: ghcr.io/appleboy/drone-ssh
+    settings:
+      host: foo.com
+      username: root
+      password: 1234
+      port: 22
++     protocol: tcp4
+      script:
+        - echo hello
+        - echo world
+```
+
+
 ## Secret Reference
 
 | Key | Description |
@@ -197,6 +214,7 @@ Example configuration for passphrase which protecting a private key:
 |-----|-------------|
 | `host` | target hostname or IP |
 | `port` | ssh port of target host |
+| `protocol` | IP protocol to use: either tcp, tcp4 or tcp6 |
 | `username` | account for target host user |
 | `password` | password for target host user |
 | `key` | plain text of user private key |
@@ -208,6 +226,7 @@ Example configuration for passphrase which protecting a private key:
 | `command_timeout` | Command timeout is the maximum amount of time for the execute commands, default is 10 minutes. |
 | `proxy_host` | proxy hostname or IP |
 | `proxy_port` | ssh port of proxy host |
+| `proxy_protocol` | IP protocol to use for the proxy: either tcp, tcp4 or tcp6 |
 | `proxy_username` | account for proxy host user |
 | `proxy_password` | password for proxy host user |
 | `proxy_key` | plain text of proxy private key |

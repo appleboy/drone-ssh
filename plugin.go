@@ -30,6 +30,7 @@ type (
 		Password          string
 		Host              []string
 		Port              int
+		Protocol          easyssh.Protocol
 		Fingerprint       string
 		Timeout           time.Duration
 		CommandTimeout    time.Duration
@@ -75,6 +76,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 		User:              p.Config.Username,
 		Password:          p.Config.Password,
 		Port:              port,
+		Protocol:          p.Config.Protocol,
 		Key:               p.Config.Key,
 		KeyPath:           p.Config.KeyPath,
 		Passphrase:        p.Config.Passphrase,
@@ -87,6 +89,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 			User:              p.Config.Proxy.User,
 			Password:          p.Config.Proxy.Password,
 			Port:              p.Config.Proxy.Port,
+			Protocol:          p.Config.Proxy.Protocol,
 			Key:               p.Config.Proxy.Key,
 			KeyPath:           p.Config.Proxy.KeyPath,
 			Passphrase:        p.Config.Proxy.Passphrase,

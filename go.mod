@@ -3,7 +3,7 @@ module github.com/appleboy/drone-ssh
 go 1.18
 
 require (
-	github.com/appleboy/easyssh-proxy v1.3.10
+	github.com/appleboy/easyssh-proxy v1.3.11-0.20230609114136-a50c12e64039
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.8.4
 	github.com/urfave/cli/v2 v2.25.7

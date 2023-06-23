@@ -1,7 +1,7 @@
 github.com/ScaleFT/sshkeys v1.2.0 h1:5BRp6rTVIhJzXT3VcUQrKgXR8zWA3sOsNeuyW15WUA8=
 github.com/ScaleFT/sshkeys v1.2.0/go.mod h1:gxOHeajFfvGQh/fxlC8oOKBe23xnnJTif00IFFbiT+o=
-github.com/appleboy/easyssh-proxy v1.3.10 h1:iriF68tlrYoxgWhS7t7Wyr0FA+hJlOem5tMfm+RDlx4=
-github.com/appleboy/easyssh-proxy v1.3.10/go.mod h1:T81pu/Cxx/zf/7YXhFCFiucBa4xeQ81ci5b0PFnMRJc=
+github.com/appleboy/easyssh-proxy v1.3.11-0.20230609114136-a50c12e64039 h1:u1o1Ft7PltG4+iOAmEubuyXx5fiDHWIvP+JiCClL+ak=
+github.com/appleboy/easyssh-proxy v1.3.11-0.20230609114136-a50c12e64039/go.mod h1:6nn1KPv9GP9BrK8tgl+d/w68jX4rpLeooO3FAcC/lds=
 github.com/cpuguy83/go-md2man/v2 v2.0.2 h1:p1EgwI/C7NhT0JmVkwCD2ZBK8j4aeHQX2pMHHBfMQ6w=
 github.com/cpuguy83/go-md2man/v2 v2.0.2/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
