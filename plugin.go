@@ -155,20 +155,23 @@ loop:
 	}
 }
 
+// format string
 func (p Plugin) format(format string, args ...string) string {
 	r := strings.NewReplacer(args...)
 	return r.Replace(format)
 }
 
+// log output to console
 func (p Plugin) log(host string, message ...interface{}) {
 	if p.Writer == nil {
 		p.Writer = os.Stdout
 	}
 	if count := len(p.Config.Host); count == 1 {
 		fmt.Fprintf(p.Writer, "%s", fmt.Sprintln(message...))
-	} else {
-		fmt.Fprintf(p.Writer, "%s: %s", host, fmt.Sprintln(message...))
+		return
 	}
+
+	fmt.Fprintf(p.Writer, "%s: %s", host, fmt.Sprintln(message...))
 }
 
 // Exec executes the plugin.
