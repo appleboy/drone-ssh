@@ -875,9 +875,14 @@ func TestAllEnvs(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			out: [foobar]
-			out: [foobar]
-			out: [foobar]
+======CMD======
+echo "[${INPUT_1}]"
+echo "[${GITHUB_2}]"
+echo "[${PLUGIN_3}]"
+======END======
+out: [foobar]
+out: [foobar]
+out: [foobar]
 		`
 	)
 
