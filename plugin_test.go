@@ -823,3 +823,94 @@ func TestPlugin_hostPort(t *testing.T) {
 		})
 	}
 }
+
+func TestFindEnvs(t *testing.T) {
+	testEnvs := []string{
+		"INPUT_FOO",
+		"INPUT_BAR",
+		"NO_PREFIX",
+		"INPUT_FOOBAR",
+	}
+
+	origEnviron := os.Environ()
+	os.Clearenv()
+	for _, env := range testEnvs {
+		os.Setenv(env, "dummyValue")
+	}
+
+	defer func() {
+		os.Clearenv()
+		for _, env := range origEnviron {
+			pair := strings.SplitN(env, "=", 2)
+			os.Setenv(pair[0], pair[1])
+		}
+	}()
+
+	t.Run("Find single prefix", func(t *testing.T) {
+		expected := []string{"INPUT_FOO", "INPUT_BAR", "INPUT_FOOBAR"}
+		result := findEnvs("INPUT_")
+		if !reflect.DeepEqual(result, expected) {
+			t.Errorf("Expected %v, but got %v", expected, result)
+		}
+	})
+
+	t.Run("Find multiple prefixes", func(t *testing.T) {
+		expected := []string{"INPUT_FOO", "INPUT_BAR", "NO_PREFIX", "INPUT_FOOBAR"}
+		result := findEnvs("INPUT_", "NO_PREFIX")
+		if !reflect.DeepEqual(result, expected) {
+			t.Errorf("Expected %v, but got %v", expected, result)
+		}
+	})
+
+	t.Run("Find non-existing prefix", func(t *testing.T) {
+		expected := []string{}
+		result := findEnvs("NON_EXISTING_")
+		if !reflect.DeepEqual(result, expected) {
+			t.Errorf("Expected %v, but got %v", expected, result)
+		}
+	})
+}
+
+func TestAllEnvs(t *testing.T) {
+	var (
+		buffer   bytes.Buffer
+		expected = `
+			out: [foobar]
+			out: [foobar]
+			out: [foobar]
+		`
+	)
+
+	os.Setenv("INPUT_1", `foobar`)
+	os.Setenv("GITHUB_2", `foobar`)
+	os.Setenv("PLUGIN_3", `foobar`)
+
+	plugin := Plugin{
+		Config: Config{
+			Host:       []string{"localhost"},
+			Username:   "drone-scp",
+			Port:       22,
+			KeyPath:    "./tests/.ssh/test",
+			Passphrase: "1234",
+			AllEnvs:    true,
+			Script: []string{
+				`echo "[${INPUT_1}]"`,
+				`echo "[${GITHUB_2}]"`,
+				`echo "[${PLUGIN_3}]"`,
+			},
+			CommandTimeout: 10 * time.Second,
+			Proxy: easyssh.DefaultConfig{
+				Server:  "localhost",
+				User:    "drone-scp",
+				Port:    "22",
+				KeyPath: "./tests/.ssh/id_rsa",
+			},
+		},
+		Writer: &buffer,
+	}
+
+	err := plugin.Exec()
+	assert.Nil(t, err)
+
+	assert.Equal(t, unindent(expected), unindent(buffer.String()))
+}
