@@ -43,6 +43,7 @@ type (
 		Ciphers           []string
 		UseInsecureCipher bool
 		EnvsFormat        string
+		AllEnvs           bool
 	}
 
 	// Plugin structure
@@ -105,6 +106,10 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	p.log(host, "======END======")
 
 	env := []string{}
+	if p.Config.AllEnvs {
+		allenvs := findEnvs("DRONE_", "PLUGIN_", "INPUT_", "GITHUB_")
+		p.Config.Envs = append(p.Config.Envs, allenvs...)
+	}
 	for _, key := range p.Config.Envs {
 		key = strings.ToUpper(key)
 		if val, found := os.LookupEnv(key); found {
@@ -266,4 +271,19 @@ func trimValues(keys []string) []string {
 	}
 
 	return newKeys
+}
+
+// Find all envs from specified prefix
+func findEnvs(prefix ...string) []string {
+	envs := []string{}
+	for _, e := range os.Environ() {
+		for _, p := range prefix {
+			if strings.HasPrefix(e, p) {
+				e = strings.Split(e, "=")[0]
+				envs = append(envs, e)
+				break
+			}
+		}
+	}
+	return envs
 }

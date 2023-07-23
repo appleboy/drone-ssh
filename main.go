@@ -215,6 +215,11 @@ func main() {
 			EnvVars: []string{"PLUGIN_ENVS_FORMAT", "INPUT_ENVS_FORMAT"},
 			Value:   envsFormat,
 		},
+		&cli.BoolFlag{
+			Name:    "allenvs",
+			Usage:   "pass all environment variable to shell script",
+			EnvVars: []string{"PLUGIN_ALLENVS", "INPUT_ALLENVS"},
+		},
 	}
 
 	// Override a template
@@ -282,6 +287,7 @@ func run(c *cli.Context) error {
 			Sync:              c.Bool("sync"),
 			Ciphers:           c.StringSlice("ciphers"),
 			UseInsecureCipher: c.Bool("useInsecureCipher"),
+			AllEnvs:           c.Bool("allenvs"),
 			Proxy: easyssh.DefaultConfig{
 				Key:               c.String("proxy.ssh-key"),
 				KeyPath:           c.String("proxy.key-path"),
