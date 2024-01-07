@@ -919,3 +919,32 @@ out: [foobar]
 
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
+
+func TestSudoCommand(t *testing.T) {
+	var (
+		buffer   bytes.Buffer
+		expected = `
+			======CMD======
+			whoami
+			======END======
+			out: drone-scp
+		`
+	)
+
+	plugin := Plugin{
+		Config: Config{
+			Host:     []string{"localhost"},
+			Username: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Script: []string{
+				`sudo su - -c "whoami"`,
+			},
+			CommandTimeout: 10 * time.Second,
+		},
+		Writer: &buffer,
+	}
+
+	assert.Nil(t, plugin.Exec())
+	assert.Equal(t, unindent(expected), unindent(buffer.String()))
+}
