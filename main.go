@@ -220,6 +220,11 @@ func main() {
 			Usage:   "pass all environment variable to shell script",
 			EnvVars: []string{"PLUGIN_ALLENVS", "INPUT_ALLENVS"},
 		},
+		&cli.BoolFlag{
+			Name:    "request-pty",
+			Usage:   "request a pseudo-terminal from the server",
+			EnvVars: []string{"PLUGIN_REQUEST_PTY", "INPUT_REQUEST_PTY"},
+		},
 	}
 
 	// Override a template
@@ -288,6 +293,7 @@ func run(c *cli.Context) error {
 			Ciphers:           c.StringSlice("ciphers"),
 			UseInsecureCipher: c.Bool("useInsecureCipher"),
 			AllEnvs:           c.Bool("allenvs"),
+			RequireTty:        c.Bool("request-pty"),
 			Proxy: easyssh.DefaultConfig{
 				Key:               c.String("proxy.ssh-key"),
 				KeyPath:           c.String("proxy.key-path"),

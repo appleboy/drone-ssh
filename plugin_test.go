@@ -925,9 +925,9 @@ func TestSudoCommand(t *testing.T) {
 		buffer   bytes.Buffer
 		expected = `
 			======CMD======
-			whoami
+			sudo su - -c "whoami"
 			======END======
-			out: drone-scp
+			out: root
 		`
 	)
 
@@ -941,6 +941,7 @@ func TestSudoCommand(t *testing.T) {
 				`sudo su - -c "whoami"`,
 			},
 			CommandTimeout: 10 * time.Second,
+			RequireTty:     true,
 		},
 		Writer: &buffer,
 	}

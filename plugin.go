@@ -44,6 +44,7 @@ type (
 		UseInsecureCipher bool
 		EnvsFormat        string
 		AllEnvs           bool
+		RequireTty        bool
 	}
 
 	// Plugin structure
@@ -85,6 +86,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 		Ciphers:           p.Config.Ciphers,
 		Fingerprint:       p.Config.Fingerprint,
 		UseInsecureCipher: p.Config.UseInsecureCipher,
+		RequestPty:        p.Config.RequireTty,
 		Proxy: easyssh.DefaultConfig{
 			Server:            p.Config.Proxy.Server,
 			User:              p.Config.Proxy.User,
