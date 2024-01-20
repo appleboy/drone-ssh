@@ -119,7 +119,6 @@ ssh-server:
 	sed -i 's/AllowTcpForwarding no/AllowTcpForwarding yes/g' /etc/ssh/sshd_config
 	sed -i 's/^#ListenAddress 0.0.0.0/ListenAddress 0.0.0.0/g' /etc/ssh/sshd_config
 	sed -i 's/^#ListenAddress ::/ListenAddress ::/g' /etc/ssh/sshd_config
-	# cp -r tests/ipv6.conf /etc/ssh/sshd_config.d/ipv6.conf
 	./tests/entrypoint.sh /usr/sbin/sshd -D &
 
 coverage:
