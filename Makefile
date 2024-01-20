@@ -118,6 +118,7 @@ ssh-server:
 	sed -i 's/^#PubkeyAuthentication yes/PubkeyAuthentication yes/g' /etc/ssh/sshd_config
 	sed -i 's/AllowTcpForwarding no/AllowTcpForwarding yes/g' /etc/ssh/sshd_config
 	cp -r tests/ipv6.conf /etc/ssh/sshd_config.d/ipv6.conf
+	/usr/sbin/sshd -t
 	./tests/entrypoint.sh /usr/sbin/sshd -D &
 
 coverage:
