@@ -963,7 +963,7 @@ func TestCommandWithIPv6(t *testing.T) {
 
 	plugin := Plugin{
 		Config: Config{
-			Host:     []string{"::1"},
+			Host:     []string{"127.0.0.1"},
 			Username: "drone-scp",
 			Port:     22,
 			KeyPath:  "./tests/.ssh/id_rsa",
