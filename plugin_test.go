@@ -970,6 +970,7 @@ func TestCommandWithIPv6(t *testing.T) {
 			Script: []string{
 				"whoami",
 			},
+			Protocol:       easyssh.PROTOCOL_TCP6,
 			CommandTimeout: 10 * time.Second,
 		},
 		Writer: &buffer,
