@@ -797,7 +797,8 @@ func TestPlugin_hostPort(t *testing.T) {
 			name: "different port",
 			fields: fields{
 				Config: Config{
-					Port: 22,
+					Port:     22,
+					Protocol: easyssh.PROTOCOL_TCP4,
 				},
 			},
 			args: args{
@@ -805,6 +806,20 @@ func TestPlugin_hostPort(t *testing.T) {
 			},
 			wantHost: "localhost",
 			wantPort: "443",
+		},
+		{
+			name: "ipv6",
+			fields: fields{
+				Config: Config{
+					Port:     22,
+					Protocol: easyssh.PROTOCOL_TCP6,
+				},
+			},
+			args: args{
+				h: "::1",
+			},
+			wantHost: "::1",
+			wantPort: "22",
 		},
 	}
 	for _, tt := range tests {
@@ -963,7 +978,7 @@ func TestCommandWithIPv6(t *testing.T) {
 
 	plugin := Plugin{
 		Config: Config{
-			Host:     []string{"127.0.0.1"},
+			Host:     []string{"::1"},
 			Username: "drone-scp",
 			Port:     22,
 			KeyPath:  "./tests/.ssh/id_rsa",
