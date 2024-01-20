@@ -68,8 +68,6 @@ func (p Plugin) hostPort(host string) (string, string) {
 		port = hosts[1]
 	}
 
-	fmt.Println(host, port)
-
 	return host, port
 }
 
