@@ -53,7 +53,7 @@ func main() {
 		},
 		&cli.StringFlag{
 			Name:    "protocol",
-			Usage:   "The IP protocol to use. Default to tcp (both IPv4 and IPv6).",
+			Usage:   "The IP protocol to use. Valid values are \"tcp\". \"tcp4\" or \"tcp6\". Default to tcp.",
 			EnvVars: []string{"PLUGIN_PROTOCOL", "SSH_PROTOCOL", "INPUT_PROTOCOL"},
 			Value:   "tcp",
 		},
@@ -149,7 +149,7 @@ func main() {
 		},
 		&cli.StringFlag{
 			Name:    "proxy.protocol",
-			Usage:   "The IP protocol to use for the proxy. Default to tcp (both IPv4 and IPv6).",
+			Usage:   "The IP protocol to use for the proxy. Valid values are \"tcp\". \"tcp4\" or \"tcp6\". Default to tcp.",
 			EnvVars: []string{"PLUGIN_PROTOCOL", "SSH_PROTOCOL", "INPUT_PROTOCOL"},
 			Value:   "tcp",
 		},

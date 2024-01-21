@@ -797,7 +797,8 @@ func TestPlugin_hostPort(t *testing.T) {
 			name: "different port",
 			fields: fields{
 				Config: Config{
-					Port: 22,
+					Port:     22,
+					Protocol: easyssh.PROTOCOL_TCP4,
 				},
 			},
 			args: args{
@@ -805,6 +806,20 @@ func TestPlugin_hostPort(t *testing.T) {
 			},
 			wantHost: "localhost",
 			wantPort: "443",
+		},
+		{
+			name: "ipv6",
+			fields: fields{
+				Config: Config{
+					Port:     22,
+					Protocol: easyssh.PROTOCOL_TCP6,
+				},
+			},
+			args: args{
+				h: "::1",
+			},
+			wantHost: "::1",
+			wantPort: "22",
 		},
 	}
 	for _, tt := range tests {
@@ -949,3 +964,34 @@ func TestSudoCommand(t *testing.T) {
 	assert.Nil(t, plugin.Exec())
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
+
+// TODO: TestCommandWithIPv6 is not working on github actions.
+// func TestCommandWithIPv6(t *testing.T) {
+// 	var (
+// 		buffer   bytes.Buffer
+// 		expected = `
+// 			======CMD======
+// 			whoami
+// 			======END======
+// 			out: drone-scp
+// 		`
+// 	)
+
+// 	plugin := Plugin{
+// 		Config: Config{
+// 			Host:     []string{"::1"},
+// 			Username: "drone-scp",
+// 			Port:     22,
+// 			KeyPath:  "./tests/.ssh/id_rsa",
+// 			Script: []string{
+// 				"whoami",
+// 			},
+// 			Protocol:       easyssh.PROTOCOL_TCP6,
+// 			CommandTimeout: 10 * time.Second,
+// 		},
+// 		Writer: &buffer,
+// 	}
+
+// 	assert.Nil(t, plugin.Exec())
+// 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
+// }

@@ -61,7 +61,9 @@ func escapeArg(arg string) string {
 func (p Plugin) hostPort(host string) (string, string) {
 	hosts := strings.Split(host, ":")
 	port := strconv.Itoa(p.Config.Port)
-	if len(hosts) > 1 {
+	if len(hosts) > 1 &&
+		(p.Config.Protocol == easyssh.PROTOCOL_TCP ||
+			p.Config.Protocol == easyssh.PROTOCOL_TCP4) {
 		host = hosts[0]
 		port = hosts[1]
 	}
