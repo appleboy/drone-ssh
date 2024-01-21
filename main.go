@@ -150,7 +150,7 @@ func main() {
 		&cli.StringFlag{
 			Name:    "proxy.protocol",
 			Usage:   "The IP protocol to use for the proxy. Valid values are \"tcp\". \"tcp4\" or \"tcp6\". Default to tcp.",
-			EnvVars: []string{"PLUGIN_PROTOCOL", "SSH_PROTOCOL", "INPUT_PROTOCOL"},
+			EnvVars: []string{"PLUGIN_PROXY_PROTOCOL", "SSH_PROXY_PROTOCOL", "INPUT_PROXY_PROTOCOL"},
 			Value:   "tcp",
 		},
 		&cli.StringFlag{
