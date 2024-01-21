@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"io"
+	"log"
 	"os"
 	"reflect"
 	"strings"
@@ -991,6 +992,10 @@ func TestCommandWithIPv6(t *testing.T) {
 		Writer: &buffer,
 	}
 
-	assert.Nil(t, plugin.Exec())
+	err := plugin.Exec()
+	if err != nil {
+		log.Printf("%#v", err)
+	}
+	assert.Nil(t, err)
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
