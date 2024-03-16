@@ -4,7 +4,7 @@
 
 [![GitHub tag](https://img.shields.io/github/tag/appleboy/drone-ssh.svg)](https://github.com/appleboy/drone-ssh/releases)
 [![GoDoc](https://godoc.org/github.com/appleboy/drone-ssh?status.svg)](https://godoc.org/github.com/appleboy/drone-ssh)
-[![Lint and Testing](https://github.com/appleboy/drone-ssh/actions/workflows/lint.yml/badge.svg)](https://github.com/appleboy/drone-ssh/actions/workflows/lint.yml)
+[![Lint and Testing](https://github.com/appleboy/drone-ssh/actions/workflows/testing.yml/badge.svg?branch=master)](https://github.com/appleboy/drone-ssh/actions/workflows/testing.yml)
 [![codecov](https://codecov.io/gh/appleboy/drone-ssh/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-ssh)
 [![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-ssh)](https://goreportcard.com/report/github.com/appleboy/drone-ssh)
 [![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-ssh.svg)](https://hub.docker.com/r/appleboy/drone-ssh/)
