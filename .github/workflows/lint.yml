@@ -27,7 +27,9 @@ jobs:
 
   testing:
     runs-on: ubuntu-latest
-    container: golang:1.21-alpine
+    container:
+      image: golang:1.21-alpine
+      options: --sysctl net.ipv6.conf.all.disable_ipv6=0
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
