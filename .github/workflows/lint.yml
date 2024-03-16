@@ -34,11 +34,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up WARP
-        uses: fscarmen/warp-on-actions@v1.1
-        with:
-          stack: dual
-
       - name: setup sshd server
         run: |
           apk add git make curl perl bash build-base zlib-dev ucl-dev sudo

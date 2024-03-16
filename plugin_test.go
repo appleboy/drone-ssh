@@ -971,16 +971,16 @@ func TestCommandWithIPv6(t *testing.T) {
 			======CMD======
 			whoami
 			======END======
-			out: ubuntu
+			out: drone-scp
 		`
 	)
 
 	plugin := Plugin{
 		Config: Config{
-			Host:     []string{"2402:1f00:8000:800::2628"},
-			Username: "ubuntu",
+			Host:     []string{"::1"},
+			Username: "drone-scp",
 			Port:     22,
-			Password: "1234567890",
+			KeyPath:  "./tests/.ssh/id_rsa",
 			Script: []string{
 				"whoami",
 			},
