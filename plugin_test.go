@@ -432,7 +432,6 @@ func getHostPublicKeyFile(keypath string) (ssh.PublicKey, error) {
 	}
 
 	pubkey, _, _, _, err = ssh.ParseAuthorizedKey(buf)
-
 	if err != nil {
 		return nil, err
 	}
@@ -965,33 +964,31 @@ func TestSudoCommand(t *testing.T) {
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
 
-// TODO: TestCommandWithIPv6 is not working on github actions.
-// func TestCommandWithIPv6(t *testing.T) {
-// 	var (
-// 		buffer   bytes.Buffer
-// 		expected = `
-// 			======CMD======
-// 			whoami
-// 			======END======
-// 			out: drone-scp
-// 		`
-// 	)
+func TestCommandWithIPv6(t *testing.T) {
+	var (
+		buffer   bytes.Buffer
+		expected = `
+			======CMD======
+			whoami
+			======END======
+			out: ubuntu
+		`
+	)
 
-// 	plugin := Plugin{
-// 		Config: Config{
-// 			Host:     []string{"::1"},
-// 			Username: "drone-scp",
-// 			Port:     22,
-// 			KeyPath:  "./tests/.ssh/id_rsa",
-// 			Script: []string{
-// 				"whoami",
-// 			},
-// 			Protocol:       easyssh.PROTOCOL_TCP6,
-// 			CommandTimeout: 10 * time.Second,
-// 		},
-// 		Writer: &buffer,
-// 	}
-
-// 	assert.Nil(t, plugin.Exec())
-// 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
-// }
+	plugin := Plugin{
+		Config: Config{
+			Host:     []string{"2402:1f00:8000:800::2628"},
+			Username: "ubuntu",
+			Port:     22,
+			Password: "1234567890",
+			Script: []string{
+				"whoami",
+			},
+			Protocol:       easyssh.PROTOCOL_TCP6,
+			CommandTimeout: 10 * time.Second,
+		},
+		Writer: &buffer,
+	}
+	assert.Nil(t, plugin.Exec())
+	assert.Equal(t, unindent(expected), unindent(buffer.String()))
+}
