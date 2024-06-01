@@ -38,10 +38,11 @@ func main() {
 	app.Version = Version
 	app.Flags = []cli.Flag{
 		&cli.StringSliceFlag{
-			Name:    "host",
-			Aliases: []string{"H"},
-			Usage:   "connect to host",
-			EnvVars: []string{"PLUGIN_HOST", "SSH_HOST", "INPUT_HOST"},
+			Name:     "host",
+			Aliases:  []string{"H"},
+			Usage:    "connect to host",
+			EnvVars:  []string{"PLUGIN_HOST", "SSH_HOST", "INPUT_HOST"},
+			FilePath: ".host",
 		},
 		&cli.IntFlag{
 			Name:    "port",
