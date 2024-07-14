@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/appleboy/easyssh-proxy"
+	easyssh "github.com/appleboy/easyssh-proxy"
 )
 
 var (

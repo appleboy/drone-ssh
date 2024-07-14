@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/appleboy/easyssh-proxy"
+	easyssh "github.com/appleboy/easyssh-proxy"
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli/v2"
 )
