@@ -125,7 +125,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 
 	p.Config.Script = append(env, p.scriptCommands()...)
 
-	if p.Config.Debug {
+	if p.Config.Debug && len(env) > 0 {
 		p.log(host, "======ENV======")
 		p.log(host, strings.Join(env, "\n"))
 		p.log(host, "======END======")
