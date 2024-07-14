@@ -105,9 +105,11 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 		},
 	}
 
-	p.log(host, "======CMD======")
-	p.log(host, strings.Join(p.Config.Script, "\n"))
-	p.log(host, "======END======")
+	if p.Config.Debug {
+		p.log(host, "======CMD======")
+		p.log(host, strings.Join(p.Config.Script, "\n"))
+		p.log(host, "======END======")
+	}
 
 	env := []string{}
 	if p.Config.AllEnvs {

@@ -392,6 +392,7 @@ func TestCommandOutput(t *testing.T) {
 			},
 			CommandTimeout: 60 * time.Second,
 			Sync:           true,
+			Debug:          true,
 		},
 		Writer: &buffer,
 	}
@@ -477,10 +478,6 @@ func TestScriptStopWithMultipleHostAndSyncMode(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			======CMD======
-			mkdir a/b/c
-			mkdir d/e/f
-			======END======
 			err: mkdir: can't create directory 'a/b/c': No such file or directory
 		`
 	)
@@ -512,10 +509,6 @@ func TestScriptStop(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			======CMD======
-			mkdir a/b/c
-			mkdir d/e/f
-			======END======
 			err: mkdir: can't create directory 'a/b/c': No such file or directory
 		`
 	)
@@ -546,10 +539,6 @@ func TestNoneScriptStop(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			======CMD======
-			mkdir a/b/c
-			mkdir d/e/f
-			======END======
 			err: mkdir: can't create directory 'a/b/c': No such file or directory
 			err: mkdir: can't create directory 'd/e/f': No such file or directory
 		`
@@ -733,10 +722,6 @@ func TestUseInsecureCipher(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			======CMD======
-			mkdir a/b/c
-			mkdir d/e/f
-			======END======
 			err: mkdir: can't create directory 'a/b/c': No such file or directory
 			err: mkdir: can't create directory 'd/e/f': No such file or directory
 		`
@@ -889,11 +874,6 @@ func TestAllEnvs(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-======CMD======
-echo "[${INPUT_1}]"
-echo "[${GITHUB_2}]"
-echo "[${PLUGIN_3}]"
-======END======
 out: [foobar]
 out: [foobar]
 out: [foobar]
@@ -956,6 +936,7 @@ func TestSudoCommand(t *testing.T) {
 			},
 			CommandTimeout: 10 * time.Second,
 			RequireTty:     true,
+			Debug:          true,
 		},
 		Writer: &buffer,
 	}
@@ -968,9 +949,6 @@ func TestCommandWithIPv6(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			======CMD======
-			whoami
-			======END======
 			out: drone-scp
 		`
 	)
