@@ -918,9 +918,6 @@ func TestSudoCommand(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			======CMD======
-			sudo su - -c "whoami"
-			======END======
 			out: root
 		`
 	)
@@ -936,7 +933,6 @@ func TestSudoCommand(t *testing.T) {
 			},
 			CommandTimeout: 10 * time.Second,
 			RequireTty:     true,
-			Debug:          true,
 		},
 		Writer: &buffer,
 	}
