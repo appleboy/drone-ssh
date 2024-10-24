@@ -131,6 +131,11 @@ func main() {
 			Usage:   "execute single commands for github action",
 			EnvVars: []string{"INPUT_SCRIPT"},
 		},
+		&cli.StringFlag{
+			Name:    "script.file",
+			Usage:   "execute commands from a file for github action",
+			EnvVars: []string{"INPUT_SCRIPT_FILE"},
+		},
 		&cli.BoolFlag{
 			Name:    "script.stop",
 			Usage:   "stop script after first failure",
@@ -269,6 +274,14 @@ func run(c *cli.Context) error {
 	scripts := c.StringSlice("script")
 	if s := c.String("script.string"); s != "" {
 		scripts = append(scripts, s)
+	}
+
+	if f := c.String("script.file"); f != "" {
+		s, err := os.ReadFile(f)
+		if err != nil {
+			return err
+		}
+		scripts = append(scripts, string(s))
 	}
 
 	plugin := Plugin{
