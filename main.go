@@ -134,7 +134,7 @@ func main() {
 		&cli.StringFlag{
 			Name:    "script.file",
 			Usage:   "execute commands from a file for github action",
-			EnvVars: []string{"INPUT_SCRIPT_FILE"},
+			EnvVars: []string{"PLUGIN_SCRIPT_FILE", "INPUT_SCRIPT_FILE"},
 		},
 		&cli.BoolFlag{
 			Name:    "script.stop",
