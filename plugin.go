@@ -137,7 +137,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 		return
 	}
 	// read from the output channel until the done signal is passed
-	isTimeout := true
+	var isTimeout bool
 loop:
 	for {
 		select {
