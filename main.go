@@ -277,6 +277,10 @@ func run(c *cli.Context) error {
 	}
 
 	if f := c.String("script.file"); f != "" {
+		// check file exists
+		if _, err := os.Stat(f); err != nil {
+			return err
+		}
 		s, err := os.ReadFile(f)
 		if err != nil {
 			return err
