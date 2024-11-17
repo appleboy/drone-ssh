@@ -365,17 +365,17 @@ func TestCommandOutput(t *testing.T) {
 			whoami
 			uname
 			localhost: ======END======
-			localhost: out: /home/drone-scp
-			localhost: out: drone-scp
-			localhost: out: Linux
+			localhost: /home/drone-scp
+			localhost: drone-scp
+			localhost: Linux
 			127.0.0.1: ======CMD======
 			127.0.0.1: pwd
 			whoami
 			uname
 			127.0.0.1: ======END======
-			127.0.0.1: out: /home/drone-scp
-			127.0.0.1: out: drone-scp
-			127.0.0.1: out: Linux
+			127.0.0.1: /home/drone-scp
+			127.0.0.1: drone-scp
+			127.0.0.1: Linux
 		`
 	)
 
@@ -444,7 +444,7 @@ func TestFingerprint(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			out: drone-scp
+			drone-scp
 		`
 	)
 
@@ -475,7 +475,7 @@ func TestScriptStopWithMultipleHostAndSyncMode(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			err: mkdir: can't create directory 'a/b/c': No such file or directory
+			mkdir: can't create directory 'a/b/c': No such file or directory
 		`
 	)
 
@@ -506,7 +506,7 @@ func TestScriptStop(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			err: mkdir: can't create directory 'a/b/c': No such file or directory
+			mkdir: can't create directory 'a/b/c': No such file or directory
 		`
 	)
 
@@ -536,8 +536,8 @@ func TestNoneScriptStop(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			err: mkdir: can't create directory 'a/b/c': No such file or directory
-			err: mkdir: can't create directory 'd/e/f': No such file or directory
+			mkdir: can't create directory 'a/b/c': No such file or directory
+			mkdir: can't create directory 'd/e/f': No such file or directory
 		`
 	)
 
@@ -584,13 +584,13 @@ func TestEnvOutput(t *testing.T) {
 			export ENV_6='test"'
 			export ENV_7='test,!#;?.@$~'\''"'
 			======END======
-			out: [test]
-			out: [test test]
-			out: [test ]
-			out: [  test  test  ]
-			out: [test']
-			out: [test"]
-			out: [test,!#;?.@$~'"]
+			[test]
+			[test test]
+			[test ]
+			[  test  test  ]
+			[test']
+			[test"]
+			[test,!#;?.@$~'"]
 		`
 	)
 
@@ -719,8 +719,8 @@ func TestUseInsecureCipher(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			err: mkdir: can't create directory 'a/b/c': No such file or directory
-			err: mkdir: can't create directory 'd/e/f': No such file or directory
+			mkdir: can't create directory 'a/b/c': No such file or directory
+			mkdir: can't create directory 'd/e/f': No such file or directory
 		`
 	)
 
@@ -871,9 +871,9 @@ func TestAllEnvs(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-out: [foobar]
-out: [foobar]
-out: [foobar]
+[foobar]
+[foobar]
+[foobar]
 		`
 	)
 
@@ -915,7 +915,7 @@ func TestSudoCommand(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			out: root
+			root
 		`
 	)
 
@@ -942,7 +942,7 @@ func TestCommandWithIPv6(t *testing.T) {
 	var (
 		buffer   bytes.Buffer
 		expected = `
-			out: drone-scp
+			drone-scp
 		`
 	)
 

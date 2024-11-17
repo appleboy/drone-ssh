@@ -145,11 +145,11 @@ loop:
 			break loop
 		case outline := <-stdoutChan:
 			if outline != "" {
-				p.log(host, "out:", outline)
+				p.log(host, outline)
 			}
 		case errline := <-stderrChan:
 			if errline != "" {
-				p.log(host, "err:", errline)
+				p.log(host, errline)
 			}
 		case err = <-errChan:
 		}
