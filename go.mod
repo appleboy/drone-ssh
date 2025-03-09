@@ -7,6 +7,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.8.4
 	github.com/urfave/cli/v2 v2.27.5
+	github.com/yassinebenaid/godump v0.11.1
 	golang.org/x/crypto v0.29.0
 )
 
