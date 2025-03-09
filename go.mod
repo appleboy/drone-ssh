@@ -1,6 +1,6 @@
 module github.com/appleboy/drone-ssh
 
-go 1.22
+go 1.23.0
 
 require (
 	github.com/appleboy/easyssh-proxy v1.5.0
@@ -8,7 +8,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/urfave/cli/v2 v2.27.5
 	github.com/yassinebenaid/godump v0.11.1
-	golang.org/x/crypto v0.29.0
+	golang.org/x/crypto v0.36.0
 )
 
 require (
@@ -19,6 +19,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
-	golang.org/x/sys v0.27.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

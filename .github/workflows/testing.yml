@@ -31,7 +31,7 @@ jobs:
   testing:
     runs-on: ubuntu-latest
     container:
-      image: golang:1.22-alpine
+      image: golang:1.23-alpine
       options: --sysctl net.ipv6.conf.all.disable_ipv6=0
     steps:
       - name: Checkout repository
