@@ -638,7 +638,7 @@ func TestEnvOutput(t *testing.T) {
 }
 
 func unindent(text string) string {
-	return strings.TrimSpace(strings.Replace(text, "\t", "", -1))
+	return strings.TrimSpace(strings.ReplaceAll(text, "\t", ""))
 }
 
 func TestPlugin_scriptCommands(t *testing.T) {

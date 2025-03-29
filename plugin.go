@@ -14,9 +14,9 @@ import (
 )
 
 var (
-	errMissingHost          = errors.New("Error: missing server host")
-	errMissingPasswordOrKey = errors.New("Error: can't connect without a private SSH key or password")
-	errCommandTimeOut       = errors.New("Error: command timeout")
+	errMissingHost          = errors.New("error: missing server host")
+	errMissingPasswordOrKey = errors.New("error: can't connect without a private SSH key or password")
+	errCommandTimeOut       = errors.New("error: command timeout")
 	envsFormat              = "export {NAME}={VALUE}"
 )
 
@@ -55,7 +55,7 @@ type (
 )
 
 func escapeArg(arg string) string {
-	return "'" + strings.Replace(arg, "'", `'\''`, -1) + "'"
+	return "'" + strings.ReplaceAll(arg, "'", `'\''`) + "'"
 }
 
 func (p Plugin) hostPort(host string) (string, string) {
