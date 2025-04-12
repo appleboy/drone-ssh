@@ -975,7 +975,7 @@ func TestSSHWithTestcontainers(t *testing.T) {
 	// Define the container request using the linuxserver/openssh-server image
 	// Configure user 'testuser' with password 'testpass'
 	req := testcontainers.ContainerRequest{
-		Image:        "lscr.io/linuxserver/openssh-server:latest",
+		Image:        "linuxserver/openssh-server:latest",
 		ExposedPorts: []string{"2222/tcp"}, // Default port for this image is 2222
 		Env: map[string]string{
 			"PUID":            strconv.Itoa(os.Getuid()), // Use current user's UID
