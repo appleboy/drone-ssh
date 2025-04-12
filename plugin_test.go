@@ -2,15 +2,20 @@ package main
 
 import (
 	"bytes"
+	"context"
+	"fmt"
 	"io"
 	"os"
 	"reflect"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/appleboy/easyssh-proxy"
 	"github.com/stretchr/testify/assert"
+	"github.com/testcontainers/testcontainers-go"
+	"github.com/testcontainers/testcontainers-go/wait"
 	"golang.org/x/crypto/ssh"
 )
 
@@ -961,5 +966,76 @@ func TestCommandWithIPv6(t *testing.T) {
 		Writer: &buffer,
 	}
 	assert.Nil(t, plugin.Exec())
+	assert.Equal(t, unindent(expected), unindent(buffer.String()))
+}
+
+func TestSSHWithTestcontainers(t *testing.T) {
+	ctx := context.Background()
+
+	// Define the container request using the linuxserver/openssh-server image
+	// Configure user 'testuser' with password 'testpass'
+	req := testcontainers.ContainerRequest{
+		Image:        "linuxserver/openssh-server:latest",
+		ExposedPorts: []string{"2222/tcp"}, // Default port for this image is 2222
+		Env: map[string]string{
+			"PUID":            strconv.Itoa(os.Getuid()), // Use current user's UID
+			"PGID":            strconv.Itoa(os.Getgid()), // Use current user's GID
+			"USER_NAME":       "testuser",
+			"USER_PASSWORD":   "testpass",
+			"PASSWORD_ACCESS": "true", // Enable password authentication
+			"SUDO_ACCESS":     "true", // Optional: grant sudo access
+		},
+		// Wait for the SSH port (2222) to be listening
+		WaitingFor: wait.ForListeningPort("2222/tcp").WithStartupTimeout(180 * time.Second),
+	}
+
+	// Create and start the container
+	sshContainer, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          true,
+	})
+	// Skip test if Docker is not available or container fails to start
+	if err != nil {
+		// Provide more context on failure
+		t.Skipf("Could not start container with image %s: %v. Check Docker environment and image availability. Skipping test.", req.Image, err)
+	}
+	defer func() {
+		if err := sshContainer.Terminate(ctx); err != nil {
+			// Log termination errors but don't fail the test for this
+			t.Logf("Could not terminate container: %v", err)
+		}
+	}()
+
+	// Get the mapped host and port for 2222/tcp
+	host, err := sshContainer.Host(ctx)
+	if err != nil {
+		t.Fatalf("Could not get container host: %v", err)
+	}
+	port, err := sshContainer.MappedPort(ctx, "2222/tcp")
+	if err != nil {
+		t.Fatalf("Could not get container mapped port 2222/tcp: %v", err)
+	}
+
+	var buffer bytes.Buffer
+	expected := `testuser` // The user we configured
+
+	plugin := Plugin{
+		Config: Config{
+			Host:           []string{host},
+			Username:       "testuser", // Use the configured username
+			Port:           port.Int(), // Use the mapped port
+			Password:       "testpass", // Use the configured password
+			Script:         []string{"whoami"},
+			CommandTimeout: 60 * time.Second,
+		},
+		Writer: &buffer,
+	}
+
+	t.Logf("Attempting SSH connection to %s:%d as user %s", host, port.Int(), plugin.Config.Username)
+	err = plugin.Exec()
+	t.Logf("SSH command output: %s", buffer.String())
+	t.Logf("SSH command error: %v", err)
+
+	assert.Nil(t, err, fmt.Sprintf("plugin.Exec failed: %v", err))
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
