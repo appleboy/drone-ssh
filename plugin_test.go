@@ -982,8 +982,8 @@ func TestSSHWithTestcontainers(t *testing.T) {
 			"PGID":            strconv.Itoa(os.Getgid()), // Use current user's GID
 			"USER_NAME":       "testuser",
 			"USER_PASSWORD":   "testpass",
-			"PASSWORD_ACCESS": "true", // Enable password authentication
-			"SUDO_ACCESS":     "true", // Optional: grant sudo access
+			"PASSWORD_ACCESS": "true",  // Enable password authentication
+			"SUDO_ACCESS":     "false", // Optional: grant sudo access
 		},
 		// Wait for the SSH port (2222) to be listening
 		WaitingFor: wait.ForListeningPort("2222/tcp").WithStartupTimeout(180 * time.Second),
