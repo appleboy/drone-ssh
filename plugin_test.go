@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"reflect"
+	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -977,8 +978,8 @@ func TestSSHWithTestcontainers(t *testing.T) {
 		Image:        "lscr.io/linuxserver/openssh-server:latest",
 		ExposedPorts: []string{"2222/tcp"}, // Default port for this image is 2222
 		Env: map[string]string{
-			"PUID":            fmt.Sprintf("%d", os.Getuid()), // Use current user's UID
-			"PGID":            fmt.Sprintf("%d", os.Getgid()), // Use current user's GID
+			"PUID":            strconv.Itoa(os.Getuid()), // Use current user's UID
+			"PGID":            strconv.Itoa(os.Getgid()), // Use current user's GID
 			"USER_NAME":       "testuser",
 			"USER_PASSWORD":   "testpass",
 			"PASSWORD_ACCESS": "true", // Enable password authentication
