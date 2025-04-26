@@ -11,16 +11,15 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-ssh)](https://goreportcard.com/report/github.com/appleboy/drone-ssh)
 [![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-ssh.svg)](https://hub.docker.com/r/appleboy/drone-ssh/)
 
-Drone plugin to execute commands on a remote host through SSH. For the usage
-information and a listing of the available options please take a look at [the docs](http://plugins.drone.io/appleboy/drone-ssh/).
+A Drone plugin for executing commands on remote hosts via SSH. For usage instructions and a list of available options, please refer to [the documentation](http://plugins.drone.io/appleboy/drone-ssh/).
 
-**Note: Please update your image config path to `appleboy/drone-ssh` for drone. `plugins/ssh` is no longer maintained.**
+**Note: Please update your Drone image config path to `appleboy/drone-ssh`. The `plugins/ssh` image is no longer maintained.**
 
 ![demo](./images/demo2017.05.10.gif)
 
-## Breaking changes
+## Breaking Changes
 
-`v1.5.0`: change command timeout flag to `Duration`. See the following setting:
+As of `v1.5.0`, the command timeout flag has changed to use the `Duration` format. See the following example:
 
 ```diff
 pipeline:
@@ -40,21 +39,21 @@ pipeline:
         - echo "Hello World"
 ```
 
-## Build or Download a binary
+## Build or Download a Binary
 
-The pre-compiled binaries can be downloaded from [release page](https://github.com/appleboy/drone-ssh/releases). Support the following OS type.
+Pre-compiled binaries are available on the [releases page](https://github.com/appleboy/drone-ssh/releases), supporting the following operating systems:
 
 - Windows amd64/386
 - Linux arm/amd64/386
-- Darwin amd64/386
+- macOS (Darwin) amd64/386
 
-With `Go` installed
+If you have `Go` installed:
 
 ```sh
 go install github.com/appleboy/drone-ssh@latest
 ```
 
-or build the binary with the following command:
+Or build the binary manually with the following commands:
 
 ```sh
 export GOOS=linux
@@ -69,7 +68,7 @@ go build -v -a -tags netgo -o release/linux/amd64/drone-ssh .
 
 ## Docker
 
-Build the docker image with the following commands:
+Build the Docker image with the following command:
 
 ```sh
 make docker
@@ -77,7 +76,7 @@ make docker
 
 ## Usage
 
-Execute from the working directory:
+Run from your working directory:
 
 ```sh
 docker run --rm \
@@ -90,13 +89,13 @@ docker run --rm \
   ghcr.io/appleboy/drone-ssh
 ```
 
-## Mount key from file path
+## Mount Key from File Path
 
-Please make sure that enable the `trusted` mode in project setting for [drone 0.8 version](https://0-8-0.docs.drone.io/).
+Make sure to enable `trusted` mode in your project settings (for [Drone 0.8 version](https://0-8-0.docs.drone.io/)).
 
 ![trusted mode](./images/trust.png)
 
-Mount private key in `volumes` setting of `.drone.yml` config
+Mount the private key in the `volumes` section of your `.drone.yml` config:
 
 ```diff
 pipeline:
@@ -111,11 +110,11 @@ pipeline:
       - echo "test ssh"
 ```
 
-See the detail of [issue comment](https://github.com/appleboy/drone-ssh/issues/51#issuecomment-336732928).
+See details in [this issue comment](https://github.com/appleboy/drone-ssh/issues/51#issuecomment-336732928).
 
 ## Configuration
 
-See [DOCS.md](./DOCS.md) for examples and full configuration options
+See [DOCS.md](./DOCS.md) for examples and full configuration options.
 
 Configuration options are loaded from multiple sources:
 
@@ -123,4 +122,4 @@ Configuration options are loaded from multiple sources:
 1. From a dotenv file at a path specified by the `PLUGIN_ENV_FILE` environment variable.
 2. From your `.drone.yml` Drone configuration.
 
-Later sources override previous sources, i.e. if `PORT` is set in an `.env` file committed in the repository or created by previous test steps, it will override the default set `main.go`.
+Later sources override earlier ones. For example, if `PORT` is set in an `.env` file committed in the repository or created by previous test steps, it will override the default set in `main.go`.

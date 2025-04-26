@@ -57,7 +57,7 @@ pipeline:
 go install github.com/appleboy/drone-ssh@latest
 ```
 
-或使用以下命令自行构建二进制文件：
+或使用以下命令手动构建二进制文件：
 
 ```sh
 export GOOS=linux
@@ -95,11 +95,9 @@ docker run --rm \
 
 ## 通过文件路径挂载密钥
 
-请确保已在项目设置中启用 `trusted` 模式（适用于 [drone 0.8 版本](https://0-8-0.docs.drone.io/)）。
+请确保已在项目设置中启用 `trusted` 模式（适用于 [Drone 0.8 版本](https://0-8-0.docs.drone.io/)）。
 
 ![trusted mode](./images/trust.png)
-
-<!-- 图片说明：Drone 项目 trusted 模式设置界面 -->
 
 在 `.drone.yml` 配置文件的 `volumes` 部分挂载私钥：
 
@@ -116,11 +114,11 @@ pipeline:
       - echo "test ssh"
 ```
 
-详情请参考 [issue comment](https://github.com/appleboy/drone-ssh/issues/51#issuecomment-336732928)。
+详情请参考 [此 issue comment](https://github.com/appleboy/drone-ssh/issues/51#issuecomment-336732928)。
 
 ## 配置说明
 
-更多示例和完整配置选项请参考 [DOCS.md](./DOCS.md)
+更多示例和完整配置选项请参考 [DOCS.md](./DOCS.md)。
 
 配置选项来源如下：
 
@@ -128,4 +126,4 @@ pipeline:
 1. 由 `PLUGIN_ENV_FILE` 环境变量指定的 dotenv 文件。
 2. `.drone.yml` Drone 配置文件。
 
-后面的来源会覆盖前面的设置，例如 `.env` 文件中的 `PORT` 会覆盖 main.go 的默认值。
+后面的来源会覆盖前面的设置。例如，`.env` 文件中的 `PORT` 会覆盖 main.go 的默认值。
