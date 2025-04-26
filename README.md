@@ -17,6 +17,17 @@ A Drone plugin for executing commands on remote hosts via SSH. For usage instruc
 
 ![demo](./images/demo2017.05.10.gif)
 
+## Table of Contents
+
+- [drone-ssh](#drone-ssh)
+  - [Table of Contents](#table-of-contents)
+  - [Breaking Changes](#breaking-changes)
+  - [Build or Download a Binary](#build-or-download-a-binary)
+  - [Docker](#docker)
+  - [Usage](#usage)
+  - [Mount Key from File Path](#mount-key-from-file-path)
+  - [Configuration](#configuration)
+
 ## Breaking Changes
 
 As of `v1.5.0`, the command timeout flag has changed to use the `Duration` format. See the following example:
