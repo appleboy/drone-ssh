@@ -1,8 +1,10 @@
 # drone-ssh
 
-> **English** | [繁體中文](./README.zh-tw.md) | [简体中文](./README.zh-cn.md)
+> [English](./README.md) | **繁體中文** | [简体中文](./README.zh-cn.md)
 
 ![sshlog](images/ssh.png)
+
+<!-- 圖片說明：SSH 日誌畫面，圖片內容與原文相同 -->
 
 [![GitHub tag](https://img.shields.io/github/tag/appleboy/drone-ssh.svg)](https://github.com/appleboy/drone-ssh/releases)
 [![GoDoc](https://godoc.org/github.com/appleboy/drone-ssh?status.svg)](https://godoc.org/github.com/appleboy/drone-ssh)
@@ -11,16 +13,17 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-ssh)](https://goreportcard.com/report/github.com/appleboy/drone-ssh)
 [![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-ssh.svg)](https://hub.docker.com/r/appleboy/drone-ssh/)
 
-Drone plugin to execute commands on a remote host through SSH. For the usage
-information and a listing of the available options please take a look at [the docs](http://plugins.drone.io/appleboy/drone-ssh/).
+Drone 外掛程式，可透過 SSH 在遠端主機執行指令。使用方式與可用選項請參考[官方文件](http://plugins.drone.io/appleboy/drone-ssh/)。
 
-**Note: Please update your image config path to `appleboy/drone-ssh` for drone. `plugins/ssh` is no longer maintained.**
+**注意：請將 Drone 的 image config 路徑更新為 `appleboy/drone-ssh`。`plugins/ssh` 已不再維護。**
 
 ![demo](./images/demo2017.05.10.gif)
 
-## Breaking changes
+<!-- 圖片說明：SSH 指令執行示意動畫，內容與原文相同 -->
 
-`v1.5.0`: change command timeout flag to `Duration`. See the following setting:
+## 重大變更
+
+`v1.5.0`：將指令逾時參數改為 `Duration` 格式。設定範例如下：
 
 ```diff
 pipeline:
@@ -40,21 +43,21 @@ pipeline:
         - echo "Hello World"
 ```
 
-## Build or Download a binary
+## 建置或下載執行檔
 
-The pre-compiled binaries can be downloaded from [release page](https://github.com/appleboy/drone-ssh/releases). Support the following OS type.
+可於[發行頁面](https://github.com/appleboy/drone-ssh/releases)下載預先編譯的執行檔，支援以下作業系統：
 
 - Windows amd64/386
 - Linux arm/amd64/386
-- Darwin amd64/386
+- macOS (Darwin) amd64/386
 
-With `Go` installed
+若已安裝 `Go`，可執行：
 
 ```sh
 go install github.com/appleboy/drone-ssh@latest
 ```
 
-or build the binary with the following command:
+或使用下列指令自行建置執行檔：
 
 ```sh
 export GOOS=linux
@@ -69,15 +72,15 @@ go build -v -a -tags netgo -o release/linux/amd64/drone-ssh .
 
 ## Docker
 
-Build the docker image with the following commands:
+可使用下列指令建置 Docker 映像檔：
 
 ```sh
 make docker
 ```
 
-## Usage
+## 使用方式
 
-Execute from the working directory:
+於工作目錄下執行：
 
 ```sh
 docker run --rm \
@@ -90,13 +93,15 @@ docker run --rm \
   ghcr.io/appleboy/drone-ssh
 ```
 
-## Mount key from file path
+## 以檔案路徑掛載金鑰
 
-Please make sure that enable the `trusted` mode in project setting for [drone 0.8 version](https://0-8-0.docs.drone.io/).
+請確認已於專案設定中啟用 `trusted` 模式（適用於 [drone 0.8 版本](https://0-8-0.docs.drone.io/)）。
 
 ![trusted mode](./images/trust.png)
 
-Mount private key in `volumes` setting of `.drone.yml` config
+<!-- 圖片說明：Drone 專案 trusted 模式設定畫面 -->
+
+於 `.drone.yml` 設定檔的 `volumes` 區段掛載私鑰：
 
 ```diff
 pipeline:
@@ -111,16 +116,16 @@ pipeline:
       - echo "test ssh"
 ```
 
-See the detail of [issue comment](https://github.com/appleboy/drone-ssh/issues/51#issuecomment-336732928).
+詳情請參考 [issue comment](https://github.com/appleboy/drone-ssh/issues/51#issuecomment-336732928)。
 
-## Configuration
+## 設定說明
 
-See [DOCS.md](./DOCS.md) for examples and full configuration options
+更多範例與完整設定選項請參考 [DOCS.md](./DOCS.md)
 
-Configuration options are loaded from multiple sources:
+設定選項來源如下：
 
-0. Hardcoded drone-ssh defaults. See [main.go CLI Flags](https://github.com/appleboy/drone-ssh/blob/6d9d6acc6aef1f9166118c6ba8bd214d3a582bdb/main.go#L39) for more information.
-1. From a dotenv file at a path specified by the `PLUGIN_ENV_FILE` environment variable.
-2. From your `.drone.yml` Drone configuration.
+0. 內建 drone-ssh 預設值。詳見 [main.go CLI Flags](https://github.com/appleboy/drone-ssh/blob/6d9d6acc6aef1f9166118c6ba8bd214d3a582bdb/main.go#L39)。
+1. 由 `PLUGIN_ENV_FILE` 環境變數指定的 dotenv 檔案。
+2. `.drone.yml` Drone 設定檔。
 
-Later sources override previous sources, i.e. if `PORT` is set in an `.env` file committed in the repository or created by previous test steps, it will override the default set `main.go`.
+後面的來源會覆蓋前面的設定，例如 `.env` 檔案中的 `PORT` 會覆蓋 main.go 的預設值。
