@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"io"
 	"os"
 	"reflect"
@@ -915,46 +914,43 @@ func TestAllEnvs(t *testing.T) {
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
 
-func TestSudoCommand(t *testing.T) {
+type SSHTestConfig struct {
+	Env            map[string]string
+	AuthMethod     string // "key" or "password"
+	KeyPath        string
+	Password       string
+	Script         []string
+	Expected       string
+	SudoAccess     bool
+	InsecureCipher bool
+	RequireTty     bool
+	CommandTimeout time.Duration
+}
+
+func runSSHContainerTest(t *testing.T, cfg SSHTestConfig) {
+	t.Helper()
 	ctx := context.Background()
 
-	pubKey, err := os.ReadFile("./tests/.ssh/id_rsa.pub")
-	if err != nil {
-		t.Fatalf("Could not read public key file: %v", err)
-	}
-	// Define the container request using the linuxserver/openssh-server image
-	// Configure user 'testuser' with password 'testpass'
 	req := testcontainers.ContainerRequest{
 		Image:        "linuxserver/openssh-server:latest",
-		ExposedPorts: []string{"2222/tcp"}, // Default port for this image is 2222
-		Env: map[string]string{
-			"USER_NAME":       "testuser",
-			"PASSWORD_ACCESS": "false", // Disable password authentication
-			"SUDO_ACCESS":     "true",  // Optional: grant sudo access
-			"PUBLIC_KEY":      string(pubKey),
-		},
-		// Wait for the SSH port (2222) to be listening
-		WaitingFor: wait.ForListeningPort("2222/tcp").WithStartupTimeout(180 * time.Second),
+		ExposedPorts: []string{"2222/tcp"},
+		Env:          cfg.Env,
+		WaitingFor:   wait.ForListeningPort("2222/tcp").WithStartupTimeout(180 * time.Second),
 	}
 
-	// Create and start the container
 	sshContainer, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: req,
 		Started:          true,
 	})
-	// Skip test if Docker is not available or container fails to start
 	if err != nil {
-		// Provide more context on failure
 		t.Skipf("Could not start container with image %s: %v. Check Docker environment and image availability. Skipping test.", req.Image, err)
 	}
 	defer func() {
 		if err := sshContainer.Terminate(ctx); err != nil {
-			// Log termination errors but don't fail the test for this
 			t.Logf("Could not terminate container: %v", err)
 		}
 	}()
 
-	// Get the mapped host and port for 2222/tcp
 	host, err := sshContainer.Host(ctx)
 	if err != nil {
 		t.Fatalf("Could not get container host: %v", err)
@@ -963,31 +959,74 @@ func TestSudoCommand(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Could not get container mapped port 2222/tcp: %v", err)
 	}
-	var (
-		buffer   bytes.Buffer
-		expected = `
-			root
-		`
-	)
+
+	var buffer bytes.Buffer
+
+	pluginCfg := Config{
+		Host:              []string{host},
+		Username:          "testuser",
+		Port:              port.Int(),
+		Script:            cfg.Script,
+		CommandTimeout:    cfg.CommandTimeout,
+		UseInsecureCipher: cfg.InsecureCipher,
+		RequireTty:        cfg.RequireTty,
+	}
+	if pluginCfg.CommandTimeout == 0 {
+		pluginCfg.CommandTimeout = 10 * time.Second
+	}
+	if cfg.AuthMethod == "key" {
+		pluginCfg.KeyPath = cfg.KeyPath
+	} else if cfg.AuthMethod == "password" {
+		pluginCfg.Password = cfg.Password
+	}
 
 	plugin := Plugin{
-		Config: Config{
-			Host:     []string{host},
-			Username: "testuser", // Use the configured username
-			Port:     port.Int(), // Use the mapped port
-			KeyPath:  "./tests/.ssh/id_rsa",
-			Script: []string{
-				`sudo su - -c "whoami"`,
-			},
-			CommandTimeout:    10 * time.Second,
-			RequireTty:        true,
-			UseInsecureCipher: true, // Allow insecure ciphers for compatibility
-		},
+		Config: pluginCfg,
 		Writer: &buffer,
 	}
 
 	assert.Nil(t, plugin.Exec())
-	assert.Equal(t, unindent(expected), unindent(buffer.String()))
+	assert.Equal(t, unindent(cfg.Expected), unindent(buffer.String()))
+}
+
+func TestSudoCommand(t *testing.T) {
+	pubKey, err := os.ReadFile("./tests/.ssh/id_rsa.pub")
+	if err != nil {
+		t.Fatalf("Could not read public key file: %v", err)
+	}
+	runSSHContainerTest(t, SSHTestConfig{
+		Env: map[string]string{
+			"USER_NAME":       "testuser",
+			"PASSWORD_ACCESS": "false",
+			"SUDO_ACCESS":     "true",
+			"PUBLIC_KEY":      string(pubKey),
+		},
+		AuthMethod:     "key",
+		KeyPath:        "./tests/.ssh/id_rsa",
+		Script:         []string{`sudo su - -c "whoami"`},
+		Expected:       "root",
+		SudoAccess:     true,
+		InsecureCipher: true,
+		RequireTty:     true,
+		CommandTimeout: 10 * time.Second,
+	})
+}
+
+func TestSSHWithTestcontainers(t *testing.T) {
+	runSSHContainerTest(t, SSHTestConfig{
+		Env: map[string]string{
+			"USER_NAME":       "testuser",
+			"USER_PASSWORD":   "testpass",
+			"PASSWORD_ACCESS": "true",
+			"SUDO_ACCESS":     "false",
+		},
+		AuthMethod:     "password",
+		Password:       "testpass",
+		Script:         []string{"whoami"},
+		Expected:       "testuser",
+		InsecureCipher: true,
+		CommandTimeout: 60 * time.Second,
+	})
 }
 
 func TestCommandWithIPv6(t *testing.T) {
@@ -1013,75 +1052,5 @@ func TestCommandWithIPv6(t *testing.T) {
 		Writer: &buffer,
 	}
 	assert.Nil(t, plugin.Exec())
-	assert.Equal(t, unindent(expected), unindent(buffer.String()))
-}
-
-func TestSSHWithTestcontainers(t *testing.T) {
-	ctx := context.Background()
-
-	// Define the container request using the linuxserver/openssh-server image
-	// Configure user 'testuser' with password 'testpass'
-	req := testcontainers.ContainerRequest{
-		Image:        "linuxserver/openssh-server:latest",
-		ExposedPorts: []string{"2222/tcp"}, // Default port for this image is 2222
-		Env: map[string]string{
-			"USER_NAME":       "testuser",
-			"USER_PASSWORD":   "testpass",
-			"PASSWORD_ACCESS": "true",  // Enable password authentication
-			"SUDO_ACCESS":     "false", // Optional: grant sudo access
-		},
-		// Wait for the SSH port (2222) to be listening
-		WaitingFor: wait.ForListeningPort("2222/tcp").WithStartupTimeout(180 * time.Second),
-	}
-
-	// Create and start the container
-	sshContainer, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
-		ContainerRequest: req,
-		Started:          true,
-	})
-	// Skip test if Docker is not available or container fails to start
-	if err != nil {
-		// Provide more context on failure
-		t.Skipf("Could not start container with image %s: %v. Check Docker environment and image availability. Skipping test.", req.Image, err)
-	}
-	defer func() {
-		if err := sshContainer.Terminate(ctx); err != nil {
-			// Log termination errors but don't fail the test for this
-			t.Logf("Could not terminate container: %v", err)
-		}
-	}()
-
-	// Get the mapped host and port for 2222/tcp
-	host, err := sshContainer.Host(ctx)
-	if err != nil {
-		t.Fatalf("Could not get container host: %v", err)
-	}
-	port, err := sshContainer.MappedPort(ctx, "2222/tcp")
-	if err != nil {
-		t.Fatalf("Could not get container mapped port 2222/tcp: %v", err)
-	}
-
-	var buffer bytes.Buffer
-	expected := `testuser` // The user we configured
-
-	plugin := Plugin{
-		Config: Config{
-			Host:              []string{host},
-			Username:          "testuser", // Use the configured username
-			Port:              port.Int(), // Use the mapped port
-			Password:          "testpass", // Use the configured password
-			Script:            []string{"whoami"},
-			CommandTimeout:    60 * time.Second,
-			UseInsecureCipher: true, // Allow insecure ciphers for compatibility
-		},
-		Writer: &buffer,
-	}
-
-	t.Logf("Attempting SSH connection to %s:%d as user %s", host, port.Int(), plugin.Config.Username)
-	err = plugin.Exec()
-	t.Logf("SSH command output: %s", buffer.String())
-	t.Logf("SSH command error: %v", err)
-
-	assert.Nil(t, err, fmt.Sprintf("plugin.Exec failed: %v", err))
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
