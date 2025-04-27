@@ -930,8 +930,8 @@ func TestSudoCommand(t *testing.T) {
 		Env: map[string]string{
 			"USER_NAME":       "testuser",
 			"USER_PASSWORD":   "testpass",
-			"PASSWORD_ACCESS": "true", // Enable password authentication
-			"SUDO_ACCESS":     "true", // Optional: grant sudo access
+			"PASSWORD_ACCESS": "false", // Enable password authentication
+			"SUDO_ACCESS":     "true",  // Optional: grant sudo access
 			"PUBLIC_KEY":      string(pubKey),
 		},
 		// Wait for the SSH port (2222) to be listening
@@ -976,7 +976,6 @@ func TestSudoCommand(t *testing.T) {
 			Host:     []string{host},
 			Username: "testuser", // Use the configured username
 			Port:     port.Int(), // Use the mapped port
-			Password: "testpass", // Use the configured password
 			KeyPath:  "./tests/.ssh/id_rsa",
 			Script: []string{
 				`sudo su - -c "whoami"`,
