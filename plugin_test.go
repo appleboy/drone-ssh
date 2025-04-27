@@ -916,6 +916,54 @@ func TestAllEnvs(t *testing.T) {
 }
 
 func TestSudoCommand(t *testing.T) {
+	ctx := context.Background()
+
+	pubKey, err := os.ReadFile("./tests/.ssh/id_rsa.pub")
+	if err != nil {
+		t.Fatalf("Could not read public key file: %v", err)
+	}
+	// Define the container request using the linuxserver/openssh-server image
+	// Configure user 'testuser' with password 'testpass'
+	req := testcontainers.ContainerRequest{
+		Image:        "linuxserver/openssh-server:latest",
+		ExposedPorts: []string{"2222/tcp"}, // Default port for this image is 2222
+		Env: map[string]string{
+			"USER_NAME":       "testuser",
+			"USER_PASSWORD":   "testpass",
+			"PASSWORD_ACCESS": "true", // Enable password authentication
+			"SUDO_ACCESS":     "true", // Optional: grant sudo access
+			"PUBLIC_KEY":      string(pubKey),
+		},
+		// Wait for the SSH port (2222) to be listening
+		WaitingFor: wait.ForListeningPort("2222/tcp").WithStartupTimeout(180 * time.Second),
+	}
+
+	// Create and start the container
+	sshContainer, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
+		ContainerRequest: req,
+		Started:          true,
+	})
+	// Skip test if Docker is not available or container fails to start
+	if err != nil {
+		// Provide more context on failure
+		t.Skipf("Could not start container with image %s: %v. Check Docker environment and image availability. Skipping test.", req.Image, err)
+	}
+	defer func() {
+		if err := sshContainer.Terminate(ctx); err != nil {
+			// Log termination errors but don't fail the test for this
+			t.Logf("Could not terminate container: %v", err)
+		}
+	}()
+
+	// Get the mapped host and port for 2222/tcp
+	host, err := sshContainer.Host(ctx)
+	if err != nil {
+		t.Fatalf("Could not get container host: %v", err)
+	}
+	port, err := sshContainer.MappedPort(ctx, "2222/tcp")
+	if err != nil {
+		t.Fatalf("Could not get container mapped port 2222/tcp: %v", err)
+	}
 	var (
 		buffer   bytes.Buffer
 		expected = `
@@ -925,9 +973,10 @@ func TestSudoCommand(t *testing.T) {
 
 	plugin := Plugin{
 		Config: Config{
-			Host:     []string{"localhost"},
-			Username: "drone-scp",
-			Port:     22,
+			Host:     []string{host},
+			Username: "testuser", // Use the configured username
+			Port:     port.Int(), // Use the mapped port
+			Password: "testpass", // Use the configured password
 			KeyPath:  "./tests/.ssh/id_rsa",
 			Script: []string{
 				`sudo su - -c "whoami"`,
