@@ -981,8 +981,9 @@ func TestSudoCommand(t *testing.T) {
 			Script: []string{
 				`sudo su - -c "whoami"`,
 			},
-			CommandTimeout: 10 * time.Second,
-			RequireTty:     true,
+			CommandTimeout:    10 * time.Second,
+			RequireTty:        true,
+			UseInsecureCipher: true, // Allow insecure ciphers for compatibility
 		},
 		Writer: &buffer,
 	}
