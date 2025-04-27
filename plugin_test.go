@@ -974,9 +974,10 @@ func runSSHContainerTest(t *testing.T, cfg SSHTestConfig) {
 	if pluginCfg.CommandTimeout == 0 {
 		pluginCfg.CommandTimeout = 10 * time.Second
 	}
-	if cfg.AuthMethod == "key" {
+	switch cfg.AuthMethod {
+	case "key":
 		pluginCfg.KeyPath = cfg.KeyPath
-	} else if cfg.AuthMethod == "password" {
+	case "password":
 		pluginCfg.Password = cfg.Password
 	}
 
