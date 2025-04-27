@@ -929,8 +929,7 @@ func TestSudoCommand(t *testing.T) {
 		ExposedPorts: []string{"2222/tcp"}, // Default port for this image is 2222
 		Env: map[string]string{
 			"USER_NAME":       "testuser",
-			"USER_PASSWORD":   "testpass",
-			"PASSWORD_ACCESS": "false", // Enable password authentication
+			"PASSWORD_ACCESS": "false", // Disable password authentication
 			"SUDO_ACCESS":     "true",  // Optional: grant sudo access
 			"PUBLIC_KEY":      string(pubKey),
 		},
