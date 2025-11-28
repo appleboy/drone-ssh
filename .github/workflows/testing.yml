@@ -42,7 +42,7 @@ jobs:
 
       - name: setup sshd server
         run: |
-          apk add git make curl perl bash build-base zlib-dev ucl-dev sudo
+          apk add git make curl perl bash build-base zlib-dev ucl-dev sudo gpg
           make ssh-server
 
       - name: testing
@@ -51,3 +51,5 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
+        with:
+          flags: go-${{ matrix.go-version }}
