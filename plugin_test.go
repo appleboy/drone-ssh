@@ -153,11 +153,15 @@ func TestSSHIPv6OnlyError(t *testing.T) {
 func TestStreamFromSSHCommand(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
-			Host:           []string{"localhost", "127.0.0.1"},
-			Username:       "drone-scp",
-			Port:           22,
-			KeyPath:        "./tests/.ssh/id_rsa",
-			Script:         []string{"whoami", "for i in {1..5}; do echo ${i}; sleep 1; done", "echo 'done'"},
+			Host:     []string{"localhost", "127.0.0.1"},
+			Username: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Script: []string{
+				"whoami",
+				"for i in {1..5}; do echo ${i}; sleep 1; done",
+				"echo 'done'",
+			},
 			CommandTimeout: 60 * time.Second,
 		},
 	}
@@ -289,13 +293,20 @@ func TestSetExistingENV(t *testing.T) {
 	os.Setenv("BAR", "")
 	plugin := Plugin{
 		Config: Config{
-			Host:           []string{"localhost"},
-			Username:       "drone-scp",
-			Port:           22,
-			KeyPath:        "./tests/.ssh/id_rsa",
-			Envs:           []string{"foo", "bar", "baz"},
-			Debug:          true,
-			Script:         []string{"export FOO", "export BAR", "export BAZ", "env | grep -q '^FOO=Value for foo$'", "env | grep -q '^BAR=$'", "if env | grep -q BAZ; then false; else true; fi"},
+			Host:     []string{"localhost"},
+			Username: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Envs:     []string{"foo", "bar", "baz"},
+			Debug:    true,
+			Script: []string{
+				"export FOO",
+				"export BAR",
+				"export BAZ",
+				"env | grep -q '^FOO=Value for foo$'",
+				"env | grep -q '^BAR=$'",
+				"if env | grep -q BAZ; then false; else true; fi",
+			},
 			CommandTimeout: 1 * time.Second,
 			Proxy: easyssh.DefaultConfig{
 				Server:  "localhost",
@@ -313,11 +324,15 @@ func TestSetExistingENV(t *testing.T) {
 func TestSyncMode(t *testing.T) {
 	plugin := Plugin{
 		Config: Config{
-			Host:           []string{"localhost", "127.0.0.1"},
-			Username:       "drone-scp",
-			Port:           22,
-			KeyPath:        "./tests/.ssh/id_rsa",
-			Script:         []string{"whoami", "for i in {1..3}; do echo ${i}; sleep 1; done", "echo 'done'"},
+			Host:     []string{"localhost", "127.0.0.1"},
+			Username: "drone-scp",
+			Port:     22,
+			KeyPath:  "./tests/.ssh/id_rsa",
+			Script: []string{
+				"whoami",
+				"for i in {1..3}; do echo ${i}; sleep 1; done",
+				"echo 'done'",
+			},
 			CommandTimeout: 60 * time.Second,
 			Sync:           true,
 		},
@@ -671,7 +686,12 @@ func TestPlugin_scriptCommands(t *testing.T) {
 					ScriptStop: true,
 				},
 			},
-			want: []string{"mkdir a", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;", "mkdir b", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;"},
+			want: []string{
+				"mkdir a",
+				"DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;",
+				"mkdir b",
+				"DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;",
+			},
 		},
 		{
 			name: "normal testing 2",
@@ -681,7 +701,14 @@ func TestPlugin_scriptCommands(t *testing.T) {
 					ScriptStop: true,
 				},
 			},
-			want: []string{"mkdir a", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;", "mkdir c", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;", "mkdir b", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;"},
+			want: []string{
+				"mkdir a",
+				"DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;",
+				"mkdir c",
+				"DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;",
+				"mkdir b",
+				"DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;",
+			},
 		},
 		// See: https://github.com/appleboy/ssh-action/issues/75#issuecomment-668314271
 		{
@@ -692,7 +719,13 @@ func TestPlugin_scriptCommands(t *testing.T) {
 					ScriptStop: true,
 				},
 			},
-			want: []string{"ls \\", "-lah", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;", "mkdir a", "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;"},
+			want: []string{
+				"ls \\",
+				"-lah",
+				"DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;",
+				"mkdir a",
+				"DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;",
+			},
 		},
 		{
 			name: "trim space",
@@ -938,12 +971,19 @@ func runSSHContainerTest(t *testing.T, cfg SSHTestConfig) {
 		WaitingFor:   wait.ForListeningPort("2222/tcp").WithStartupTimeout(180 * time.Second),
 	}
 
-	sshContainer, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
-		ContainerRequest: req,
-		Started:          true,
-	})
+	sshContainer, err := testcontainers.GenericContainer(
+		ctx,
+		testcontainers.GenericContainerRequest{
+			ContainerRequest: req,
+			Started:          true,
+		},
+	)
 	if err != nil {
-		t.Skipf("Could not start container with image %s: %v. Check Docker environment and image availability. Skipping test.", req.Image, err)
+		t.Skipf(
+			"Could not start container with image %s: %v. Check Docker environment and image availability. Skipping test.",
+			req.Image,
+			err,
+		)
 	}
 	defer func() {
 		if err := sshContainer.Terminate(ctx); err != nil {

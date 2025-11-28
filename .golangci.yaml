@@ -46,6 +46,7 @@ formatters:
     - gci
     - gofmt
     - goimports
+    - golines
   exclusions:
     generated: lax
     paths:

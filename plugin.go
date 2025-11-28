@@ -15,9 +15,11 @@ import (
 
 var (
 	errMissingHost          = errors.New("error: missing server host")
-	errMissingPasswordOrKey = errors.New("error: can't connect without a private SSH key or password")
-	errCommandTimeOut       = errors.New("error: command timeout")
-	envsFormat              = "export {NAME}={VALUE}"
+	errMissingPasswordOrKey = errors.New(
+		"error: can't connect without a private SSH key or password",
+	)
+	errCommandTimeOut = errors.New("error: command timeout")
+	envsFormat        = "export {NAME}={VALUE}"
 )
 
 type (
@@ -119,7 +121,10 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	for _, key := range p.Config.Envs {
 		key = strings.ToUpper(key)
 		if val, found := os.LookupEnv(key); found {
-			env = append(env, p.format(p.Config.EnvsFormat, "{NAME}", key, "{VALUE}", escapeArg(val)))
+			env = append(
+				env,
+				p.format(p.Config.EnvsFormat, "{NAME}", key, "{VALUE}", escapeArg(val)),
+			)
 		}
 	}
 
@@ -131,7 +136,10 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 		p.log(host, "======END======")
 	}
 
-	stdoutChan, stderrChan, doneChan, errChan, err := ssh.Stream(strings.Join(p.Config.Script, "\n"), p.Config.CommandTimeout)
+	stdoutChan, stderrChan, doneChan, errChan, err := ssh.Stream(
+		strings.Join(p.Config.Script, "\n"),
+		p.Config.CommandTimeout,
+	)
 	if err != nil {
 		errChannel <- err
 		return
@@ -257,7 +265,10 @@ func (p Plugin) scriptCommands() []string {
 		}
 		commands = append(commands, cmd)
 		if p.Config.ScriptStop && cmd[(len(cmd)-1):] != "\\" {
-			commands = append(commands, "DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;")
+			commands = append(
+				commands,
+				"DRONE_SSH_PREV_COMMAND_EXIT_CODE=$? ; if [ $DRONE_SSH_PREV_COMMAND_EXIT_CODE -ne 0 ]; then exit $DRONE_SSH_PREV_COMMAND_EXIT_CODE; fi;",
+			)
 		}
 	}
 
