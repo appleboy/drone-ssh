@@ -1,6 +1,6 @@
 module github.com/appleboy/drone-ssh
 
-go 1.23.0
+go 1.24.0
 
 require (
 	github.com/appleboy/easyssh-proxy v1.5.0
@@ -9,7 +9,7 @@ require (
 	github.com/testcontainers/testcontainers-go v0.36.0
 	github.com/urfave/cli/v2 v2.27.6
 	github.com/yassinebenaid/godump v0.11.1
-	golang.org/x/crypto v0.37.0
+	golang.org/x/crypto v0.45.0
 )
 
 require (
@@ -65,7 +65,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.35.0 // indirect
 	go.opentelemetry.io/otel/trace v1.35.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.5.0 // indirect
-	golang.org/x/sys v0.32.0 // indirect
+	golang.org/x/sys v0.38.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20250409194420-de1ac958c67a // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
