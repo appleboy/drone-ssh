@@ -181,12 +181,16 @@ func (p Plugin) format(format string, args ...string) string {
 	return r.Replace(format)
 }
 
+func (p Plugin) getWriter() io.Writer {
+	if p.Writer != nil {
+		return p.Writer
+	}
+	return os.Stdout
+}
+
 // log output to console
 func (p Plugin) log(host string, message ...any) {
-	w := p.Writer
-	if w == nil {
-		w = os.Stdout
-	}
+	w := p.getWriter()
 	if count := len(p.Config.Host); count == 1 {
 		fmt.Fprintf(w, "%s", fmt.Sprintln(message...))
 		return
@@ -240,10 +244,7 @@ func (p Plugin) Exec() error {
 		}
 	}
 
-	w := p.Writer
-	if w == nil {
-		w = os.Stdout
-	}
+	w := p.getWriter()
 	fmt.Fprintln(w, "===============================================")
 	fmt.Fprintln(w, "✅ Successfully executed commands to all hosts.")
 	fmt.Fprintln(w, "===============================================")
