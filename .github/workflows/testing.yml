@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go-version: ["1.24", "1.25"]
+        go-version: ["1.25", "1.26"]
     container:
       image: golang:${{ matrix.go-version }}-alpine
       options: --sysctl net.ipv6.conf.all.disable_ipv6=0
