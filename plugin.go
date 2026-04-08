@@ -128,7 +128,8 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 		}
 	}
 
-	p.Config.Script = append(env, p.scriptCommands()...)
+	env = append(env, p.scriptCommands()...)
+	p.Config.Script = env
 
 	if p.Config.Debug && len(env) > 0 {
 		p.log(host, "======ENV======")
@@ -181,16 +182,17 @@ func (p Plugin) format(format string, args ...string) string {
 }
 
 // log output to console
-func (p Plugin) log(host string, message ...interface{}) {
-	if p.Writer == nil {
-		p.Writer = os.Stdout
+func (p Plugin) log(host string, message ...any) {
+	w := p.Writer
+	if w == nil {
+		w = os.Stdout
 	}
 	if count := len(p.Config.Host); count == 1 {
-		fmt.Fprintf(p.Writer, "%s", fmt.Sprintln(message...))
+		fmt.Fprintf(w, "%s", fmt.Sprintln(message...))
 		return
 	}
 
-	fmt.Fprintf(p.Writer, "%s: %s", host, fmt.Sprintln(message...))
+	fmt.Fprintf(w, "%s: %s", host, fmt.Sprintln(message...))
 }
 
 // Exec executes the plugin.
@@ -238,9 +240,13 @@ func (p Plugin) Exec() error {
 		}
 	}
 
-	fmt.Println("===============================================")
-	fmt.Println("✅ Successfully executed commands to all hosts.")
-	fmt.Println("===============================================")
+	w := p.Writer
+	if w == nil {
+		w = os.Stdout
+	}
+	fmt.Fprintln(w, "===============================================")
+	fmt.Fprintln(w, "✅ Successfully executed commands to all hosts.")
+	fmt.Fprintln(w, "===============================================")
 
 	return nil
 }

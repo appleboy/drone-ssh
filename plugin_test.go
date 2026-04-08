@@ -12,6 +12,7 @@ import (
 
 	"github.com/appleboy/easyssh-proxy"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"golang.org/x/crypto/ssh"
@@ -22,7 +23,7 @@ func TestMissingHostOrUser(t *testing.T) {
 
 	err := plugin.Exec()
 
-	assert.NotNil(t, err)
+	require.Error(t, err)
 	assert.Equal(t, errMissingHost, err)
 }
 
@@ -37,7 +38,7 @@ func TestMissingKeyOrPassword(t *testing.T) {
 
 	err := plugin.Exec()
 
-	assert.NotNil(t, err)
+	require.Error(t, err)
 	assert.Equal(t, errMissingPasswordOrKey, err)
 }
 
@@ -54,7 +55,7 @@ func TestIncorrectPassword(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
 
 func TestSSHScriptFromRawKey(t *testing.T) {
@@ -97,7 +98,7 @@ ib4KbP5ovZlrjL++akMQ7V2fHzuQIFWnCkDA5c2ZAqzlM+ZN+HRG7gWur7Bt4XH1
 	}
 
 	err := plugin.Exec()
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestSSHScriptFromKeyFile(t *testing.T) {
@@ -113,7 +114,7 @@ func TestSSHScriptFromKeyFile(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestSSHIPv4Only(t *testing.T) {
@@ -130,7 +131,7 @@ func TestSSHIPv4Only(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestSSHIPv6OnlyError(t *testing.T) {
@@ -147,7 +148,7 @@ func TestSSHIPv6OnlyError(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
 
 func TestStreamFromSSHCommand(t *testing.T) {
@@ -167,7 +168,7 @@ func TestStreamFromSSHCommand(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestSSHScriptWithError(t *testing.T) {
@@ -184,7 +185,7 @@ func TestSSHScriptWithError(t *testing.T) {
 
 	err := plugin.Exec()
 	// Process exited with status 1
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
 
 func TestSSHCommandTimeOut(t *testing.T) {
@@ -200,7 +201,7 @@ func TestSSHCommandTimeOut(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
 
 func TestProxyCommand(t *testing.T) {
@@ -222,7 +223,7 @@ func TestProxyCommand(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestSSHCommandError(t *testing.T) {
@@ -238,7 +239,7 @@ func TestSSHCommandError(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
 
 func TestSSHCommandExitCodeError(t *testing.T) {
@@ -260,11 +261,11 @@ func TestSSHCommandExitCodeError(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
 
 func TestSetENV(t *testing.T) {
-	os.Setenv("FOO", `'  1)  '`)
+	t.Setenv("FOO", `'  1)  '`)
 	plugin := Plugin{
 		Config: Config{
 			Host:           []string{"localhost"},
@@ -285,12 +286,12 @@ func TestSetENV(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestSetExistingENV(t *testing.T) {
-	os.Setenv("FOO", "Value for foo")
-	os.Setenv("BAR", "")
+	t.Setenv("FOO", "Value for foo")
+	t.Setenv("BAR", "")
 	plugin := Plugin{
 		Config: Config{
 			Host:     []string{"localhost"},
@@ -318,7 +319,7 @@ func TestSetExistingENV(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func TestSyncMode(t *testing.T) {
@@ -339,7 +340,7 @@ func TestSyncMode(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 func Test_escapeArg(t *testing.T) {
@@ -416,7 +417,7 @@ func TestCommandOutput(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
@@ -439,7 +440,7 @@ func TestWrongFingerprint(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.NotNil(t, err)
+	assert.Error(t, err)
 }
 
 func getHostPublicKeyFile(keypath string) (ssh.PublicKey, error) {
@@ -467,7 +468,7 @@ func TestFingerprint(t *testing.T) {
 	)
 
 	hostKey, err := getHostPublicKeyFile("/etc/ssh/ssh_host_rsa_key.pub")
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	plugin := Plugin{
 		Config: Config{
@@ -485,7 +486,7 @@ func TestFingerprint(t *testing.T) {
 	}
 
 	err = plugin.Exec()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
 
@@ -515,7 +516,7 @@ func TestScriptStopWithMultipleHostAndSyncMode(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.NotNil(t, err)
+	require.Error(t, err)
 
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
@@ -545,7 +546,7 @@ func TestScriptStop(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.NotNil(t, err)
+	require.Error(t, err)
 
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
@@ -575,7 +576,7 @@ func TestNoneScriptStop(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.NotNil(t, err)
+	require.Error(t, err)
 
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
@@ -612,13 +613,13 @@ func TestEnvOutput(t *testing.T) {
 		`
 	)
 
-	os.Setenv("ENV_1", `test`)
-	os.Setenv("ENV_2", `test test`)
-	os.Setenv("ENV_3", `test `)
-	os.Setenv("ENV_4", `  test  test  `)
-	os.Setenv("ENV_5", `test'`)
-	os.Setenv("ENV_6", `test"`)
-	os.Setenv("ENV_7", `test,!#;?.@$~'"`)
+	t.Setenv("ENV_1", `test`)
+	t.Setenv("ENV_2", `test test`)
+	t.Setenv("ENV_3", `test `)
+	t.Setenv("ENV_4", `  test  test  `)
+	t.Setenv("ENV_5", `test'`)
+	t.Setenv("ENV_6", `test"`)
+	t.Setenv("ENV_7", `test,!#;?.@$~'"`)
 
 	plugin := Plugin{
 		Config: Config{
@@ -650,7 +651,7 @@ func TestEnvOutput(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
@@ -777,7 +778,7 @@ func TestUseInsecureCipher(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.NotNil(t, err)
+	require.Error(t, err)
 
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
@@ -857,49 +858,37 @@ func TestPlugin_hostPort(t *testing.T) {
 }
 
 func TestFindEnvs(t *testing.T) {
-	testEnvs := []string{
-		"INPUT_FOO",
-		"INPUT_BAR",
-		"NO_PREFIX",
-		"INPUT_FOOBAR",
-	}
-
-	origEnviron := os.Environ()
-	os.Clearenv()
-	for _, env := range testEnvs {
-		os.Setenv(env, "dummyValue")
-	}
-
-	defer func() {
-		os.Clearenv()
-		for _, env := range origEnviron {
-			pair := strings.SplitN(env, "=", 2)
-			os.Setenv(pair[0], pair[1])
-		}
-	}()
+	t.Setenv("DRONETEST_INPUT_FOO", "dummyValue")
+	t.Setenv("DRONETEST_INPUT_BAR", "dummyValue")
+	t.Setenv("DRONETEST_NO_PREFIX", "dummyValue")
+	t.Setenv("DRONETEST_INPUT_FOOBAR", "dummyValue")
 
 	t.Run("Find single prefix", func(t *testing.T) {
-		expected := []string{"INPUT_FOO", "INPUT_BAR", "INPUT_FOOBAR"}
-		result := findEnvs("INPUT_")
-		if !reflect.DeepEqual(result, expected) {
-			t.Errorf("Expected %v, but got %v", expected, result)
-		}
+		result := findEnvs("DRONETEST_INPUT_")
+		assert.ElementsMatch(
+			t,
+			[]string{"DRONETEST_INPUT_FOO", "DRONETEST_INPUT_BAR", "DRONETEST_INPUT_FOOBAR"},
+			result,
+		)
 	})
 
 	t.Run("Find multiple prefixes", func(t *testing.T) {
-		expected := []string{"INPUT_FOO", "INPUT_BAR", "NO_PREFIX", "INPUT_FOOBAR"}
-		result := findEnvs("INPUT_", "NO_PREFIX")
-		if !reflect.DeepEqual(result, expected) {
-			t.Errorf("Expected %v, but got %v", expected, result)
-		}
+		result := findEnvs("DRONETEST_INPUT_", "DRONETEST_NO_PREFIX")
+		assert.ElementsMatch(
+			t,
+			[]string{
+				"DRONETEST_INPUT_FOO",
+				"DRONETEST_INPUT_BAR",
+				"DRONETEST_NO_PREFIX",
+				"DRONETEST_INPUT_FOOBAR",
+			},
+			result,
+		)
 	})
 
 	t.Run("Find non-existing prefix", func(t *testing.T) {
-		expected := []string{}
-		result := findEnvs("NON_EXISTING_")
-		if !reflect.DeepEqual(result, expected) {
-			t.Errorf("Expected %v, but got %v", expected, result)
-		}
+		result := findEnvs("ZZZZNONEXISTING_")
+		assert.Empty(t, result)
 	})
 }
 
@@ -913,9 +902,9 @@ func TestAllEnvs(t *testing.T) {
 		`
 	)
 
-	os.Setenv("INPUT_1", `foobar`)
-	os.Setenv("GITHUB_2", `foobar`)
-	os.Setenv("PLUGIN_3", `foobar`)
+	t.Setenv("INPUT_1", `foobar`)
+	t.Setenv("GITHUB_2", `foobar`)
+	t.Setenv("PLUGIN_3", `foobar`)
 
 	plugin := Plugin{
 		Config: Config{
@@ -942,7 +931,7 @@ func TestAllEnvs(t *testing.T) {
 	}
 
 	err := plugin.Exec()
-	assert.Nil(t, err)
+	require.NoError(t, err)
 
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
@@ -1026,7 +1015,7 @@ func runSSHContainerTest(t *testing.T, cfg SSHTestConfig) {
 		Writer: &buffer,
 	}
 
-	assert.Nil(t, plugin.Exec())
+	require.NoError(t, plugin.Exec())
 	assert.Equal(t, unindent(cfg.Expected), unindent(buffer.String()))
 }
 
@@ -1092,6 +1081,6 @@ func TestCommandWithIPv6(t *testing.T) {
 		},
 		Writer: &buffer,
 	}
-	assert.Nil(t, plugin.Exec())
+	require.NoError(t, plugin.Exec())
 	assert.Equal(t, unindent(expected), unindent(buffer.String()))
 }
