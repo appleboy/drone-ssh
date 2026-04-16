@@ -477,6 +477,9 @@ func TestFingerprint(t *testing.T) {
 		buffer   bytes.Buffer
 		expected = `
 			drone-scp
+			===============================================
+			✅ Successfully executed commands to all hosts.
+			===============================================
 		`
 	)
 
@@ -623,6 +626,9 @@ func TestEnvOutput(t *testing.T) {
 			[test']
 			[test"]
 			[test,!#;?.@$~'"]
+			===============================================
+			✅ Successfully executed commands to all hosts.
+			===============================================
 		`
 	)
 
@@ -912,6 +918,9 @@ func TestAllEnvs(t *testing.T) {
 [foobar]
 [foobar]
 [foobar]
+===============================================
+✅ Successfully executed commands to all hosts.
+===============================================
 		`
 	)
 
@@ -1047,7 +1056,7 @@ func TestSudoCommand(t *testing.T) {
 		AuthMethod:     "key",
 		KeyPath:        "./tests/.ssh/id_rsa",
 		Script:         []string{`sudo su - -c "whoami"`},
-		Expected:       "root",
+		Expected:       "root\n===============================================\n✅ Successfully executed commands to all hosts.\n===============================================",
 		SudoAccess:     true,
 		InsecureCipher: true,
 		RequireTty:     true,
@@ -1066,7 +1075,7 @@ func TestSSHWithTestcontainers(t *testing.T) {
 		AuthMethod:     "password",
 		Password:       "testpass",
 		Script:         []string{"whoami"},
-		Expected:       "testuser",
+		Expected:       "testuser\n===============================================\n✅ Successfully executed commands to all hosts.\n===============================================",
 		InsecureCipher: true,
 		CommandTimeout: 60 * time.Second,
 	})
@@ -1077,6 +1086,9 @@ func TestCommandWithIPv6(t *testing.T) {
 		buffer   bytes.Buffer
 		expected = `
 			drone-scp
+			===============================================
+			✅ Successfully executed commands to all hosts.
+			===============================================
 		`
 	)
 
