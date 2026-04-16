@@ -994,7 +994,7 @@ func runSSHContainerTest(t *testing.T, cfg SSHTestConfig) {
 	pluginCfg := Config{
 		Host:              []string{host},
 		Username:          "testuser",
-		Port:              port.Int(),
+		Port:              int(port.Num()),
 		Script:            cfg.Script,
 		CommandTimeout:    cfg.CommandTimeout,
 		UseInsecureCipher: cfg.InsecureCipher,
