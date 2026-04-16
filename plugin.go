@@ -128,14 +128,14 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 		}
 	}
 
-	env = append(env, p.scriptCommands()...)
-	p.Config.Script = env
-
 	if p.Config.Debug && len(env) > 0 {
 		p.log(host, "======ENV======")
 		p.log(host, strings.Join(env, "\n"))
 		p.log(host, "======END======")
 	}
+
+	env = append(env, p.scriptCommands()...)
+	p.Config.Script = env
 
 	stdoutChan, stderrChan, doneChan, errChan, err := ssh.Stream(
 		strings.Join(p.Config.Script, "\n"),

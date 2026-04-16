@@ -384,20 +384,10 @@ func TestCommandOutput(t *testing.T) {
 			whoami
 			uname
 			localhost: ======END======
-			localhost: ======ENV======
-			localhost: pwd
-			whoami
-			uname
-			localhost: ======END======
 			localhost: /home/drone-scp
 			localhost: drone-scp
 			localhost: Linux
 			127.0.0.1: ======CMD======
-			127.0.0.1: pwd
-			whoami
-			uname
-			127.0.0.1: ======END======
-			127.0.0.1: ======ENV======
 			127.0.0.1: pwd
 			whoami
 			uname
@@ -618,13 +608,6 @@ func TestEnvOutput(t *testing.T) {
 			export ENV_5='test'\'''
 			export ENV_6='test"'
 			export ENV_7='test,!#;?.@$~'\''"'
-			echo "[${ENV_1}]"
-			echo "[${ENV_2}]"
-			echo "[${ENV_3}]"
-			echo "[${ENV_4}]"
-			echo "[${ENV_5}]"
-			echo "[${ENV_6}]"
-			echo "[${ENV_7}]"
 			======END======
 			[test]
 			[test test]
