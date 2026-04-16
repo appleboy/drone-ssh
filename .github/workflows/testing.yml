@@ -20,7 +20,7 @@ jobs:
       - name: Setup golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
-          version: latest
+          version: v2.11
           args: --verbose
 
       - uses: hadolint/hadolint-action@v3.3.0
