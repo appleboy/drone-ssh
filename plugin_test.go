@@ -618,6 +618,13 @@ func TestEnvOutput(t *testing.T) {
 			export ENV_5='test'\'''
 			export ENV_6='test"'
 			export ENV_7='test,!#;?.@$~'\''"'
+			echo "[${ENV_1}]"
+			echo "[${ENV_2}]"
+			echo "[${ENV_3}]"
+			echo "[${ENV_4}]"
+			echo "[${ENV_5}]"
+			echo "[${ENV_6}]"
+			echo "[${ENV_7}]"
 			======END======
 			[test]
 			[test test]
@@ -676,6 +683,7 @@ func TestEnvOutput(t *testing.T) {
 }
 
 func unindent(text string) string {
+	text = strings.ReplaceAll(text, "\r\n", "\n")
 	return strings.TrimSpace(strings.ReplaceAll(text, "\t", ""))
 }
 
