@@ -384,6 +384,11 @@ func TestCommandOutput(t *testing.T) {
 			whoami
 			uname
 			localhost: ======END======
+			localhost: ======ENV======
+			localhost: pwd
+			whoami
+			uname
+			localhost: ======END======
 			localhost: /home/drone-scp
 			localhost: drone-scp
 			localhost: Linux
@@ -392,9 +397,17 @@ func TestCommandOutput(t *testing.T) {
 			whoami
 			uname
 			127.0.0.1: ======END======
+			127.0.0.1: ======ENV======
+			127.0.0.1: pwd
+			whoami
+			uname
+			127.0.0.1: ======END======
 			127.0.0.1: /home/drone-scp
 			127.0.0.1: drone-scp
 			127.0.0.1: Linux
+			===============================================
+			✅ Successfully executed commands to all hosts.
+			===============================================
 		`
 	)
 
