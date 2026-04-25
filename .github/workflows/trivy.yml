@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Run Trivy vulnerability scanner (repo)
-        uses: aquasecurity/trivy-action@v0.35.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: "fs"
           scan-ref: "."
@@ -70,7 +70,7 @@ jobs:
           tags: drone-ssh:scan
 
       - name: Run Trivy vulnerability scanner (image)
-        uses: aquasecurity/trivy-action@v0.35.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: "drone-ssh:scan"
           format: "sarif"
