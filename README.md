@@ -9,7 +9,6 @@
 [![Lint and Testing](https://github.com/appleboy/drone-ssh/actions/workflows/testing.yml/badge.svg?branch=master)](https://github.com/appleboy/drone-ssh/actions/workflows/testing.yml)
 [![Trivy Security Scan](https://github.com/appleboy/drone-ssh/actions/workflows/trivy.yml/badge.svg?branch=master)](https://github.com/appleboy/drone-ssh/actions/workflows/trivy.yml)
 [![codecov](https://codecov.io/gh/appleboy/drone-ssh/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-ssh)
-[![Go Report Card](https://goreportcard.com/badge/github.com/appleboy/drone-ssh)](https://goreportcard.com/report/github.com/appleboy/drone-ssh)
 [![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-ssh.svg)](https://hub.docker.com/r/appleboy/drone-ssh/)
 
 A Drone plugin for executing commands on remote hosts via SSH. For usage instructions and a list of available options, please refer to [the documentation](http://plugins.drone.io/appleboy/drone-ssh/).
