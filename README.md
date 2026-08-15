@@ -5,13 +5,13 @@
 ![sshlog](images/ssh.png)
 
 [![GitHub tag](https://img.shields.io/github/tag/appleboy/drone-ssh.svg)](https://github.com/appleboy/drone-ssh/releases)
-[![GoDoc](https://godoc.org/github.com/appleboy/drone-ssh?status.svg)](https://godoc.org/github.com/appleboy/drone-ssh)
+[![GoDoc](https://pkg.go.dev/badge/github.com/appleboy/drone-ssh.svg)](https://pkg.go.dev/github.com/appleboy/drone-ssh)
 [![Lint and Testing](https://github.com/appleboy/drone-ssh/actions/workflows/testing.yml/badge.svg?branch=master)](https://github.com/appleboy/drone-ssh/actions/workflows/testing.yml)
 [![Trivy Security Scan](https://github.com/appleboy/drone-ssh/actions/workflows/trivy.yml/badge.svg?branch=master)](https://github.com/appleboy/drone-ssh/actions/workflows/trivy.yml)
 [![codecov](https://codecov.io/gh/appleboy/drone-ssh/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-ssh)
 [![Docker Pulls](https://img.shields.io/docker/pulls/appleboy/drone-ssh.svg)](https://hub.docker.com/r/appleboy/drone-ssh/)
 
-A Drone plugin for executing commands on remote hosts via SSH. For usage instructions and a list of available options, please refer to [the documentation](http://plugins.drone.io/appleboy/drone-ssh/).
+A Drone plugin for executing commands on remote hosts via SSH. For usage instructions and a list of available options, please refer to [the documentation](https://plugins.drone.io/plugins/ssh).
 
 **Note: Please update your Drone image config path to `appleboy/drone-ssh`. The `plugins/ssh` image is no longer maintained.**
 
@@ -102,7 +102,7 @@ docker run --rm \
 
 ## Mount Key from File Path
 
-Make sure to enable `trusted` mode in your project settings (for [Drone 0.8 version](https://0-8-0.docs.drone.io/)).
+Make sure to enable `trusted` mode in your project settings (see the [Drone documentation](https://docs.drone.io/)).
 
 ![trusted mode](./images/trust.png)
 
