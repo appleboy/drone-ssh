@@ -23,7 +23,7 @@ jobs:
           version: v2.12
           args: --verbose
 
-      - uses: hadolint/hadolint-action@v3.3.0
+      - uses: hadolint/hadolint-action@v3.4.0
         name: hadolint for Dockerfile
         with:
           dockerfile: docker/Dockerfile
