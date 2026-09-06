@@ -7,7 +7,7 @@
 <!-- 圖片說明：SSH 日誌畫面，圖片內容與原文相同 -->
 
 [![GitHub tag](https://img.shields.io/github/tag/appleboy/drone-ssh.svg)](https://github.com/appleboy/drone-ssh/releases)
-[![GoDoc](https://godoc.org/github.com/appleboy/drone-ssh?status.svg)](https://godoc.org/github.com/appleboy/drone-ssh)
+[![GoDoc](https://pkg.go.dev/badge/github.com/appleboy/drone-ssh.svg)](https://pkg.go.dev/github.com/appleboy/drone-ssh)
 [![Lint and Testing](https://github.com/appleboy/drone-ssh/actions/workflows/testing.yml/badge.svg?branch=master)](https://github.com/appleboy/drone-ssh/actions/workflows/testing.yml)
 [![Trivy Security Scan](https://github.com/appleboy/drone-ssh/actions/workflows/trivy.yml/badge.svg?branch=master)](https://github.com/appleboy/drone-ssh/actions/workflows/trivy.yml)
 [![codecov](https://codecov.io/gh/appleboy/drone-ssh/branch/master/graph/badge.svg)](https://codecov.io/gh/appleboy/drone-ssh)
