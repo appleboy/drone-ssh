@@ -102,12 +102,20 @@ issues:
   max-same-issues: 0
 formatters:
   enable:
+    - gci
     - gofmt
     - gofumpt
     - golines
   settings:
+    gci:
+      custom-order: true
+      sections:
+        - standard
+        - prefix(github.com/appleboy/drone-ssh)
+        - default
     gofumpt:
-      extra-rules: true
+      extra:
+        group-params: true
   exclusions:
     generated: lax
 run:
