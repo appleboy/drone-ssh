@@ -3,8 +3,7 @@ EXECUTABLE := drone-ssh
 DIST := dist
 DIST_DIRS := $(DIST)/binaries $(DIST)/release
 GO ?= go
-GOLANGCI_LINT_VERSION ?= v2.14.0
-GOLANGCI_LINT ?= $(GO) run github.com/golangci/golangci-lint/v2/cmd/golangci-lint@$(GOLANGCI_LINT_VERSION)
+TOOLS_MOD := -modfile=go.tools.mod
 SHASUM ?= shasum -a 256
 GOFILES := $(shell find . -name "*.go" -type f)
 HAS_GO = $(shell hash $(GO) > /dev/null 2>&1 && echo "GO" || echo "NOGO" )
@@ -52,20 +51,24 @@ LDFLAGS ?= -X 'main.Version=$(VERSION)'
 
 all: build
 
+.PHONY: install-tools
+install-tools:
+	$(GO) mod download $(TOOLS_MOD)
+
 .PHONY: fmt
 fmt:
-	$(GOLANGCI_LINT) fmt
+	$(GO) tool $(TOOLS_MOD) golangci-lint fmt
 
 .PHONY: lint
 lint:
-	$(GOLANGCI_LINT) run
+	$(GO) tool $(TOOLS_MOD) golangci-lint run
 
 vet:
 	$(GO) vet ./...
 
 .PHONY: fmt-check
 fmt-check:
-	$(GOLANGCI_LINT) fmt --diff --diff-colored=false
+	$(GO) tool $(TOOLS_MOD) golangci-lint fmt --diff --diff-colored=false
 
 test:
 	@$(GO) test -v -cover -coverprofile coverage.txt ./... && echo "\n==>\033[32m Ok\033[m\n" || exit 1
