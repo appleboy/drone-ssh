@@ -8,6 +8,7 @@ require (
 	github.com/stretchr/testify v1.12.1
 	github.com/testcontainers/testcontainers-go v0.44.0
 	github.com/urfave/cli/v2 v2.27.7
+	github.com/yassinebenaid/godump v0.11.1
 	golang.org/x/crypto v0.57.0
 )
 

@@ -238,7 +238,10 @@ With `sync: true`, hosts run in order and the first failure stops subsequent hos
 In parallel mode (the default), all started hosts are allowed to finish or time out
 before the first reported error is returned. Errors include the affected host.
 
-Debug mode does not dump connection credentials. Forwarded environment variables
-are logged as `NAME=[REDACTED]`; their original values are still sent to the remote
+Debug mode uses `godump` to show a copy of the connection configuration. Non-empty
+SSH and proxy keys, passwords, and passphrases appear as `[REDACTED]`; unset
+credentials remain empty and other settings remain visible. The original
+configuration is unchanged. Forwarded environment variables are logged as
+`NAME=[REDACTED]`; their original values are still sent to the remote
 script. Debug command text and remote command output remain visible, so secrets
 written directly into scripts or printed by commands are not automatically masked.

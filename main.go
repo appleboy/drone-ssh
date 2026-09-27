@@ -9,6 +9,7 @@ import (
 	easyssh "github.com/appleboy/easyssh-proxy"
 	"github.com/joho/godotenv"
 	"github.com/urfave/cli/v2"
+	"github.com/yassinebenaid/godump"
 )
 
 // Version set at compile-time
@@ -376,6 +377,10 @@ func run(c *cli.Context) error {
 			},
 		},
 		Writer: os.Stdout,
+	}
+
+	if plugin.Config.Debug {
+		_ = godump.Dump(plugin.Config.redacted())
 	}
 
 	return plugin.Exec()

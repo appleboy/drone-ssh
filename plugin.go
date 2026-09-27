@@ -56,6 +56,19 @@ type (
 	}
 )
 
+// redacted returns a display-only copy, preserving whether credentials are set.
+func (c Config) redacted() Config {
+	for _, credential := range []*string{
+		&c.Key, &c.Password, &c.Passphrase,
+		&c.Proxy.Key, &c.Proxy.Password, &c.Proxy.Passphrase,
+	} {
+		if *credential != "" {
+			*credential = "[REDACTED]"
+		}
+	}
+	return c
+}
+
 func escapeArg(arg string) string {
 	return "'" + strings.ReplaceAll(arg, "'", `'\''`) + "'"
 }

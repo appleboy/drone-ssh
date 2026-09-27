@@ -11,12 +11,13 @@ import (
 	"testing/synctest"
 	"time"
 
+	easyssh "github.com/appleboy/easyssh-proxy"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/urfave/cli/v2"
 )
 
-func TestRunDebugDoesNotDumpCredentials(t *testing.T) {
+func TestRunDebugRedactsCredentials(t *testing.T) {
 	output, err := os.CreateTemp(t.TempDir(), "debug-output")
 	require.NoError(t, err)
 	original := os.Stdout
@@ -28,6 +29,9 @@ func TestRunDebugDoesNotDumpCredentials(t *testing.T) {
 
 	flags := flag.NewFlagSet("test", flag.ContinueOnError)
 	flags.Bool("debug", true, "")
+	flags.String("user", "debug-user", "")
+	flags.Int("port", 2222, "")
+	flags.String("proxy.host", "bastion.example.invalid", "")
 	for _, name := range []string{
 		"ssh-key", "password", "ssh-passphrase",
 		"proxy.ssh-key", "proxy.password", "proxy.ssh-passphrase",
@@ -41,6 +45,36 @@ func TestRunDebugDoesNotDumpCredentials(t *testing.T) {
 	logged, err := io.ReadAll(output)
 	require.NoError(t, err)
 	assert.NotContains(t, string(logged), "secret-")
+	assert.Equal(t, 6, strings.Count(string(logged), "[REDACTED]"))
+	assert.Contains(t, string(logged), "debug-user")
+	assert.Contains(t, string(logged), "2222")
+	assert.Contains(t, string(logged), "bastion.example.invalid")
+}
+
+func TestConfigRedactedPreservesOriginal(t *testing.T) {
+	original := Config{
+		Key: "private-key", Password: "password", Passphrase: "passphrase",
+		Host: []string{"example.invalid"}, Port: 2222, Username: "deploy",
+		KeyPath: "/keys/deploy", Timeout: time.Second, Debug: true,
+		Envs: []string{"TOKEN"}, Script: []string{"whoami"},
+		Proxy: easyssh.DefaultConfig{
+			Key: "proxy-key", Password: "proxy-password", Passphrase: "proxy-passphrase",
+			Server: "bastion.example.invalid", User: "jump", Port: "2223",
+		},
+	}
+	config := original
+	got := config.redacted()
+	assert.Equal(t, original, config, "debug rendering must not change connection credentials")
+	expected := original
+	expected.Key, expected.Password, expected.Passphrase = "[REDACTED]", "[REDACTED]", "[REDACTED]"
+	expected.Proxy.Key, expected.Proxy.Password, expected.Proxy.Passphrase = "[REDACTED]", "[REDACTED]", "[REDACTED]"
+	assert.Equal(t, expected, got, "non-sensitive settings must remain available for debugging")
+	assert.Equal(
+		t,
+		Config{},
+		(Config{}).redacted(),
+		"unset credentials must remain distinguishable",
+	)
 }
 
 func TestDebugRedactsEnvironment(t *testing.T) {
