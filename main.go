@@ -380,7 +380,7 @@ func run(c *cli.Context) error {
 	}
 
 	if plugin.Config.Debug {
-		_ = godump.Dump(plugin)
+		_ = godump.Dump(plugin.Config.redacted())
 	}
 
 	return plugin.Exec()

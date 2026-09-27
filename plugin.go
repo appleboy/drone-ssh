@@ -56,6 +56,19 @@ type (
 	}
 )
 
+// redacted returns a display-only copy, preserving whether credentials are set.
+func (c Config) redacted() Config {
+	for _, credential := range []*string{
+		&c.Key, &c.Password, &c.Passphrase,
+		&c.Proxy.Key, &c.Proxy.Password, &c.Proxy.Passphrase,
+	} {
+		if *credential != "" {
+			*credential = "[REDACTED]"
+		}
+	}
+	return c
+}
+
 func escapeArg(arg string) string {
 	return "'" + strings.ReplaceAll(arg, "'", `'\''`) + "'"
 }
@@ -73,8 +86,7 @@ func (p Plugin) hostPort(host string) (string, string) {
 	return host, port
 }
 
-func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
-	defer wg.Done()
+func (p Plugin) exec(host string) error {
 	host, port := p.hostPort(host)
 	// Create MakeConfig instance with remote username, server address and path to private key.
 	ssh := &easyssh.MakeConfig{
@@ -114,6 +126,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	}
 
 	env := []string{}
+	envNames := []string{}
 	if p.Config.AllEnvs {
 		allenvs := findEnvs("DRONE_", "PLUGIN_", "INPUT_", "GITHUB_")
 		p.Config.Envs = append(p.Config.Envs, allenvs...)
@@ -121,6 +134,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 	for _, key := range p.Config.Envs {
 		key = strings.ToUpper(key)
 		if val, found := os.LookupEnv(key); found {
+			envNames = append(envNames, key+"=[REDACTED]")
 			env = append(
 				env,
 				p.format(p.Config.EnvsFormat, "{NAME}", key, "{VALUE}", escapeArg(val)),
@@ -130,7 +144,7 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 
 	if p.Config.Debug && len(env) > 0 {
 		p.log(host, "======ENV======")
-		p.log(host, strings.Join(env, "\n"))
+		p.log(host, strings.Join(envNames, "\n"))
 		p.log(host, "======END======")
 	}
 
@@ -142,9 +156,18 @@ func (p Plugin) exec(host string, wg *sync.WaitGroup, errChannel chan error) {
 		p.Config.CommandTimeout,
 	)
 	if err != nil {
-		errChannel <- err
-		return
+		return err
 	}
+	return p.readStream(host, stdoutChan, stderrChan, doneChan, errChan)
+}
+
+func (p Plugin) readStream(
+	host string,
+	stdoutChan, stderrChan <-chan string,
+	doneChan <-chan bool,
+	errChan <-chan error,
+) error {
+	var err error
 	// read from the output channel until the done signal is passed
 	var isTimeout bool
 loop:
@@ -152,27 +175,41 @@ loop:
 		select {
 		case isTimeout = <-doneChan:
 			break loop
-		case outline := <-stdoutChan:
+		case outline, ok := <-stdoutChan:
+			if !ok {
+				stdoutChan = nil
+				continue
+			}
 			if outline != "" {
 				p.log(host, outline)
 			}
-		case errline := <-stderrChan:
+		case errline, ok := <-stderrChan:
+			if !ok {
+				stderrChan = nil
+				continue
+			}
 			if errline != "" {
 				p.log(host, errline)
 			}
-		case err = <-errChan:
+		case streamErr, ok := <-errChan:
+			if !ok {
+				errChan = nil
+			} else if streamErr != nil {
+				err = streamErr
+			}
 		}
 	}
 
 	// get exit code or command error.
 	if err != nil {
-		errChannel <- err
+		return err
 	}
 
 	// command time out
 	if !isTimeout {
-		errChannel <- errCommandTimeOut
+		return errCommandTimeOut
 	}
+	return nil
 }
 
 // format string
@@ -215,33 +252,8 @@ func (p Plugin) Exec() error {
 		p.Config.EnvsFormat = envsFormat
 	}
 
-	wg := sync.WaitGroup{}
-	wg.Add(len(p.Config.Host))
-	errChannel := make(chan error)
-	finished := make(chan struct{})
-	if p.Config.Sync {
-		go func() {
-			for _, host := range p.Config.Host {
-				p.exec(host, &wg, errChannel)
-			}
-		}()
-	} else {
-		for _, host := range p.Config.Host {
-			go p.exec(host, &wg, errChannel)
-		}
-	}
-
-	go func() {
-		wg.Wait()
-		close(finished)
-	}()
-
-	select {
-	case <-finished:
-	case err := <-errChannel:
-		if err != nil {
-			return err
-		}
+	if err := p.execHosts(p.exec); err != nil {
+		return err
 	}
 
 	w := p.getWriter()
@@ -250,6 +262,34 @@ func (p Plugin) Exec() error {
 	fmt.Fprintln(w, "===============================================")
 
 	return nil
+}
+
+// execHosts waits for all started hosts before returning. In sync mode, a failure
+// stops subsequent hosts; in parallel mode, already started hosts finish normally.
+func (p Plugin) execHosts(run func(string) error) error {
+	if p.Config.Sync {
+		for _, host := range p.Config.Host {
+			if err := run(host); err != nil {
+				return fmt.Errorf("%s: %w", host, err)
+			}
+		}
+		return nil
+	}
+
+	var wg sync.WaitGroup
+	// Each host sends at most one error, so sends never block on a receiver.
+	errChannel := make(chan error, len(p.Config.Host))
+	for _, host := range p.Config.Host {
+		wg.Go(func() {
+			if err := run(host); err != nil {
+				errChannel <- fmt.Errorf("%s: %w", host, err)
+			}
+		})
+	}
+	wg.Wait()
+	close(errChannel)
+	// Preserve the first reported error, after every worker has exited.
+	return <-errChannel
 }
 
 func (p Plugin) scriptCommands() []string {

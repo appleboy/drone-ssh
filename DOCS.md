@@ -231,3 +231,17 @@ Example configuration for forcing protocol to IPv4 only:
 | `proxy_password` | password for proxy host user |
 | `proxy_key` | plain text of proxy private key |
 | `proxy_key_path` | key path of proxy private key |
+
+## Execution failures and debug output
+
+With `sync: true`, hosts run in order and the first failure stops subsequent hosts.
+In parallel mode (the default), all started hosts are allowed to finish or time out
+before the first reported error is returned. Errors include the affected host.
+
+Debug mode uses `godump` to show a copy of the connection configuration. Non-empty
+SSH and proxy keys, passwords, and passphrases appear as `[REDACTED]`; unset
+credentials remain empty and other settings remain visible. The original
+configuration is unchanged. Forwarded environment variables are logged as
+`NAME=[REDACTED]`; their original values are still sent to the remote
+script. Debug command text and remote command output remain visible, so secrets
+written directly into scripts or printed by commands are not automatically masked.
