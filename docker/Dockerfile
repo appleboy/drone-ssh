@@ -12,7 +12,8 @@ LABEL org.opencontainers.image.source=https://github.com/appleboy/drone-ssh
 LABEL org.opencontainers.image.description="Execute commands on a remote host through SSH"
 LABEL org.opencontainers.image.licenses=MIT
 
-RUN apk add --no-cache ca-certificates tzdata && \
+RUN apk upgrade --no-cache && \
+  apk add --no-cache ca-certificates tzdata && \
   rm -rf /var/cache/apk/*
 
 RUN addgroup \
