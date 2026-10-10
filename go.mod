@@ -1,6 +1,6 @@
 module github.com/appleboy/drone-ssh
 
-go 1.26.8
+go 1.26.9
 
 require (
 	github.com/appleboy/easyssh-proxy v1.5.3
