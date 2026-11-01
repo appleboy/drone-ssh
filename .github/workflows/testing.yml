@@ -23,6 +23,9 @@ jobs:
       - name: Lint
         run: make lint
 
+      - name: Check Go formatting
+        run: make fmt-check
+
       - uses: hadolint/hadolint-action@v3.4.0
         name: hadolint for Dockerfile
         with:
